@@ -1,3 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
+/*   Updated: 2026/01/08 16:53:17 by jojeda-p         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
 typedef enum e_redir_type
 {
 	R_IN,

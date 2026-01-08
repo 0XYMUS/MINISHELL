@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/08 15:21:55 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/08 15:23:55 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,4 +14,5 @@
 int	main(int argc, char **argv)
 {
 	int i;
+	int j;
 }

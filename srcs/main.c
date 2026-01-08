@@ -1,14 +1,17 @@
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
+/*   Updated: 2026/01/08 15:21:55 by julepere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 int	main(int argc, char **argv)
 {
-	ssize_t	bytes;
-	char	buf;
-
-	bytes = read(STDIN_FILENO, buf, BUFFER_SIZE)
+	int i;
 }

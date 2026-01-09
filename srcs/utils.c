@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenization.c                                     :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/09 11:41:57 by jojeda-p         ###   ########.fr       */
+/*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
+/*   Updated: 2026/01/09 11:40:51 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	tokenizer(char *line)
+int	is_space(char c) 
 {
-	int	i;
-	
-	i = 0;
-	while (line[i])
-	{
-		if (is_space(line[i]))
-		i++;
-	}
+	return (c == ' '  || 
+			c == '\t' || 
+			c == '\n' || 
+			c == '\r' || 
+			c == '\v' || 
+			c == '\f');
 }

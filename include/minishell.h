@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/08 16:53:17 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/09 11:41:49 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,3 +42,6 @@ typedef struct s_pipeline
 	t_command			*cmd;
 	struct s_pipeline	*next;
 }	t_pipeline;
+
+//funciones
+int	is_space(char c);

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/09 11:41:57 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/09 13:25:33 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	tokenizer(char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (is_space(line[i]))
+		while (!is_space(line[i]))
+			
 		i++;
 	}
 }

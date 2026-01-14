@@ -5,7 +5,9 @@ INCLUDES	:= -Iinclude
 
 SRCS		:= \
 	srcs/main.c \
-	srcs/tokenization.c
+	srcs/utils.c \
+	srcs/tokenization.c \
+	srcs/token_utils.c
 
 OBJS		:= $(SRCS:.c=.o)
 

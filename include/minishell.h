@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/09 11:41:49 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/14 10:37:19 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,25 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+// Estructura temporal de tokenizacion
+typedef enum e_token_type
+{
+	TOK_WORD,
+	TOK_PIPE,
+	TOK_REDIR_IN,
+	TOK_REDIR_OUT,
+	TOK_APPEND,
+	TOK_HEREDOC
+} 	t_token_type;
+
+typedef struct s_token
+{
+	t_token_type		type;
+	char				*value;
+	struct s_token		*next;
+} 	t_token;
+
+// Estructura final
 typedef enum e_redir_type
 {
 	R_IN,
@@ -45,3 +64,10 @@ typedef struct s_pipeline
 
 //funciones
 int	is_space(char c);
+
+//funciones para listas
+t_token	*token_new(t_token_type type, char *value);
+void	token_add_back(t_token **lst, t_token *new_tok);
+void	token_free_one(t_token *tok);
+void	token_free_all(t_token **lst);
+void	token_debug_print(const t_token *lst);

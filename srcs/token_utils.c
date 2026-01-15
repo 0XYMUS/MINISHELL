@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/09 13:41:52 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/14 16:33:11 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,18 @@ static const char	*token_type_str(t_token_type t)
  */
 t_token	*token_new(t_token_type type, char *value)
 {
-	t_token	*tok;
+	t_token	*token;
 
-	tok = (t_token *)malloc(sizeof(*tok));
-	if (!tok)
+	token = malloc(sizeof(t_token));
+	if (!token)
 		return (NULL);
-	tok->type = type;
-	tok->value = value;
-	tok->next = NULL;
-	return (tok);
+	token->type = type;
+	if (type != TOK_WORD)
+		token->value = NULL;
+	else
+		token->value = value;
+	token->next = NULL;
+	return (token);
 }
 
 /*

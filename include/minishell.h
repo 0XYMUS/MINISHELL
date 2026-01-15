@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/14 10:37:19 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/15 13:27:08 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,10 @@ typedef struct s_pipeline
 
 //funciones
 int	is_space(char c);
+int	str_len_quote(char *str, int i);
+int	str_len_space(char *str, int i);
+char	*word_dup(char *line, int i, int wordlen);
+t_token	*tokenizer(char *line);
 
 //funciones para listas
 t_token	*token_new(t_token_type type, char *value);

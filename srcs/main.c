@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/14 14:02:25 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/15 13:29:50 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
+	t_token	*lst;
 
 	(void)argc;
 	(void)argv;
 	(void)envp;
+	lst = NULL;
 
 	while(1)
 	{
@@ -36,8 +38,10 @@ int	main(int argc, char **argv, char **envp)
 			continue;
 		}
 		add_history(line);
-		printf("Input recibido: %s\n", line);
+		lst = tokenizer(line);
+		token_debug_print(lst);
 		free(line);
 	}
+	token_free_all(&lst);
 	return (0);
 }

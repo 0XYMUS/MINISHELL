@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/14 17:35:18 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/15 15:39:30 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,23 @@ int	is_space(char c)
 
 int	is_key(char c)
 {
-	return (c == '|'  || c == '<' || c == '>' || c == '"' || c == '\'');
+	return (c == '|'  || c == '<' || c == '>');
 }
 
-int	str_len_quote(char *str, int i)
+int	str_len_quote(char *str, int i) // falta el caso para que coja bien  las comillas como "hola"hola como un palabra todo
 {
-	int	i_initial;
+	int		i_initial;
 
 	i_initial = i;
 	if (str[i - 1] == '\'')
 	{
-		while (str[i] != '\'' && str[i])
+		while (str[i] && (str[i] != '\'' && !is_space(str[i + 1])))
 			i++;
 		return (i - i_initial);
 	}
 	else
 	{
-		while (str[i] != '"' && str[i])
+		while (str[i] && (str[i] != '"' || (str[i] == '"' && !is_space(str[i + 1])) ))
 			i++;
 		return (i - i_initial);
 	}

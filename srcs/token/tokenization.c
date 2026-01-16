@@ -3,57 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/16 12:11:32 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/16 18:24:18 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*type_word_helper(char *line, char q, int i, int wordlen)
+static int	type_word(char *line, int *i, t_token **lst)
 {
+	int		wordlen;
 	char	*word;
 	t_token	*token;
 
 	token = NULL;
-	word = word_dup(line, i, wordlen, q);
+	wordlen = word_len(line, *i);
+	if (wordlen < 0)
+		return (-1);
+	word = word_dup(line, *i, wordlen);
 	if (!word)
-		return (NULL);
+		return (-1);
 	token = token_new(TOK_WORD, word);
 	if (!token)
-		return (free(word), NULL);
-	return (token);
-}
-
-static int	type_word(char *line, int *i, t_token **lst)
-{
-	int		wordlen;
-	char	q;
-	t_token	*token;
-
-	token = NULL;
-	q = 0;
-	if (line[*i] == '\'' || line[*i] == '"')
-	{
-		q = line[*i];
-		(*i)++;
-		wordlen = str_len_quote(line, (*i), q);
-		if (wordlen == -1)
-			return (-1);
-	}
-	else
-		wordlen = str_len_space(line, *i, q);
-	token = type_word_helper(line, q, *i, wordlen);
-	if (!token)
-		return (-1);
+		return (free(word), -1);
 	token_add_back(lst, token);
 	*i = *i + wordlen;
-	if (q != 0)
-		(*i)++;
 	return (0);
 }
+
 
 static int	type_operator(t_token_type type, int *i, t_token **lst)
 {
@@ -121,5 +100,7 @@ t_token	*tokenizer(char *line)
 				return (token_free_all(&lst), NULL);
 		}
 	}
+	if (getenv("MS_DEBUG_LEXER"))
+		token_debug_print(lst);
 	return (lst);
 }

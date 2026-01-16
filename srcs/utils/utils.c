@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/16 12:11:40 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/16 18:24:18 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,67 +23,112 @@ int	is_key(char c)
 	return (c == '|'  || c == '<' || c == '>');
 }
 
-int	str_len_quote(char *str, int i, char q)
+int	word_len(char *line, int i)
 {
 	int		i_initial;
-
+	char	q;
+	
 	i_initial = i;
-	if (q == '\'')
+	q = 0;
+	while(line[i] && (!is_space(line[i]) || q != 0) && (!is_key(line[i]) || q != 0))
 	{
-		while (str[i])
+		if (line[i] == '\'' || line[i] == '"')
 		{
-			if (str[i] == q && str[i + 1] && is_space(str[i + 1]))
-				break ;
+			q = line[i];
 			i++;
+			while (line[i] && line[i] != q)
+				i++;
+			if (line[i] && line[i] == q)
+			{	
+				q = 0;
+				i++;
+			}
+			else
+				return (-1);
 		}
-		return (i - i_initial);
-	}
-	else
-	{
-		while (str[i] && str[i] != '"' && !is_space(str[i + 1]) )
-		{
-			if (str[i] == q && str[i + 1] && is_space(str[i + 1]))
-				break ;
+		else
 			i++;
-		}
-		return (i - i_initial);
 	}
-	return (-1);
+	return (i - i_initial);
 }
 
-int	str_len_space(char *str, int i, char q)
+int	word_len_quote(char *line, int i)
 {
-	int	i_initial;
-	int	i_quote;
-
-	i_quote = 0;
-	i_initial = i;
-	while(str[i] && !is_space(str[i]) && !is_key(str[i]))
+	char	q;
+	int		out_len;
+	
+	out_len = 0;
+	q = 0;
+	while(line[i] && (!is_space(line[i]) || q != 0) && (!is_key(line[i]) || q != 0))
 	{
-		if (str[i] == q)
-			i_quote++;
-		i++;
+		if (line[i] == '\'' || line[i] == '"')
+		{
+			q = line[i];
+			i++;
+			while (line[i] && line[i] != q)
+			{
+				out_len++;
+				i++;
+			}
+			if (line[i] && line[i] == q)
+			{	
+				q = 0;
+				i++;
+			}
+			else
+				return (-1);
+		}
+		else
+		{
+			out_len++;
+			i++;
+		}
 	}
-	return (i -i_initial - i_quote);
+	return (out_len);
 }
 
-char	*word_dup(char *line, int i, int wordlen, char q)
+char	*word_dup(char *line, int i, int wordlen)
 {
-	int	j;
-	char *word;
+	int		j;
+	char	q;
+	char	*word;
+	int		end;
+	int		out_len;
 
-	word = malloc(sizeof(char) * wordlen + 1);
+	end = i + wordlen;
+	out_len = word_len_quote(line, i);
+	if (out_len < 0)
+		return (NULL);
+	word = malloc(sizeof(char) * out_len + 1);
 	if (!word)
 		return (NULL);
 	j = 0;
-	while (wordlen > 0)
+	q = 0;
+	while (i < end)
 	{
-		if (line[i] == q)
+		if (line[i] == '\'' || line[i] == '"')
+		{
+			q = line[i];
 			i++;
-		word[j] = line[i];
-		i++;
-		j++;
-		wordlen--;
+			while (i < end && line[i] && line[i] != q)
+			{
+				word[j] = line[i];
+				i++;
+				j++;
+			}
+			if (i < end && line[i] == q)
+			{
+				q = 0;
+				i++;
+			}
+		}
+		else
+		{
+			word[j] = line[i];
+				i++;
+				j++;
+		}
+			
 	}
 	word[j] = '\0';
 	return (word);

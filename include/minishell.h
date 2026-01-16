@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/16 15:21:46 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/16 18:10:02 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,10 @@ typedef struct s_shell
 /* ************************************************************************** */
 
 int		is_space(char c);
-int		str_len_quote(char *str, int i, char q);
-int		str_len_space(char *str, int i, char q);
-char	*word_dup(char *line, int i, int wordlen, char q);
+int		word_len_quote(char *line, int i);
+char	*word_dup(char *line, int i, int wordlen);
 t_token	*tokenizer(char *line);
+int		word_len(char *line, int i);
 
 /* ************************************************************************** */
 /*                                 TOKEN LIST                                 */

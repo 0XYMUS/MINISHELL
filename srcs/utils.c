@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/16 11:14:55 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/16 11:33:45 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,20 @@ int	str_len_quote(char *str, int i, char q)
 	return (-1);
 }
 
-int	str_len_space(char *str, int i)
+int	str_len_space(char *str, int i, char q)
 {
 	int	i_initial;
-	
+	int	i_quote;
+
+	i_quote = 0;
 	i_initial = i;
-	while(!is_space(str[i]) && !is_key(str[i]) && str[i])
+	while(str[i] && !is_space(str[i]) && !is_key(str[i]))
+	{
+		if (str[i] == q)
+			i_quote++;
 		i++;
-	return (i -i_initial);
+	}
+	return (i -i_initial - i_quote);
 }
 
 char	*word_dup(char *line, int i, int wordlen, char q)

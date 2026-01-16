@@ -6,13 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/16 11:24:02 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/16 11:34:02 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static t_token	type_word_helper(char *line, char q, int i, int wordlen)
+t_token	*type_word_helper(char *line, char q, int i, int wordlen)
 {
 	char	*word;
 	t_token	*token;
@@ -44,7 +44,7 @@ static int	type_word(char *line, int *i, t_token **lst)
 			return (-1);
 	}
 	else
-		wordlen = str_len_space(line, *i);
+		wordlen = str_len_space(line, *i, q);
 	token = type_word_helper(line, q, *i, wordlen);
 	if (!token)
 		return (-1);

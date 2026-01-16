@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/15 15:39:30 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/16 11:14:55 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,29 @@ int	is_key(char c)
 	return (c == '|'  || c == '<' || c == '>');
 }
 
-int	str_len_quote(char *str, int i) // falta el caso para que coja bien  las comillas como "hola"hola como un palabra todo
+int	str_len_quote(char *str, int i, char q)
 {
 	int		i_initial;
 
 	i_initial = i;
-	if (str[i - 1] == '\'')
+	if (q == '\'')
 	{
-		while (str[i] && (str[i] != '\'' && !is_space(str[i + 1])))
+		while (str[i])
+		{
+			if (str[i] == q && str[i + 1] && is_space(str[i + 1]))
+				break ;
 			i++;
+		}
 		return (i - i_initial);
 	}
 	else
 	{
-		while (str[i] && (str[i] != '"' || (str[i] == '"' && !is_space(str[i + 1])) ))
+		while (str[i] && str[i] != '"' && !is_space(str[i + 1]) )
+		{
+			if (str[i] == q && str[i + 1] && is_space(str[i + 1]))
+				break ;
 			i++;
+		}
 		return (i - i_initial);
 	}
 	return (-1);
@@ -53,7 +61,7 @@ int	str_len_space(char *str, int i)
 	return (i -i_initial);
 }
 
-char	*word_dup(char *line, int i, int wordlen)
+char	*word_dup(char *line, int i, int wordlen, char q)
 {
 	int	j;
 	char *word;
@@ -64,6 +72,8 @@ char	*word_dup(char *line, int i, int wordlen)
 	j = 0;
 	while (wordlen > 0)
 	{
+		if (line[i] == q)
+			i++;
 		word[j] = line[i];
 		i++;
 		j++;

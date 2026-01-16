@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/14 16:33:11 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/16 11:10:40 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	token_debug_print(const t_token *lst)
 	while (lst)
 	{
 		if (lst->type == TOK_WORD)
-			printf("[%s:'%s']", token_type_str(lst->type), lst->value);
+			printf("[%s:%s]", token_type_str(lst->type), lst->value);
 		else
 			printf("[%s]", token_type_str(lst->type));
 		if (lst->next)

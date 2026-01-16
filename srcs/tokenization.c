@@ -6,46 +6,49 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/15 12:55:47 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/16 11:24:02 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	type_word_helper(char *line, t_token **lst, int i, int wordlen)
+static t_token	type_word_helper(char *line, char q, int i, int wordlen)
 {
 	char	*word;
 	t_token	*token;
 
 	token = NULL;
-	word = word_dup(line, i, wordlen);
+	word = word_dup(line, i, wordlen, q);
 	if (!word)
-		return (-1);
+		return (NULL);
 	token = token_new(TOK_WORD, word);
 	if (!token)
-		return (free(word), -1);
-	token_add_back(lst, token);
-	return (0);
+		return (free(word), NULL);
+	return (token);
 }
 
 static int	type_word(char *line, int *i, t_token **lst)
 {
 	int		wordlen;
 	char	q;
+	t_token	*token;
 
+	token = NULL;
 	q = 0;
 	if (line[*i] == '\'' || line[*i] == '"')
 	{
 		q = line[*i];
 		(*i)++;
-		wordlen = str_len_quote(line, (*i));
-		if (wordlen == -1 || line[*i + wordlen] != q)
+		wordlen = str_len_quote(line, (*i), q);
+		if (wordlen == -1)
 			return (-1);
 	}
 	else
 		wordlen = str_len_space(line, *i);
-	if (type_word_helper(line, lst, *i, wordlen) == -1)
+	token = type_word_helper(line, q, *i, wordlen);
+	if (!token)
 		return (-1);
+	token_add_back(lst, token);
 	*i = *i + wordlen;
 	if (q != 0)
 		(*i)++;

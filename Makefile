@@ -16,10 +16,10 @@ INC_DIR     = include
 # Archivos Fuente (Añade aquí tus nuevos archivos .c)
 # Archivos Fuente
 SRC_FILES	= main.c \
-               tokenization.c \
-               token_utils.c \
-               utils.c \
-			   errors.c
+               token/tokenization.c \
+               token/token_utils.c \
+               utils/utils.c \
+			   utils/errors.c
 
 # Generación automática de rutas
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

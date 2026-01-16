@@ -3,19 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/16 11:34:23 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/16 15:21:46 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
-// Estructura temporal de tokenizacion
+/* ************************************************************************** */
+/*                                  INCLUDES                                  */
+/* ************************************************************************** */
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+
+/* ************************************************************************** */
+/*                                   LEXER                                    */
+/* ************************************************************************** */
+
+/* Token types produced by the tokenizer */
 typedef enum e_token_type
 {
 	TOK_WORD,
@@ -24,16 +36,19 @@ typedef enum e_token_type
 	TOK_REDIR_OUT,
 	TOK_APPEND,
 	TOK_HEREDOC
-} 	t_token_type;
+}	t_token_type;
 
 typedef struct s_token
 {
-	t_token_type		type;
-	char				*value;
-	struct s_token		*next;
-} 	t_token;
+	t_token_type	type;
+	char			*value;
+	struct s_token	*next;
+}	t_token;
 
-// Estructura final
+/* ************************************************************************** */
+/*                                   PARSER                                   */
+/* ************************************************************************** */
+
 typedef enum e_redir_type
 {
 	R_IN,
@@ -44,15 +59,15 @@ typedef enum e_redir_type
 
 typedef struct s_redir
 {
-	t_redir_type	type;
-	char			*target;
-	struct s_redir	*next;
+	t_redir_type		type;
+	char				*target;
+	struct s_redir		*next;
 }	t_redir;
 
 typedef struct s_command
 {
-	char		**argv;    // argumentos finales del comando
-	t_redir		*redirs;  // TODAS las redirecciones en orden
+	char		**argv;		/* final argv for execve / builtins */
+	t_redir		*redirs;	/* redirections in order */
 	int			is_builtin;
 }	t_command;
 
@@ -62,16 +77,37 @@ typedef struct s_pipeline
 	struct s_pipeline	*next;
 }	t_pipeline;
 
-//funciones
+/* ************************************************************************** */
+/*                                    SHELL                                   */
+/* ************************************************************************** */
+
+typedef struct s_shell
+{
+	char		*line;			/* current readline() buffer */
+	char		**envp;			/* environment (temporary as char**) */
+	int			exit_status;	/* $? */
+	t_token		*tokens;		/* lexer output for current line */
+	t_pipeline	*pipeline;		/* parser output for current line */
+}	t_shell;
+
+/* ************************************************************************** */
+/*                                  TOKENIZER                                 */
+/* ************************************************************************** */
+
 int		is_space(char c);
 int		str_len_quote(char *str, int i, char q);
 int		str_len_space(char *str, int i, char q);
 char	*word_dup(char *line, int i, int wordlen, char q);
 t_token	*tokenizer(char *line);
 
-//funciones para listas
+/* ************************************************************************** */
+/*                                 TOKEN LIST                                 */
+/* ************************************************************************** */
+
 t_token	*token_new(t_token_type type, char *value);
 void	token_add_back(t_token **lst, t_token *new_tok);
 void	token_free_one(t_token *tok);
 void	token_free_all(t_token **lst);
 void	token_debug_print(const t_token *lst);
+
+#endif

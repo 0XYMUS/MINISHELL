@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/16 18:24:18 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 11:53:57 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,27 +51,22 @@ static int	type_operator(t_token_type type, int *i, t_token **lst)
 
 static int	tokenizer2(char *line, t_token	**lst, int *i)
 {
-	if (line[*i] == '<' && line[*i + 1] == '<')
-	{
-		if (type_operator(TOK_HEREDOC, i, lst) == -1)
-			return (token_free_all(lst), -1);
-	}
+	int	error;
+	
+	error = 0;
+	if (line[*i] == '|')
+		error = type_operator(TOK_PIPE, &i, &lst);
+	else if (line[*i] == '<' && line[*i + 1] == '<')
+		error = type_operator(TOK_HEREDOC, i, lst);
 	else if (line[*i] == '>' && line[*i + 1] == '>')
-	{
-		if (type_operator(TOK_APPEND, i, lst) == -1)
-			return (token_free_all(lst), -1);
-	}
+		error = type_operator(TOK_APPEND, i, lst);
 	else if (line[*i] == '<')
-	{
-		if (type_operator(TOK_REDIR_IN, i, lst) == -1)
-			return (token_free_all(lst), -1);
-	}
+		error = type_operator(TOK_REDIR_IN, i, lst);
 	else if (line[*i] == '>')
-	{
-		if (type_operator(TOK_REDIR_OUT, i, lst) == -1)
-			return (token_free_all(lst), -1);
-	}
+		error = type_operator(TOK_REDIR_OUT, i, lst);
 	else if (type_word(line, i, lst) == -1)
+		error = -1;
+	if (error == -1)
 		return (token_free_all(lst), -1);
 	return (0);
 }
@@ -85,22 +80,12 @@ t_token	*tokenizer(char *line)
 	i = 0;
 	while (line[i])
 	{
-		while (is_space(line[i]) && line[i])
+		while (line[i] && is_space(line[i]))
 			i++;
 		if (!line[i])
 			break ;
-		if (line[i] == '|')
-		{
-			if (type_operator(TOK_PIPE, &i, &lst) == -1)
-				return (token_free_all(&lst), NULL);
-		}
-		else
-		{
-			if (tokenizer2(line, &lst, &i) == -1)
-				return (token_free_all(&lst), NULL);
-		}
+		if (tokenizer2(line, &lst, &i) == -1)
+			return (token_free_all(&lst), NULL);
 	}
-	if (getenv("MS_DEBUG_LEXER"))
-		token_debug_print(lst);
 	return (lst);
 }

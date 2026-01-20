@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/19 14:13:29 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 11:00:56 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ int	word_len_quote(char *line, int i)
 	q = 0;
 	while(line[i] && (!is_space(line[i]) || q != 0) && (!is_key(line[i]) || q != 0))
 		out_len = word_len_quote_helper(line, out_len, &i, &q);
+	if (out_len == -1)
+		return (-1);
 	return (out_len);
 }
 

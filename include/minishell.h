@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/16 18:10:02 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 11:34:07 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_redir
 typedef struct s_command
 {
 	char		**argv;		/* final argv for execve / builtins */
+	int			**space;
 	t_redir		*redirs;	/* redirections in order */
 	int			is_builtin;
 }	t_command;

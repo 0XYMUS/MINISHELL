@@ -22,6 +22,7 @@ SRC_FILES	=	main.c \
 				token/token_manage.c \
 				parse/parse.c \
 				builtins/echo.c \
+				exec/exec.c \
 
 # Generación automática de rutas
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

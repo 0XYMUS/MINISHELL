@@ -1,38 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/16 12:22:52 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/20 18:16:51 by julepere         ###   ########.fr       */
+/*   Created: 2026/01/20 17:51:02 by julepere          #+#    #+#             */
+/*   Updated: 2026/01/20 17:51:31 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	xy_n_flag()
-{
-	
-}
-
-int	xy_echo(t_command *cmd, t_shell *sh)
-{
-	int i;
-	int n_flag;
-
-	i = 1;
-	n_flag = 0;
-	if(!cmd || !cmd->argv)
-	{
-		sh->exit_status = 0;
-		return (0);
-	}
-	while (cmd->argv[i])
-	{
-		
-	}
-	if (!n_flag)
-   		write(1, "\n", 1);
-}

@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 16:13:52 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/20 17:56:29 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ typedef enum e_builtin
 
 typedef struct s_command
 {
-	char		**argv;		/* final argv for execve / builtins */
+	char		**argv;			/* final argv for execve / builtins */
 	int			**space;
-	t_redir		*redirs;	/* redirections in order */
+	t_redir		*redirs;		/* redirections in order */
 	t_builtin	builtin;
 }	t_command;
 

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 11:53:57 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 13:44:22 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,14 @@ static int	type_word(char *line, int *i, t_token **lst)
 }
 
 
-static int	type_operator(t_token_type type, int *i, t_token **lst)
+static int	type_operator(t_token_type type, int *i, t_token **lst, char *line)
 {
 	t_token	*token;
 
-	token = token_new(type, NULL);
+	if (is_space(line[*i + 1]))
+		token = token_new(type, NULL, 1);
+	else
+		token = token_new(type, NULL, 0);
 	if (!token)
 		return (-1);
 	token_add_back(lst, token);
@@ -55,15 +58,15 @@ static int	tokenizer2(char *line, t_token	**lst, int *i)
 	
 	error = 0;
 	if (line[*i] == '|')
-		error = type_operator(TOK_PIPE, &i, &lst);
+		error = type_operator(TOK_PIPE, i, lst, line);
 	else if (line[*i] == '<' && line[*i + 1] == '<')
-		error = type_operator(TOK_HEREDOC, i, lst);
+		error = type_operator(TOK_HEREDOC, i, lst, line);
 	else if (line[*i] == '>' && line[*i + 1] == '>')
-		error = type_operator(TOK_APPEND, i, lst);
+		error = type_operator(TOK_APPEND, i, lst, line);
 	else if (line[*i] == '<')
-		error = type_operator(TOK_REDIR_IN, i, lst);
+		error = type_operator(TOK_REDIR_IN, i, lst, line);
 	else if (line[*i] == '>')
-		error = type_operator(TOK_REDIR_OUT, i, lst);
+		error = type_operator(TOK_REDIR_OUT, i, lst, line);
 	else if (type_word(line, i, lst) == -1)
 		error = -1;
 	if (error == -1)

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 11:00:56 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 13:56:19 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,10 @@ int	word_len(char *line, int i)
 	
 	i_initial = i;
 	q = 0;
-	while(line[i] && (!is_space(line[i]) || q != 0) && (!is_key(line[i]) || q != 0))
-	{
-		if (line[i] == '\'' || line[i] == '"')
-		{
-			q = line[i];
-			i++;
-			while (line[i] && line[i] != q)
-				i++;
-			if (line[i] && line[i] == q)
-			{	
-				q = 0;
-				i++;
-			}
-			else
-				return (-1);
-		}
-		else
-			i++;
-	}
+	if (line[i] != '\'' || line[i] != '"')
+		q = line[i];
+	while (line[i] && !is_space(line[i]) )
+	
 	return (i - i_initial);
 }
 

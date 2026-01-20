@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 11:34:07 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 13:39:04 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
+	int				space;
 	struct s_token	*next;
 }	t_token;
 
@@ -105,7 +106,7 @@ int		word_len(char *line, int i);
 /*                                 TOKEN LIST                                 */
 /* ************************************************************************** */
 
-t_token	*token_new(t_token_type type, char *value);
+t_token	*token_new(t_token_type type, char *value, int space);
 void	token_add_back(t_token **lst, t_token *new_tok);
 void	token_free_one(t_token *tok);
 void	token_free_all(t_token **lst);

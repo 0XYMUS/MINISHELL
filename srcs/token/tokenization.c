@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 14:55:31 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 16:36:57 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static int	type_word(char *line, int *i, t_token **lst)
 	int		wordlen;
 	char	*word;
 	t_token	*token;
+	int		space;
 
 	token = NULL;
 	wordlen = word_len(line, *i);
@@ -25,6 +26,11 @@ static int	type_word(char *line, int *i, t_token **lst)
 	word = word_dup(line, *i, wordlen);
 	if (!word)
 		return (-1);
+	if (is_space(line[*i + wordlen + 1]))
+		space = 1;
+	else
+		space = 0;
+	return (0);
 	token = token_new(TOK_WORD, word, 1);
 	if (!token)
 		return (free(word), -1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 16:01:30 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 16:10:45 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	is_space(char c)
 			c == '\f');
 }
 
-int	is_key(char c)
+static int	is_key(char c)
 {
 	return (c == '|'  || c == '<' || c == '>' || c == '\'' || c == '"');
 }

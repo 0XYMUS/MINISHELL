@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 14:02:11 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/20 16:13:52 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,24 +104,40 @@ typedef struct s_shell
 	t_pipeline	*pipeline;		/* parser output for current line */
 }	t_shell;
 
-/* ************************************************************************** */
-/*                                  TOKENIZER                                 */
-/* ************************************************************************** */
 
+
+/* ************************************************************************** */
+/*                                    UTILS                                   */
+/* ************************************************************************** */
+/* token_utils.c */
 int		is_space(char c);
-int		word_len_quote(char *line, int i);
 char	*word_dup(char *line, int i, int wordlen);
-t_token	*tokenizer(char *line);
 int		word_len(char *line, int i);
 
 /* ************************************************************************** */
-/*                                 TOKEN LIST                                 */
+/*                                  TOKENIZER                                 */
 /* ************************************************************************** */
+/* tokenizaion.c */
+t_token	*tokenizer(char *line);
 
+/* token_manage.c */
 t_token	*token_new(t_token_type type, char *value, int space);
 void	token_add_back(t_token **lst, t_token *new_tok);
 void	token_free_one(t_token *tok);
 void	token_free_all(t_token **lst);
 void	token_debug_print(const t_token *lst);
+
+/* ************************************************************************** */
+/*                                   PARSER                                   */
+/* ************************************************************************** */
+
+
+/* ************************************************************************** */
+/*                                 BUILT-INS                                  */
+/* ************************************************************************** */
+/* echo.c */
+int		xy_echo(t_command *cmd, t_shell *sh);
+
+
 
 #endif

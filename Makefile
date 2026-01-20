@@ -2,24 +2,26 @@
 #                                 VARIABLES                                    #
 # ============================================================================ #
 
-NAME        = minishell
-CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -g3 
+NAME		= minishell
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror -g3 
 # -g3 se usa para usar valgrind/gdb
 # sirve para generar mas info en caso de errores al compilar
 
 # Directorios
-SRC_DIR     = srcs
-OBJ_DIR     = objects
-INC_DIR     = include
+SRC_DIR		= srcs
+OBJ_DIR		= objects
+INC_DIR		= include
 
 # Archivos Fuente (Añade aquí tus nuevos archivos .c)
 # Archivos Fuente
-SRC_FILES	= main.c \
-               token/tokenization.c \
-               token/token_utils.c \
-               utils/utils.c \
-			   utils/errors.c
+SRC_FILES	=	main.c \
+				utils/token_utils.c \
+				utils/errors.c \
+				token/tokenization.c \
+				token/token_manage.c \
+				parse/parse.c \
+				builtins/echo.c \
 
 # Generación automática de rutas
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

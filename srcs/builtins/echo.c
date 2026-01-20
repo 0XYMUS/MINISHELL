@@ -6,16 +6,19 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 12:22:52 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/20 14:02:59 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/20 16:16:23 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+/* 
+static int	xy_n_flag()
+{
+	
+}
 
-int xy_echo(t_command *cmd, t_shell *shell)
+int	xy_echo(t_command *cmd, t_shell *sh)
 {
 	int i;
 	int n_flag;
-
-	(void)shell;
-}
+} */

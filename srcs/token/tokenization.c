@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 13:44:22 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:55:31 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	type_word(char *line, int *i, t_token **lst)
 	word = word_dup(line, *i, wordlen);
 	if (!word)
 		return (-1);
-	token = token_new(TOK_WORD, word);
+	token = token_new(TOK_WORD, word, 1);
 	if (!token)
 		return (free(word), -1);
 	token_add_back(lst, token);

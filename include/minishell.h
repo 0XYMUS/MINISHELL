@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 13:39:04 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:02:11 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,29 @@ typedef struct s_redir
 	struct s_redir		*next;
 }	t_redir;
 
+typedef enum e_builtin
+{
+    BI_NONE,
+    BI_ECHO,
+    BI_CD,
+    BI_PWD,
+    BI_EXPORT,
+    BI_UNSET,
+    BI_ENV,
+    BI_EXIT
+} t_builtin;
+
 typedef struct s_command
 {
 	char		**argv;		/* final argv for execve / builtins */
 	int			**space;
 	t_redir		*redirs;	/* redirections in order */
-	int			is_builtin;
+	t_builtin	builtin;
 }	t_command;
 
 typedef struct s_pipeline
 {
-	t_command			*cmd;
+	t_command			cmd;
 	struct s_pipeline	*next;
 }	t_pipeline;
 

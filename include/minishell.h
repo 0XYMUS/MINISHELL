@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 17:56:29 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/21 13:52:04 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ typedef struct s_shell
 /* ************************************************************************** */
 /*                                    UTILS                                   */
 /* ************************************************************************** */
+/* utils.c */
+size_t	xy_strlen(const char *s);
 /* token_utils.c */
 int		is_space(char c);
 char	*word_dup(char *line, int i, int wordlen);
@@ -138,6 +140,11 @@ void	token_debug_print(const t_token *lst);
 /* echo.c */
 int		xy_echo(t_command *cmd, t_shell *sh);
 
-
-
+/* ************************************************************************** */
+/*                                   EXEC                                     */
+/* ************************************************************************** */
+/* exec.c */
+int	token_to_command_tmp(t_token *toks, t_command *cmd);
+int	cmd_type_and_exec_tmp(t_command *cmd, t_shell *sh);
+int	exec_from_tokens_tmp(t_token *toks, t_shell *sh);
 #endif

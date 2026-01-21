@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/20 16:36:57 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/21 12:21:33 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ static int	type_word(char *line, int *i, t_token **lst)
 	word = word_dup(line, *i, wordlen);
 	if (!word)
 		return (-1);
-	if (is_space(line[*i + wordlen + 1]))
+
+	space = 0;
+	if (is_space(line[*i + wordlen]))
 		space = 1;
-	else
-		space = 0;
-	return (0);
-	token = token_new(TOK_WORD, word, 1);
+
+	token = token_new(TOK_WORD, word, space);
 	if (!token)
 		return (free(word), -1);
 	token_add_back(lst, token);

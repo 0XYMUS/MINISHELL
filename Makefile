@@ -18,6 +18,7 @@ INC_DIR		= include
 SRC_FILES	=	main.c \
 				utils/token_utils.c \
 				utils/errors.c \
+				utils/utils.c \
 				token/tokenization.c \
 				token/token_manage.c \
 				parse/parse.c \

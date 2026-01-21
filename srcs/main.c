@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/19 13:46:13 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/21 13:58:36 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,14 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	t_token	*lst;
+	t_shell	sh;
 
+	
 	(void)argc;
 	(void)argv;
 	(void)envp;
 	lst = NULL;
+	sh.exit_status = 0;
 	while(1)
 	{
 		line = readline("minishell$ ");
@@ -39,6 +42,10 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		lst = tokenizer(line);
 		token_debug_print(lst);
+		/*test         PRUEBA DE COMANDOS		 test*/
+		/*test*/exec_from_tokens_tmp(lst, &sh);
+		/*test*/token_free_all(&lst);
+	
 		free(line);
 	}
 	token_free_all(&lst);

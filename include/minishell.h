@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/21 13:52:04 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/23 12:00:53 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ typedef enum e_builtin
 
 typedef struct s_command
 {
-	char		**argv;			/* final argv for execve / builtins */
+	char		**argv;
 	int			**space;
-	t_redir		*redirs;		/* redirections in order */
+	t_redir		*redirs;
 	t_builtin	builtin;
 }	t_command;
 

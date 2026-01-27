@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/26 13:02:43 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/27 13:02:42 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef struct s_command
 
 typedef struct s_pipeline
 {
-	t_command			cmd;
+	t_command			*cmd;
 	struct s_pipeline	*next;
 }	t_pipeline;
 

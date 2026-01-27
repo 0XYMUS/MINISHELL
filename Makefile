@@ -19,9 +19,11 @@ SRC_FILES	=	main.c \
 				utils/token_utils.c \
 				utils/errors.c \
 				utils/utils.c \
+				utils/parse_utils.c \
 				token/tokenization.c \
 				token/token_manage.c \
 				parse/parse.c \
+				parse/pipeline_utils.c \
 				builtins/echo.c \
 				exec/exec.c \
 

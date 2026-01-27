@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/27 13:21:53 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/27 17:22:04 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ typedef struct s_shell
 /* ************************************************************************** */
 /* utils.c */
 size_t	xy_strlen(const char *s);
+char	*ft_strdup(const char *s);
 /* token_utils.c */
 int		is_space(char c);
 int		is_redir(t_token_type type);
@@ -135,6 +136,8 @@ void	token_debug_print(const t_token *lst);
 /* ************************************************************************** */
 t_pipeline	*pipeline_new(void);
 void		pipeline_add_back(t_pipeline **lst, t_pipeline *new_node);
+t_redir	*redir_new(t_token_type type, char *target);
+void		redir_add_back(t_redir **lst, t_redir *new_node);
 
 /* ************************************************************************** */
 /*                                 BUILT-INS                                  */

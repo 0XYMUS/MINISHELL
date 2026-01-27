@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/21 14:00:34 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/27 20:00:40 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,13 @@ int	cmd_type_and_exec_tmp(t_command *cmd, t_shell *sh)
 		xy_echo(cmd, sh);
 		return (1);
 	}
+	if (cmd->argv && cmd->argv[0] && xy_streq(cmd->argv[0], "pwd"))
+	{
+		cmd->builtin = BI_PWD;
+		xy_pwd(cmd, sh);
+		return (1);
+	}
+
 	cmd->builtin = BI_NONE;
 	return (0);
 }

@@ -6,38 +6,43 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/26 15:55:43 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/27 15:05:09 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parse_simple_command(t_token **token)
+t_pipeline	**parse_simple_command(t_pipeline **lst, t_token **token)
 {
-	t_command	cmd;
+	t_pipeline	*node;
 	int	n_red;
 	int	n_arg;
 
 	n_red = 0;
 	n_arg = 0;
 	if ((*token)->type == TOK_PIPE)
-		return (-1);
+		return (NULL);
+	node = pipeline_new();
+	if (!node)
+		return (NULL);
 	while ((*token)->type != TOK_PIPE)
 	{
-		if (add_reddir(token, &cmd, n_red) == -1)
-			return (-1);
-		if (add_word(token, &cmd, n_arg) == -1)
-			return (-1);
+		if (add_reddir(token, &node->cmd, n_red) == -1)
+			return (NULL);
+		if (add_word(token, &node->cmd, n_arg) == -1)
+			return (NULL);
 	}
 	if (n_arg < 1)
-	return (-1);
+		return (NULL);
+	pipeline_add_back(lst, node);
+	return (lst);
 }
 
 static int	add_word(t_token **token, t_command **cmd, int *n_arg)
 {
 	if ((*token)->type == TOK_WORD)
 	{
-		(*cmd)->argv[*n_arg] = token;
+		(*cmd)->argv[*n_arg] = (*token)->value;
 		(*n_arg)++;
 		*token = (*token)->next;
 	}
@@ -65,32 +70,11 @@ static int	add_reddir(t_token **token, t_command **cmd, int  *n_red)
 	}
 	return (0);
 }
-t_pipeline	parse (t_token **token)
+t_pipeline	**parse (t_token **token)
 {
-	t_pipeline	lst;
+	t_pipeline	**lst;
 
 	while (token)
-	{
-		parse_simple_command(token);
-	}
-}
-
-t_pipeline	pipeline_new()
-{
-	t_pipeline	*;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = type;
-	if (type != TOK_WORD)
-		token->value = NULL;
-	else
-		token->value = value;
-	if (space == 1)
-		token->space = 1;
-	else
-		token->space = 0;
-	token->next = NULL;
-	return (token);
+		lst = parse_simple_command(lst, token);
+	return (lst);
 }

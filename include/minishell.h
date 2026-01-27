@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/23 12:00:53 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/26 13:02:43 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ typedef struct s_shell
 size_t	xy_strlen(const char *s);
 /* token_utils.c */
 int		is_space(char c);
+int		is_redir(t_token_type type);
 char	*word_dup(char *line, int i, int wordlen);
 int		word_len(char *line, int i);
 

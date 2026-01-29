@@ -6,21 +6,11 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/27 17:34:27 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/29 16:00:22 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	command_init(t_command **cmd)
-{
-	if (!cmd)
-		return ;
-	(*cmd)->argv = NULL;
-	(*cmd)->space = NULL;
-	(*cmd)->redirs = NULL;
-	(*cmd)->builtin = BI_NONE;
-}
 
 t_pipeline	*pipeline_new(void)
 {
@@ -29,7 +19,13 @@ t_pipeline	*pipeline_new(void)
 	node = (t_pipeline *)malloc(sizeof(t_pipeline));
 	if (!node)
 		return (NULL);
-	command_init(&node->cmd);
+	node->cmd = malloc(sizeof(t_command));
+	if (!node->cmd)
+		return (NULL);
+	node->cmd->argv = NULL;
+	node->cmd->space = NULL;
+	node->cmd->redirs = NULL;
+	node->cmd->builtin = BI_NONE;
 	node->next = NULL;
 	return (node);
 }

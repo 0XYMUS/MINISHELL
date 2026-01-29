@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/27 17:30:35 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/01/29 16:58:40 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,16 @@ static int	add_word(t_token **token, t_command **cmd, int *n_arg)
 {
 	if ((*token)->type == TOK_WORD)
 	{
-		(*cmd)->argv[*n_arg] = (*token)->value;
+		(*cmd)->argv[*n_arg] = ft_strdup((*token)->value);
+		if (!(*cmd)->argv[*n_arg])
+			return (-1);
 		(*n_arg)++;
 		*token = (*token)->next;
 	}
 	return (0);
 }
 
-static int	add_reddir(t_token **token, t_command **cmd, int  *n_red)
+static int	add_reddir(t_token **token, t_command **cmd)
 {
 	t_redir	*redir;
 
@@ -32,44 +34,57 @@ static int	add_reddir(t_token **token, t_command **cmd, int  *n_red)
 		if (!(*token)->next || (*token)->next->type != TOK_WORD)
 			return (-1);
 		redir = redir_new((*token)->type, (*token)->next->value);
+		if (!redir)
+			return (-1);
 		redir_add_back(&(*cmd)->redirs, redir);
-		(*n_red)++;
 		*token = (*token)->next->next;
 	}
 	return (0);
 }
 
-t_pipeline	**parse_simple_command(t_pipeline **lst, t_token **token)
+int	parse_simple_command(t_pipeline **lst, t_token **token)
 {
 	t_pipeline	*node;
-	int	n_red;
-	int	n_arg;
+	int	n_argv;
 
-	n_red = 0;
-	n_arg = 0;
 	if ((*token)->type == TOK_PIPE)
-		return (NULL);
+		return (-1);
 	node = pipeline_new();
 	if (!node)
-		return (NULL);
+		return (-1);
+	n_argv = argv_len(*token);
+	if (n_argv < 0)
+		return (pipeline_free_all(&node), -1);
+	node->cmd->argv = malloc(sizeof (char *) * (n_argv + 1));
+	if (!node->cmd->argv)
+		return (pipeline_free_all(&node), -1);
+	node->cmd->argv[n_argv] = NULL;
+	n_argv = 0;
 	while (*token && (*token)->type != TOK_PIPE)
 	{
-		if (add_reddir(token, &node->cmd, &n_red) == -1)
-			return (NULL);
-		if (add_word(token, &node->cmd, &n_arg) == -1)
-			return (NULL);
+		if (add_reddir(token, &node->cmd) == -1)
+			return (pipeline_free_all(&node), -1);
+		if (add_word(token, &node->cmd, &n_argv) == -1)
+			return (pipeline_free_all(&node), -1);
 	}
-	if (n_arg < 1)
-		return (NULL);
 	pipeline_add_back(lst, node);
-	return (lst);
+	return (0);
 }
 
-t_pipeline	**parse (t_token **token)
+t_pipeline	*parse (t_token **token)
 {
-	t_pipeline	**lst;
+	t_pipeline	*lst;
 
-	while (token)
-		lst = parse_simple_command(lst, token);
+	lst = NULL;
+	while (*token)
+	{
+		if (parse_simple_command(&lst, token) == -1)
+			return (pipeline_free_all(&lst), NULL);
+		if (*token && (*token)->type == TOK_PIPE
+			&& (!(*token)->next || (*token)->next->type == TOK_PIPE))
+			return (pipeline_free_all(&lst), NULL);
+		else if (*token && (*token)->type == TOK_PIPE)
+			*token = (*token)->next;
+	}
 	return (lst);
 }

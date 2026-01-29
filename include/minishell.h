@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/28 13:21:41 by julepere         ###   ########.fr       */
+/*   Updated: 2026/01/29 16:06:41 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,9 +135,12 @@ void	token_debug_print(const t_token *lst);
 /*                                   PARSER                                   */
 /* ************************************************************************** */
 t_pipeline	*pipeline_new(void);
+t_pipeline	*parse (t_token **token);
 void		pipeline_add_back(t_pipeline **lst, t_pipeline *new_node);
-t_redir	*redir_new(t_token_type type, char *target);
+void		pipeline_free_all(t_pipeline **lst);
+t_redir		*redir_new(t_token_type type, char *target);
 void		redir_add_back(t_redir **lst, t_redir *new_node);
+int			argv_len(t_token *token);
 
 /* ************************************************************************** */
 /*                                 BUILT-INS                                  */

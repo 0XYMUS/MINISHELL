@@ -24,6 +24,7 @@ SRC_FILES	=	main.c \
 				token/token_manage.c \
 				parse/parse.c \
 				parse/pipeline_utils.c \
+				parse/free_pipeline.c \
 				builtins/echo.c \
 				builtins/pwd.c \
 				exec/exec.c \

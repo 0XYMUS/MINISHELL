@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/29 16:06:41 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/03 16:45:47 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,35 @@ typedef struct s_pipeline
 	struct s_pipeline	*next;
 }	t_pipeline;
 
+typedef enum e_parse_errcode
+{
+	PERR_NONE,
+	PERR_PIPE_START,
+	PERR_PIPE_END,
+	PERR_PIPE_DOUBLE,
+	PERR_REDIR_NO_TARGET,
+	PERR_UNEXPECTED_TOKEN,
+	PERR_OOM
+}	t_parse_errcode;
+
+typedef enum e_parse_near
+{
+	PNEAR_NONE,
+	PNEAR_NEWLINE,
+	PNEAR_PIPE,
+	PNEAR_REDIR_IN,
+	PNEAR_REDIR_OUT,
+	PNEAR_APPEND,
+	PNEAR_HEREDOC,
+	PNEAR_WORD
+}	t_parse_near;
+
+typedef struct s_parse_error
+{
+	t_parse_errcode	code;
+	t_parse_near		near;
+}t_parse_error;
+
 /* ************************************************************************** */
 /*                                    SHELL                                   */
 /* ************************************************************************** */
@@ -135,12 +164,22 @@ void	token_debug_print(const t_token *lst);
 /*                                   PARSER                                   */
 /* ************************************************************************** */
 t_pipeline	*pipeline_new(void);
-t_pipeline	*parse (t_token **token);
+t_pipeline	*parse(t_token **token, t_parse_error *err);
+int			parse_simple_command(t_pipeline **lst, t_token **token,
+				t_parse_error *err);
 void		pipeline_add_back(t_pipeline **lst, t_pipeline *new_node);
 void		pipeline_free_all(t_pipeline **lst);
+void		pipeline_debug_print(const t_pipeline *lst);
 t_redir		*redir_new(t_token_type type, char *target);
 void		redir_add_back(t_redir **lst, t_redir *new_node);
 int			argv_len(t_token *token);
+
+void		parse_error_init(t_parse_error *err);
+void		parse_error_set(t_parse_error *err, t_parse_errcode code,
+				t_parse_near near);
+void		parse_error_print(const t_parse_error *err);
+int			parse_error_status(const t_parse_error *err);
+int			validate_syntax(t_token *t, t_parse_error *err);
 
 /* ************************************************************************** */
 /*                                 BUILT-INS                                  */

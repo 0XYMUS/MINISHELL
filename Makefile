@@ -23,6 +23,8 @@ SRC_FILES	=	main.c \
 				token/tokenization.c \
 				token/token_manage.c \
 				parse/parse.c \
+				parse/parse_error.c \
+				parse/validate_syntax.c \
 				parse/pipeline_utils.c \
 				parse/free_pipeline.c \
 				builtins/echo.c \

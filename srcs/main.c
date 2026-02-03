@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/21 13:58:36 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/03 16:45:47 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	t_token	*lst;
+	t_pipeline	*pl;
 	t_shell	sh;
+	t_parse_error	err;
 
 	
 	(void)argc;
 	(void)argv;
 	(void)envp;
+	(void)sh;
 	lst = NULL;
 	sh.exit_status = 0;
 	while(1)
@@ -41,10 +44,19 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		lst = tokenizer(line);
-		token_debug_print(lst);
-		/*test         PRUEBA DE COMANDOS		 test*/
-		/*test*/exec_from_tokens_tmp(lst, &sh);
-		/*test*/token_free_all(&lst);
+		// token_debug_print(lst); //(para probar tokenizer)
+		pl = parse(&lst, &err);
+		if (!pl)
+		{
+			sh.exit_status = parse_error_status(&err);
+			parse_error_print(&err);
+		}
+		else
+		{
+			pipeline_debug_print(pl); // para probar parseo
+			pipeline_free_all(&pl);
+		}
+		token_free_all(&lst);
 	
 		free(line);
 	}

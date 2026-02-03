@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/29 16:18:20 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/03 12:17:14 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ char	*ft_strdup(const char *s)
 int	argv_len(t_token *token)
 {
 	int	n_argv;
-	
+
 	n_argv = 0;
 	while (token && token->type != TOK_PIPE)
 	{
 		if (is_redir(token->type))
 		{
-			if (!token->next || !token->next->next)
+			if (!token->next || token->next->type != TOK_WORD)
 				return (-1);
 			token = token->next->next;
 		}

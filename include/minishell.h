@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/03 16:45:47 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/04 12:15:38 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ typedef struct s_redir
 	struct s_redir		*next;
 }	t_redir;
 
-typedef enum e_builtin
+/* Command Types */
+
+typedef enum e_builtin_cmd
 {
     BI_NONE,
     BI_ECHO,
@@ -75,14 +77,27 @@ typedef enum e_builtin
     BI_UNSET,
     BI_ENV,
     BI_EXIT
-} t_builtin;
+} t_builtin_cmd;
+
+typedef enum e_cmd_type
+{
+	CMD_BUILTIN,
+	CMD_EXTERNAL,
+	CMD_UNKNOWN
+}	t_cmd_type;
+
+typedef struct s_cmd_info
+{
+	t_cmd_type		type;
+	t_builtin_cmd	builtin;
+}	t_cmd_info;
 
 typedef struct s_command
 {
 	char		**argv;
 	int			**space;
 	t_redir		*redirs;
-	t_builtin	builtin;
+	t_cmd_info	cmd_info;
 }	t_command;
 
 typedef struct s_pipeline
@@ -117,7 +132,7 @@ typedef enum e_parse_near
 typedef struct s_parse_error
 {
 	t_parse_errcode	code;
-	t_parse_near		near;
+	t_parse_near	near;
 }t_parse_error;
 
 /* ************************************************************************** */
@@ -189,6 +204,7 @@ int		xy_echo(t_command *cmd, t_shell *sh);
 /* pwd.c */
 int		xy_pwd(t_command *cmd, t_shell *sh);
 /* env.c */
+int		xy_env(t_command *cmd, t_shell *sh);
 /* ************************************************************************** */
 /*                                   EXEC                                     */
 /* ************************************************************************** */

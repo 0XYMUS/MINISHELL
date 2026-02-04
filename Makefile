@@ -29,6 +29,7 @@ SRC_FILES	=	main.c \
 				parse/free_pipeline.c \
 				builtins/echo.c \
 				builtins/pwd.c \
+				builtins/env.c \
 				exec/exec.c \
 
 # Generación automática de rutas

@@ -63,7 +63,8 @@ t_pipeline	*pipeline_new(void)
 	node->cmd->argv = NULL;
 	node->cmd->space = NULL;
 	node->cmd->redirs = NULL;
-	node->cmd->builtin = BI_NONE;
+	node->cmd->cmd_info.type = CMD_UNKNOWN;
+	node->cmd->cmd_info.builtin = BI_NONE;
 	node->next = NULL;
 	return (node);
 }

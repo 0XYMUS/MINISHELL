@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/03 16:45:47 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/04 12:22:16 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ int	main(int argc, char **argv, char **envp)
 	
 	(void)argc;
 	(void)argv;
-	(void)envp;
-	(void)sh;
 	lst = NULL;
+	sh.envp = envp;
 	sh.exit_status = 0;
 	while(1)
 	{
@@ -45,6 +44,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		lst = tokenizer(line);
 		// token_debug_print(lst); //(para probar tokenizer)
+		exec_from_tokens_tmp(lst, &sh); // para probar las funciones de los comandos
 		pl = parse(&lst, &err);
 		if (!pl)
 		{

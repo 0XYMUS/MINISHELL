@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/04 12:15:38 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/05 14:54:04 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,7 @@ void		parse_error_set(t_parse_error *err, t_parse_errcode code,
 void		parse_error_print(const t_parse_error *err);
 int			parse_error_status(const t_parse_error *err);
 int			validate_syntax(t_token *t, t_parse_error *err);
+void	is_builtin(char *argv, t_pipeline **node);
 
 /* ************************************************************************** */
 /*                                 BUILT-INS                                  */

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/03 17:06:22 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/05 15:14:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,12 @@ static int	add_reddir(t_token **token, t_command **cmd, t_parse_error *err)
 	return (0);
 }
 
-int	parse_simple_command(t_pipeline **lst, t_token **token, t_parse_error *err)
+int	init_command(t_pipeline **node, t_token **token, t_parse_error *err)
 {
-	t_pipeline	*node;
 	int	n_argv;
 
-	node = pipeline_new();
-	if (!node)
+	*node = pipeline_new();
+	if (!(*node))
 	{
 		errno = ENOMEM;
 		parse_error_set(err, PERR_OOM, PNEAR_NONE);
@@ -69,15 +68,51 @@ int	parse_simple_command(t_pipeline **lst, t_token **token, t_parse_error *err)
 	}
 	n_argv = argv_len(*token);
 	if (n_argv < 0)
-		return (pipeline_free_all(&node), -1);
-	node->cmd->argv = malloc(sizeof (char *) * (n_argv + 1));
-	if (!node->cmd->argv)
+		return (pipeline_free_all(node), -1);
+	(*node)->cmd->argv = malloc(sizeof (char *) * (n_argv + 1));
+	if (!(*node)->cmd->argv)
 	{
 		errno = ENOMEM;
 		parse_error_set(err, PERR_OOM, PNEAR_NONE);
-		return (pipeline_free_all(&node), -1);
+		return (pipeline_free_all(node), -1);
 	}
-	node->cmd->argv[n_argv] = NULL;
+	(*node)->cmd->argv[n_argv] = NULL;
+	return (0);
+}
+
+int	correct_command(char *argv, t_pipeline **node)
+{
+	is_builtin(argv, node);
+	if ((*node)->cmd->cmd_info.type)
+		return (0);
+	is_external(argv, node);
+}
+
+int	check_command(t_pipeline **node,int n_argv,t_parse_error *err)
+{
+	if (!(*node)->cmd->argv && (*node)->cmd->redirs)
+		return (0);
+	if (!(*node)->cmd->argv && !(*node)->cmd->redirs)
+	{
+		errno = ENOMEM;
+		parse_error_set(err, PERR_NONE, PNEAR_NONE);
+		return (-1);
+	}
+	if (correct_command((*node)->cmd->argv[0], node) == -1)
+	{
+		errno = ENOMEM;
+		parse_error_set(err, PERR_UNEXPECTED_TOKEN, PNEAR_WORD);
+		return (-1);
+	}
+}
+
+int	parse_simple_command(t_pipeline **lst, t_token **token, t_parse_error *err)
+{
+	t_pipeline	*node;
+	int	n_argv;
+
+	if (init_command(&node, token, err) == -1)
+		return (-1);
 	n_argv = 0;
 	while (*token && (*token)->type != TOK_PIPE)
 	{
@@ -86,6 +121,8 @@ int	parse_simple_command(t_pipeline **lst, t_token **token, t_parse_error *err)
 		if (*token && add_word(token, &node->cmd, &n_argv, err) == -1)
 			return (pipeline_free_all(&node), -1);
 	}
+	if (check_command(node, n_argv, err) == -1)
+		return (pipeline_free_all(&node), -1);
 	pipeline_add_back(lst, node);
 	return (0);
 }

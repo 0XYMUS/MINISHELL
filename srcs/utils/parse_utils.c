@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 11:43:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:36:58 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,23 @@ void	is_builtin(char *argv, t_pipeline **node)
 		is_builtin2(argv, node);
 }
 
-int	is_external(char *argv, t_pipeline **node)
+int	is_external(char *argv, t_pipeline **node, t_error *err)
 {
-	if (argv[0] == '/' || (argv[0] == '.' && argv[0] == '/'))
+	if (argv[0] == '/' || (argv[0] == '.' && argv[1] == '/'))
 	{
-		if (access(argv,X_OK) == 0 && (*node))
-			return (0);
+		if (access(argv,F_OK) == 0)
+		{
+			if (access(argv, X_OK) == 0)
+				return (0);
+			else
+				return(parse_error_set(err, PERR_PERMISSION_DENIED, PNEAR_NONE), -1);
+		}
+		else
+			return(parse_error_set(err, PERR_NOT_FOUND, PNEAR_NONE), -1);
+	}
+	else
+	{
+		
 	}
 	return (0);
 }

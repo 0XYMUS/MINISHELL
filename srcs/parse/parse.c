@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:53:31 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 15:57:43 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,10 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 
 	if (is_redir((*token)->type))
 	{
-		if (!(*token)->next || (*token)->next->type != TOK_WORD)
-			return (-1);
+		if (!(*token)->next)
+			return (error_set(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE), -1);
+		if ((*token)->next->type != TOK_WORD)
+			return (error_set(err, PERR_REDIR_NO_TARGET, near_from_token((*token)->next->type)), -1);
 		redir = redir_new((*token)->type, (*token)->next->value);
 		if (!redir)
 		{
@@ -80,16 +82,17 @@ int	init_command(t_pipeline **node, t_token **token, t_error *err)
 	return (0);
 }
 
-int	correct_command(char *argv, t_pipeline **node, t_error *err)
+/* int	correct_command(char *argv, t_pipeline **node, t_error *err)
 {
 	is_builtin(argv, node);
 	if ((*node)->cmd->cmd_info.type == CMD_BUILTIN)
 		return (0);
-	is_external(argv, node, err);
+	if (is_external(argv, node, err) == -1)
+		return (-1);
 	return (0);
-}
+} */
 
-int	check_command(t_pipeline **node, t_error *err)
+/* int	check_command(t_pipeline **node, t_error *err)
 {
 	if (!(*node)->cmd->argv[0] && (*node)->cmd->redirs)
 		return (0);
@@ -106,7 +109,7 @@ int	check_command(t_pipeline **node, t_error *err)
 		return (-1);
 	}
 	return (0);
-}
+} */
 
 int	parse_simple_command(t_pipeline **lst, t_token **token, t_error *err)
 {
@@ -123,8 +126,8 @@ int	parse_simple_command(t_pipeline **lst, t_token **token, t_error *err)
 		if (*token && add_word(token, &node->cmd, &n_argv, err) == -1)
 			return (pipeline_free_all(&node), -1);
 	}
-	if (check_command(&node, err) == -1)
-		return (pipeline_free_all(&node), -1);
+	/* if (check_command(&node, err) == -1)
+		return (pipeline_free_all(&node), -1); */
 	pipeline_add_back(lst, node);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:52:23 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 15:48:11 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,9 +192,10 @@ t_redir		*redir_new(t_token_type type, char *target);
 void		redir_add_back(t_redir **lst, t_redir *new_node);
 int			argv_len(t_token *token);
 int			validate_syntax(t_token *t, t_error *err);
-void		is_builtin(char *argv, t_pipeline **node);
+/* void		is_builtin(char *argv, t_pipeline **node); */
 int			xy_streq(const char *a, const char *b);
-int			is_external(char *argv, t_pipeline **node, t_error *err);
+/* int			is_external(char *argv, t_pipeline **node, t_error *err); */
+t_near	near_from_token(t_token_type token);
 
 /* ************************************************************************** */
 /*                                   ERROR                                    */

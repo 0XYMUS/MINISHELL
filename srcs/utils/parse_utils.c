@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:54:14 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 15:26:13 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int is_redir(t_token_type type)
          || type == TOK_REDIR_OUT);
 }
 
-static void	is_builtin2(char *argv, t_pipeline **node)
+/* static void	is_builtin2(char *argv, t_pipeline **node)
 {
 	if (xy_streq(argv, "unset"))
 	{
@@ -35,9 +35,9 @@ static void	is_builtin2(char *argv, t_pipeline **node)
 		(*node)->cmd->cmd_info.type = CMD_BUILTIN;
 		(*node)->cmd->cmd_info.builtin = BI_EXIT;
 	}
-}
+} */
 
-void	is_builtin(char *argv, t_pipeline **node)
+/* void	is_builtin(char *argv, t_pipeline **node)
 {
 	if (xy_streq(argv, "echo"))
 	{
@@ -61,24 +61,29 @@ void	is_builtin(char *argv, t_pipeline **node)
 	}
 	else
 		is_builtin2(argv, node);
-}
+} */
 
-int	is_external(char *argv, t_pipeline **node, t_error *err)
+/* int	is_external(char *argv, t_pipeline **node, t_error *err)
 {
-	if ((argv[0] == '/' || (argv[0] == '.' && argv[1] == '/')) && *node)
+	if (argv[0] == '/' || (argv[0] == '.' && argv[1] == '/')
+	 || (argv[0] == '.' && argv[1] == '.' && argv[2] == '/'))
 	{
 		if (access(argv,F_OK) == 0)
 		{
 			if (access(argv, X_OK) == 0)
+			{
+				(*node)->cmd->cmd_info.type = CMD_EXTERNAL;
 				return (0);
-			else
+			}
+				else
 				return(error_set(err, PERR_PERMISSION_DENIED, PNEAR_NONE), -1);
 		}
 		else
 			return(error_set(err, PERR_NOT_FOUND, PNEAR_NONE), -1);
 	}
+	(*node)->cmd->cmd_info.type = CMD_UNKNOWN;
 	return (0);
-}
+} */
 
 char	*ft_strdup(const char *s)
 {

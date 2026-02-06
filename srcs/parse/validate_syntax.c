@@ -6,13 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:54:50 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 15:47:56 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_near	near_from_token(t_token_type token)
+t_near	near_from_token(t_token_type token)
 {
 	if (token == TOK_PIPE)
 		return (PNEAR_PIPE);
@@ -39,16 +39,16 @@ int	validate_syntax(t_token *token, t_error *err)
 		if (token->type == TOK_PIPE)
 		{
 			if (!token->next)
-				return (error_set(err, 2, 1), -1);
+				return (error_set(err, PERR_PIPE_END, PNEAR_NEWLINE), -1);
 			if (token->next->type == TOK_PIPE)
-				return (error_set(err, 3, 2), -1);
+				return (error_set(err, PERR_PIPE_DOUBLE, PNEAR_PIPE), -1);
 		}
 		if (is_redir(token->type))
 		{
 			if (!token->next)
-				return (error_set(err, 4, PNEAR_NEWLINE), -1);
+				return (error_set(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE), -1);
 			if (token->next->type != TOK_WORD)
-				return (error_set(err, 4, near_from_token(token->next->type)), -1);
+				return (error_set(err, PERR_REDIR_NO_TARGET, near_from_token(token->next->type)), -1);
 		}
 		token = token->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/05 15:14:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 11:44:53 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,17 @@ int	init_command(t_pipeline **node, t_token **token, t_parse_error *err)
 int	correct_command(char *argv, t_pipeline **node)
 {
 	is_builtin(argv, node);
-	if ((*node)->cmd->cmd_info.type)
+	if ((*node)->cmd->cmd_info.type == CMD_BUILTIN)
 		return (0);
 	is_external(argv, node);
+	return (0);
 }
 
-int	check_command(t_pipeline **node,int n_argv,t_parse_error *err)
+int	check_command(t_pipeline **node, t_parse_error *err)
 {
-	if (!(*node)->cmd->argv && (*node)->cmd->redirs)
+	if (!(*node)->cmd->argv[0] && (*node)->cmd->redirs)
 		return (0);
-	if (!(*node)->cmd->argv && !(*node)->cmd->redirs)
+	if (!(*node)->cmd->argv[0] && !(*node)->cmd->redirs)
 	{
 		errno = ENOMEM;
 		parse_error_set(err, PERR_NONE, PNEAR_NONE);
@@ -104,6 +105,7 @@ int	check_command(t_pipeline **node,int n_argv,t_parse_error *err)
 		parse_error_set(err, PERR_UNEXPECTED_TOKEN, PNEAR_WORD);
 		return (-1);
 	}
+	return (0);
 }
 
 int	parse_simple_command(t_pipeline **lst, t_token **token, t_parse_error *err)
@@ -121,7 +123,7 @@ int	parse_simple_command(t_pipeline **lst, t_token **token, t_parse_error *err)
 		if (*token && add_word(token, &node->cmd, &n_argv, err) == -1)
 			return (pipeline_free_all(&node), -1);
 	}
-	if (check_command(node, n_argv, err) == -1)
+	if (check_command(&node, err) == -1)
 		return (pipeline_free_all(&node), -1);
 	pipeline_add_back(lst, node);
 	return (0);

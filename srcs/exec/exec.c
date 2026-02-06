@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/04 12:03:32 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/06 11:41:04 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ TEMPORAL Y A PROPÓSITO "CUTRE":
 
 /* -------- mini helpers (porque no tienes ft_strdup/ft_strcmp) -------- */
 
-static int	xy_streq(const char *a, const char *b)
+int	xy_streq(const char *a, const char *b)
 {
 	int	i;
 

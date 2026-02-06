@@ -30,6 +30,7 @@ SRC_FILES	=	main.c \
 				builtins/echo.c \
 				builtins/pwd.c \
 				builtins/env.c \
+				builtins/cd.c \
 				exec/exec.c \
 
 # Generación automática de rutas

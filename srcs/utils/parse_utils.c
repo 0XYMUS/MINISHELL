@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:36:58 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:40:39 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	is_builtin(char *argv, t_pipeline **node)
 
 int	is_external(char *argv, t_pipeline **node, t_error *err)
 {
-	if (argv[0] == '/' || (argv[0] == '.' && argv[1] == '/'))
+	if ((argv[0] == '/' || (argv[0] == '.' && argv[1] == '/')) && *node)
 	{
 		if (access(argv,F_OK) == 0)
 		{
@@ -76,10 +76,6 @@ int	is_external(char *argv, t_pipeline **node, t_error *err)
 		}
 		else
 			return(parse_error_set(err, PERR_NOT_FOUND, PNEAR_NONE), -1);
-	}
-	else
-	{
-		
 	}
 	return (0);
 }

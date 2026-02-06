@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/03 16:45:47 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:35:18 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parse_error_status(const t_parse_error *err)
+int	parse_error_status(const t_error *err)
 {
 	if (!err || err->code == PERR_NONE)
 		return (0);
@@ -21,7 +21,7 @@ int	parse_error_status(const t_parse_error *err)
 	return (2);
 }
 
-void	parse_error_init(t_parse_error *err)
+void	parse_error_init(t_error *err)
 {
 	if (!err)
 		return ;
@@ -29,8 +29,8 @@ void	parse_error_init(t_parse_error *err)
 	err->near = PNEAR_NONE;
 }
 
-void	parse_error_set(t_parse_error *err, t_parse_errcode code,
-			t_parse_near near)
+void	parse_error_set(t_error *err, t_errcode code,
+			t_near near)
 {
 	if (!err)
 		return ;
@@ -38,7 +38,7 @@ void	parse_error_set(t_parse_error *err, t_parse_errcode code,
 	err->near = near;
 }
 
-static const char	*near_to_str(t_parse_near near)
+static const char	*near_to_str(t_near near)
 {
 	if (near == PNEAR_NEWLINE)
 		return ("newline");
@@ -57,7 +57,7 @@ static const char	*near_to_str(t_parse_near near)
 	return ("?");
 }
 
-void	parse_error_print(const t_parse_error *err)
+void	parse_error_print(const t_error *err)
 {
 	const char	*s;
 

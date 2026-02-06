@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 11:44:53 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:41:32 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 /* NOTE: En rutas OOM forzamos errno=ENOMEM para que perror() sea determinista */
 
 static int	add_word(t_token **token, t_command **cmd, int *n_arg,
-			t_parse_error *err)
+			t_error *err)
 {
 	if ((*token)->type == TOK_WORD)
 	{
@@ -34,7 +34,7 @@ static int	add_word(t_token **token, t_command **cmd, int *n_arg,
 	return (0);
 }
 
-static int	add_reddir(t_token **token, t_command **cmd, t_parse_error *err)
+static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 {
 	t_redir	*redir;
 
@@ -55,7 +55,7 @@ static int	add_reddir(t_token **token, t_command **cmd, t_parse_error *err)
 	return (0);
 }
 
-int	init_command(t_pipeline **node, t_token **token, t_parse_error *err)
+int	init_command(t_pipeline **node, t_token **token, t_error *err)
 {
 	int	n_argv;
 
@@ -80,16 +80,16 @@ int	init_command(t_pipeline **node, t_token **token, t_parse_error *err)
 	return (0);
 }
 
-int	correct_command(char *argv, t_pipeline **node)
+int	correct_command(char *argv, t_pipeline **node, t_error *err)
 {
 	is_builtin(argv, node);
 	if ((*node)->cmd->cmd_info.type == CMD_BUILTIN)
 		return (0);
-	is_external(argv, node);
+	is_external(argv, node, err);
 	return (0);
 }
 
-int	check_command(t_pipeline **node, t_parse_error *err)
+int	check_command(t_pipeline **node, t_error *err)
 {
 	if (!(*node)->cmd->argv[0] && (*node)->cmd->redirs)
 		return (0);
@@ -99,7 +99,7 @@ int	check_command(t_pipeline **node, t_parse_error *err)
 		parse_error_set(err, PERR_NONE, PNEAR_NONE);
 		return (-1);
 	}
-	if (correct_command((*node)->cmd->argv[0], node) == -1)
+	if (correct_command((*node)->cmd->argv[0], node, err) == -1)
 	{
 		errno = ENOMEM;
 		parse_error_set(err, PERR_UNEXPECTED_TOKEN, PNEAR_WORD);
@@ -108,7 +108,7 @@ int	check_command(t_pipeline **node, t_parse_error *err)
 	return (0);
 }
 
-int	parse_simple_command(t_pipeline **lst, t_token **token, t_parse_error *err)
+int	parse_simple_command(t_pipeline **lst, t_token **token, t_error *err)
 {
 	t_pipeline	*node;
 	int	n_argv;
@@ -129,7 +129,7 @@ int	parse_simple_command(t_pipeline **lst, t_token **token, t_parse_error *err)
 	return (0);
 }
 
-t_pipeline	*parse(t_token **token, t_parse_error *err)
+t_pipeline	*parse(t_token **token, t_error *err)
 {
 	t_pipeline	*lst;
 

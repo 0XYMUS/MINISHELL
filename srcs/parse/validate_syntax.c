@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   validate_syntax.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/03 15:27:42 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:34:37 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_parse_near	near_from_token(t_token_type token)
+static t_near	near_from_token(t_token_type token)
 {
 	if (token == TOK_PIPE)
 		return (PNEAR_PIPE);
@@ -27,7 +27,7 @@ static t_parse_near	near_from_token(t_token_type token)
 	return (PNEAR_WORD);
 }
 
-int	validate_syntax(t_token *token, t_parse_error *err)
+int	validate_syntax(t_token *token, t_error *err)
 {
 	parse_error_init(err);
 	if (!token)

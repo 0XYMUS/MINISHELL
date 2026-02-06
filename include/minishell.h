@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:30:08 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:46:41 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,14 @@ typedef struct s_redir
 
 typedef enum e_builtin_cmd
 {
-    BI_NONE,
-    BI_ECHO,
-    BI_CD,
-    BI_PWD,
-    BI_EXPORT,
-    BI_UNSET,
-    BI_ENV,
-    BI_EXIT
+	BI_NONE,
+	BI_ECHO,
+	BI_CD,
+	BI_PWD,
+	BI_EXPORT,
+	BI_UNSET,
+	BI_ENV,
+	BI_EXIT
 } t_builtin_cmd;
 
 typedef enum e_cmd_type
@@ -106,7 +106,7 @@ typedef struct s_pipeline
 	struct s_pipeline	*next;
 }	t_pipeline;
 
-typedef enum e_parse_errcode
+typedef enum e_errcode
 {
 	PERR_NONE,
 	PERR_PIPE_START,
@@ -117,9 +117,9 @@ typedef enum e_parse_errcode
 	PERR_NOT_FOUND,
 	PERR_PERMISSION_DENIED,
 	PERR_OOM
-}	t_parse_errcode;
+}	t_errcode;
 
-typedef enum e_parse_near
+typedef enum e_near
 {
 	PNEAR_NONE,
 	PNEAR_NEWLINE,
@@ -129,13 +129,13 @@ typedef enum e_parse_near
 	PNEAR_APPEND,
 	PNEAR_HEREDOC,
 	PNEAR_WORD
-}	t_parse_near;
+}	t_near;
 
-typedef struct s_parse_error
+typedef struct s_error
 {
-	t_parse_errcode	code;
-	t_parse_near	near;
-}t_parse_error;
+	t_errcode	code;
+	t_near		near;
+}t_error;
 
 /* ************************************************************************** */
 /*                                    SHELL                                   */
@@ -148,6 +148,7 @@ typedef struct s_shell
 	int			exit_status;	/* $? */
 	t_token		*tokens;		/* lexer output for current line */
 	t_pipeline	*pipeline;		/* parser output for current line */
+	t_error		err;
 }	t_shell;
 
 
@@ -181,9 +182,9 @@ void	token_debug_print(const t_token *lst);
 /*                                   PARSER                                   */
 /* ************************************************************************** */
 t_pipeline	*pipeline_new(void);
-t_pipeline	*parse(t_token **token, t_parse_error *err);
+t_pipeline	*parse(t_token **token, t_error *err);
 int			parse_simple_command(t_pipeline **lst, t_token **token,
-				t_parse_error *err);
+				t_error *err);
 void		pipeline_add_back(t_pipeline **lst, t_pipeline *new_node);
 void		pipeline_free_all(t_pipeline **lst);
 void		pipeline_debug_print(const t_pipeline *lst);
@@ -191,15 +192,15 @@ t_redir		*redir_new(t_token_type type, char *target);
 void		redir_add_back(t_redir **lst, t_redir *new_node);
 int			argv_len(t_token *token);
 
-void		parse_error_init(t_parse_error *err);
-void		parse_error_set(t_parse_error *err, t_parse_errcode code,
-				t_parse_near near);
-void		parse_error_print(const t_parse_error *err);
-int			parse_error_status(const t_parse_error *err);
-int			validate_syntax(t_token *t, t_parse_error *err);
+void		parse_error_init(t_error *err);
+void		parse_error_set(t_error *err, t_errcode code,
+				t_near near);
+void		parse_error_print(const t_error *err);
+int			parse_error_status(const t_error *err);
+int			validate_syntax(t_token *t, t_error *err);
 void		is_builtin(char *argv, t_pipeline **node);
 int			xy_streq(const char *a, const char *b);
-int	is_external(char *argv, t_pipeline **node, t_parse_error *err);
+int			is_external(char *argv, t_pipeline **node, t_error *err);
 
 /* ************************************************************************** */
 /*                                 BUILT-INS                                  */
@@ -210,6 +211,8 @@ int		xy_echo(t_command *cmd, t_shell *sh);
 int		xy_pwd(t_command *cmd, t_shell *sh);
 /* env.c */
 int		xy_env(t_command *cmd, t_shell *sh);
+/* env.c */
+int		xy_cd(t_command *cmd, t_shell *sh);
 /* ************************************************************************** */
 /*                                   EXEC                                     */
 /* ************************************************************************** */

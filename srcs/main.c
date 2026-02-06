@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/05 12:48:11 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:48:45 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int argc, char **argv, char **envp)
 	t_token	*lst;
 	t_pipeline	*pl;
 	t_shell	sh;
-	t_parse_error	err;
+	t_error	err;
 
 	(void)argc;
 	(void)argv;
@@ -43,6 +43,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		lst = tokenizer(line);
+		exec_from_tokens_tmp(lst, &sh);
 		pl = parse(&lst, &err);
 		if (!pl)
 		{
@@ -52,8 +53,7 @@ int	main(int argc, char **argv, char **envp)
 		else
 		{
 			// token_debug_print(lst); //(para probar tokenizer)
-			// exec_from_tokens_tmp(lst, &sh); // pruebas de ejecución (solo si parse OK)
-			pipeline_debug_print(pl); // para probar parseo
+			// pipeline_debug_print(pl); // para probar parseo
 			pipeline_free_all(&pl);
 		}
 		token_free_all(&lst);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:40:39 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:54:14 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ int	is_external(char *argv, t_pipeline **node, t_error *err)
 			if (access(argv, X_OK) == 0)
 				return (0);
 			else
-				return(parse_error_set(err, PERR_PERMISSION_DENIED, PNEAR_NONE), -1);
+				return(error_set(err, PERR_PERMISSION_DENIED, PNEAR_NONE), -1);
 		}
 		else
-			return(parse_error_set(err, PERR_NOT_FOUND, PNEAR_NONE), -1);
+			return(error_set(err, PERR_NOT_FOUND, PNEAR_NONE), -1);
 	}
 	return (0);
 }

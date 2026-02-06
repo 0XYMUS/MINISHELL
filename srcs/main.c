@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/06 12:48:45 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:53:16 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	main(int argc, char **argv, char **envp)
 		pl = parse(&lst, &err);
 		if (!pl)
 		{
-			sh.exit_status = parse_error_status(&err);
-			parse_error_print(&err);
+			sh.exit_status = error_status(&err);
+			error_print(&err);
 		}
 		else
 		{

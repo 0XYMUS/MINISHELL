@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:41:32 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:53:31 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	add_word(t_token **token, t_command **cmd, int *n_arg,
 		if (!(*cmd)->argv[*n_arg])
 		{
 			errno = ENOMEM;
-			parse_error_set(err, PERR_OOM, PNEAR_NONE);
+			error_set(err, PERR_OOM, PNEAR_NONE);
 			return (-1);
 		}
 		(*n_arg)++;
@@ -46,7 +46,7 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 		if (!redir)
 		{
 			errno = ENOMEM;
-			parse_error_set(err, PERR_OOM, PNEAR_NONE);
+			error_set(err, PERR_OOM, PNEAR_NONE);
 			return (-1);
 		}
 		redir_add_back(&(*cmd)->redirs, redir);
@@ -63,7 +63,7 @@ int	init_command(t_pipeline **node, t_token **token, t_error *err)
 	if (!(*node))
 	{
 		errno = ENOMEM;
-		parse_error_set(err, PERR_OOM, PNEAR_NONE);
+		error_set(err, PERR_OOM, PNEAR_NONE);
 		return (-1);
 	}
 	n_argv = argv_len(*token);
@@ -73,7 +73,7 @@ int	init_command(t_pipeline **node, t_token **token, t_error *err)
 	if (!(*node)->cmd->argv)
 	{
 		errno = ENOMEM;
-		parse_error_set(err, PERR_OOM, PNEAR_NONE);
+		error_set(err, PERR_OOM, PNEAR_NONE);
 		return (pipeline_free_all(node), -1);
 	}
 	(*node)->cmd->argv[n_argv] = NULL;
@@ -96,13 +96,13 @@ int	check_command(t_pipeline **node, t_error *err)
 	if (!(*node)->cmd->argv[0] && !(*node)->cmd->redirs)
 	{
 		errno = ENOMEM;
-		parse_error_set(err, PERR_NONE, PNEAR_NONE);
+		error_set(err, PERR_NONE, PNEAR_NONE);
 		return (-1);
 	}
 	if (correct_command((*node)->cmd->argv[0], node, err) == -1)
 	{
 		errno = ENOMEM;
-		parse_error_set(err, PERR_UNEXPECTED_TOKEN, PNEAR_WORD);
+		error_set(err, PERR_UNEXPECTED_TOKEN, PNEAR_WORD);
 		return (-1);
 	}
 	return (0);

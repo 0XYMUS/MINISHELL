@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 12:46:41 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:52:23 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,16 +191,18 @@ void		pipeline_debug_print(const t_pipeline *lst);
 t_redir		*redir_new(t_token_type type, char *target);
 void		redir_add_back(t_redir **lst, t_redir *new_node);
 int			argv_len(t_token *token);
-
-void		parse_error_init(t_error *err);
-void		parse_error_set(t_error *err, t_errcode code,
-				t_near near);
-void		parse_error_print(const t_error *err);
-int			parse_error_status(const t_error *err);
 int			validate_syntax(t_token *t, t_error *err);
 void		is_builtin(char *argv, t_pipeline **node);
 int			xy_streq(const char *a, const char *b);
 int			is_external(char *argv, t_pipeline **node, t_error *err);
+
+/* ************************************************************************** */
+/*                                   ERROR                                    */
+/* ************************************************************************** */
+void		error_init(t_error *err);
+void		error_set(t_error *err, t_errcode code, t_near near);
+void		error_print(const t_error *err);
+int			error_status(const t_error *err);
 
 /* ************************************************************************** */
 /*                                 BUILT-INS                                  */

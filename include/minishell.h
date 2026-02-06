@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 11:47:15 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:01:22 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ typedef enum e_parse_errcode
 	PERR_PIPE_DOUBLE,
 	PERR_REDIR_NO_TARGET,
 	PERR_UNEXPECTED_TOKEN,
+	PERR_NOT_FOUND,
+	PERR_PERMISSION_DENIED,
 	PERR_OOM
 }	t_parse_errcode;
 
@@ -197,7 +199,7 @@ int			parse_error_status(const t_parse_error *err);
 int			validate_syntax(t_token *t, t_parse_error *err);
 void		is_builtin(char *argv, t_pipeline **node);
 int			xy_streq(const char *a, const char *b);
-int			is_external(char *argv, t_pipeline **node);
+int	is_external(char *argv, t_pipeline **node, t_parse_error *err);
 
 /* ************************************************************************** */
 /*                                 BUILT-INS                                  */

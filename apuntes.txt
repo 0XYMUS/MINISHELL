@@ -1,0 +1,3 @@
+- Los errores NO se pasan como argumento a otro comando del pipe
+a | cat
+el error: 'a' command not found, no se pasa como argumento al cat

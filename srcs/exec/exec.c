@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/06 12:45:41 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/09 15:34:11 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,8 @@ static int	exec_builtin(t_command *cmd, t_shell *sh)
 		return (xy_env(cmd, sh));
 	if (cmd->cmd_info.builtin == BI_CD)
         return (xy_cd(cmd, sh));
+	if (cmd->cmd_info.builtin == BI_EXIT)
+        return (xy_exit(cmd, sh));
 	/* TODO: resto de builtins */
 	return (1);
 }

@@ -30,10 +30,13 @@ SRC_FILES	=	main.c \
 				parse/pipeline_utils.c \
 				parse/free_pipeline.c \
 				builtins/echo.c \
-				builtins/pwd.c \
-				builtins/env.c \
 				builtins/cd.c \
-				exec/exec.c \
+				builtins/pwd.c \
+				builtins/export.c \
+				builtins/unset.c \
+				builtins/env.c \
+				builtins/exit.c \
+				exec/exec.c
 
 # Generación automática de rutas
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

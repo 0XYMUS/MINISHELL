@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/05 12:52:16 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/09 15:35:18 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ t_pipeline	*pipeline_new(void)
 		free(node);
 		return (NULL);
 	}
+	/* Ensure all fields are initialized even if t_command grows */
+	*node->cmd = (t_command){0};
 	node->cmd->argv = NULL;
 	node->cmd->space = NULL;
 	node->cmd->redirs = NULL;
@@ -106,6 +108,7 @@ t_redir	*redir_new(t_token_type type, char *target)
 		free(node);
 		return (NULL);
 	}
+	node->expand = 1;
 	node->next = NULL;
 	return (node);
 }

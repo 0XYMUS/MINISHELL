@@ -4,7 +4,9 @@
 
 NAME		= minishell
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g3 
+CFLAGS		= -Wall -Wextra -Werror -g3
+# Auto-deps: recompila objetos cuando cambian headers (.h)
+DEPFLAGS	= -MMD -MP
 # -g3 se usa para usar valgrind/gdb
 # sirve para generar mas info en caso de errores al compilar
 
@@ -36,6 +38,7 @@ SRC_FILES	=	main.c \
 # Generación automática de rutas
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS        = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
+DEPS        = $(OBJS:.o=.d)
 
 # Librerías (Readline)
 LIBS        = -lreadline -lhistory -lncurses
@@ -72,12 +75,15 @@ $(NAME): $(OBJS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@echo "$(CYAN)Compilando: $(GRAY)$<$(DEF_COLOR)"
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(CC) $(CFLAGS) $(DEPFLAGS) $(INCLUDES) -c $< -o $@
 
 # Limpieza de objetos
 clean:
 	@echo "$(RED)Limpiando archivos objeto...$(DEF_COLOR)"
 	@rm -rf $(OBJ_DIR)
+
+# Incluye dependencias generadas (si existen)
+-include $(DEPS)
 
 # Limpieza total
 fclean: clean

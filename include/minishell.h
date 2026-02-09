@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 15:48:11 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/09 15:32:28 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_token
 	t_token_type	type;
 	char			*value;
 	int				space;
+	int				quoted;
 	struct s_token	*next;
 }	t_token;
 
@@ -62,6 +63,7 @@ typedef struct s_redir
 {
 	t_redir_type		type;
 	char				*target;
+	int				expand;
 	struct s_redir		*next;
 }	t_redir;
 

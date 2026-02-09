@@ -6,11 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/29 15:58:38 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/09 15:32:29 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+#include <errno.h>
 
 int	is_space(char c) 
 {
@@ -39,7 +41,10 @@ int	word_len(char *line, int i)
 		if (line[i] == q)
 			i++;
 		else
+		{
+			errno = EINVAL;
 			return (-1);
+		}
 	}
 	else
 	{

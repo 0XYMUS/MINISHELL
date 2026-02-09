@@ -6,11 +6,23 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/06 12:53:16 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/09 13:38:25 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	streq(const char *a, const char *b)
+{
+	int	i;
+
+	if (!a || !b)
+		return (0);
+	i = 0;
+	while (a[i] && b[i] && a[i] == b[i])
+		i++;
+	return (a[i] == '\0' && b[i] == '\0');
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -42,8 +54,13 @@ int	main(int argc, char **argv, char **envp)
 			continue;
 		}
 		add_history(line);
+		if (streq(line, "exit"))
+		{
+			free(line);
+			break ;
+		}
 		lst = tokenizer(line);
-		exec_from_tokens_tmp(lst, &sh);
+		/* exec_from_tokens_tmp(lst, &sh); */
 		pl = parse(&lst, &err);
 		if (!pl)
 		{

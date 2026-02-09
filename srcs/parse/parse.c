@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 15:57:43 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/09 15:32:29 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 			error_set(err, PERR_OOM, PNEAR_NONE);
 			return (-1);
 		}
+		if ((*token)->type == TOK_HEREDOC && (*token)->next->quoted)
+			redir->expand = 0;
 		redir_add_back(&(*cmd)->redirs, redir);
 		*token = (*token)->next->next;
 	}

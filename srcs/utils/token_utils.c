@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/09 16:32:20 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:15:58 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,98 @@ static int	is_dquote_escapable(char c)
 	return (c == '\\' || c == '"' || c == '$' || c == '`' || c == '\n');
 }
 
+static int	is_quote(char c)
+{
+	return (c == '\'' || c == '"');
+}
+
+static char	qmask_from_quote(char q)
+{
+	if (q == '\'')
+		return ('1');
+	if (q == '"')
+		return ('2');
+	return ('0');
+}
+
+static int	append_plain(char *word, char *qmask, int *j, char c)
+{
+	word[*j] = c;
+	qmask[*j] = '0';
+	(*j)++;
+	return (0);
+}
+
+static void	append_quoted(char *word, char *qmask, int *j, char q, char c)
+{
+	word[*j] = c;
+	qmask[*j] = qmask_from_quote(q);
+	(*j)++;
+}
+
+static int	handle_backslash(char *line, int *i, int end, char q,
+				char *word, char *qmask, int *j)
+{
+	if (line[*i] != '\\' || q == '\'' || *i + 1 >= end)
+		return (0);
+	if (q == 0)
+	{
+		append_plain(word, qmask, j, line[*i + 1]);
+		*i += 2;
+		return (1);
+	}
+	if (q == '"' && is_dquote_escapable(line[*i + 1]))
+	{
+		if (line[*i + 1] != '\n')
+			append_quoted(word, qmask, j, q, line[*i + 1]);
+		*i += 2;
+		return (1);
+	}
+	append_quoted(word, qmask, j, q, line[*i]);
+	(*i)++;
+	return (1);
+}
+
+static int	handle_quote(char *line, int *i, char *q)
+{
+	if (line[*i] != '\'' && line[*i] != '"')
+		return (0);
+	if (*q == 0)
+		*q = line[(*i)++];
+	else if (*q == line[*i])
+	{
+		*q = 0;
+		(*i)++;
+	}
+	else
+		return (0);
+	return (1);
+}
+
+static int	word_len_step(char *line, int *i, char *q)
+{
+	if (line[*i] == '\\' && *q != '\'' && line[*i + 1])
+	{
+		if (*q == 0)
+			*i += 2;
+		else if (*q == '"' && is_dquote_escapable(line[*i + 1]))
+			*i += 2;
+		else
+			(*i)++;
+		return (1);
+	}
+	if (is_quote(line[*i]))
+	{
+		if (*q == 0)
+			*q = line[*i];
+		else if (*q == line[*i])
+			*q = 0;
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
 int	word_len(char *line, int i)
 {
 	int		i_initial;
@@ -41,25 +133,8 @@ int	word_len(char *line, int i)
 	{
 		if (!q && (is_space(line[i]) || is_key(line[i])))
 			break ;
-		if (line[i] == '\\' && q != '\'' && line[i + 1])
-		{
-			if (q == 0)
-				i += 2;
-			else if (q == '"' && is_dquote_escapable(line[i + 1]))
-				i += 2;
-			else
-				i++;
+		if (word_len_step(line, &i, &q))
 			continue ;
-		}
-		if (line[i] == '\'' || line[i] == '"')
-		{
-			if (q == 0)
-				q = line[i];
-			else if (q == line[i])
-				q = 0;
-			i++;
-			continue ;
-		}
 		i++;
 	}
 	if (q != 0)
@@ -70,54 +145,53 @@ int	word_len(char *line, int i)
 	return (i - i_initial);
 }
 
-char	*word_dup(char *line, int i, int wordlen)
+static int	alloc_word_qmask(int wordlen, char **word, char **qmask)
+{
+	*word = malloc(sizeof(char) * wordlen + 1);
+	if (!*word)
+		return (0);
+	*qmask = malloc(sizeof(char) * wordlen + 1);
+	if (!*qmask)
+	{
+		free(*word);
+		return (0);
+	}
+	return (1);
+}
+
+static void	word_dup_finish(char *word, char *qmask, int j,
+				char **qmask_out)
+{
+	word[j] = '\0';
+	qmask[j] = '\0';
+	if (qmask_out)
+		*qmask_out = qmask;
+	else
+		free(qmask);
+}
+
+char	*word_dup(char *line, int i, int wordlen, char **qmask_out)
 {
 	char	*word;
+	char	*qmask;
 	int		end;
 	int		j;
 	char	q;
 
 	end = i + wordlen;
-	word = malloc(sizeof(char) * wordlen + 1);
-	if (!word)
+	if (!alloc_word_qmask(wordlen, &word, &qmask))
 		return (NULL);
 	j = 0;
 	q = 0;
 	while (i < end)
 	{
-		if (line[i] == '\\' && q != '\'' && i + 1 < end)
-		{
-			if (q == 0)
-			{
-				word[j++] = line[i + 1];
-				i += 2;
-				continue ;
-			}
-			if (q == '"' && is_dquote_escapable(line[i + 1]))
-			{
-				if (line[i + 1] != '\n')
-					word[j++] = line[i + 1];
-				i += 2;
-				continue ;
-			}
-			word[j++] = line[i++];
+		if (handle_backslash(line, &i, end, q, word, qmask, &j))
 			continue ;
-		}
-		if (line[i] == '\'' || line[i] == '"')
-		{
-			if (q == 0)
-				q = line[i++];
-			else if (q == line[i])
-			{
-				q = 0;
-				i++;
-			}
-			else
-				word[j++] = line[i++];
+		if (handle_quote(line, &i, &q))
 			continue ;
-		}
-		word[j++] = line[i++];
+		append_quoted(word, qmask, &j, q, line[i]);
+		i++;
 	}
-	word[j] = '\0';
+	word_dup_finish(word, qmask, j, qmask_out);
 	return (word);
 }

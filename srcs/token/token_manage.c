@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/09 15:32:29 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static const char	*token_type_str(t_token_type t)
  * Recomendación: pásale un string ya duplicado (malloc/ft_strdup),
  * no un puntero a memoria estática o a un buffer que luego reutilices.
  */
-t_token	*token_new(t_token_type type, char *value, int space)
+t_token	*token_new(t_token_type type, char *value, char *qmask, int space)
 {
 	t_token	*token;
 
@@ -52,14 +52,19 @@ t_token	*token_new(t_token_type type, char *value, int space)
 		return (NULL);
 	token->type = type;
 	if (type != TOK_WORD)
+	{
 		token->value = NULL;
+		token->qmask = NULL;
+	}
 	else
+	{
 		token->value = value;
+		token->qmask = qmask;
+	}
 	if (space == 1)
 		token->space = 1;
 	else
 		token->space = 0;
-	token->quoted = 0;
 	token->next = NULL;
 	return (token);
 }
@@ -97,6 +102,7 @@ void	token_free_one(t_token *tok)
 	if (!tok)
 		return ;
 	free(tok->value);
+	free(tok->qmask);
 	free(tok);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 11:27:09 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
+	char			*qmask;
 	int				space;
-	int				quoted;
 	struct s_token	*next;
 }	t_token;
 
@@ -63,6 +63,7 @@ typedef struct s_redir
 {
 	t_redir_type		type;
 	char				*target;
+	char				*qmask;
 	int				expand;
 	struct s_redir		*next;
 }	t_redir;
@@ -97,7 +98,7 @@ typedef struct s_cmd_info
 typedef struct s_command
 {
 	char		**argv;
-	int			**space;
+	char		**qmask;
 	t_redir		*redirs;
 	t_cmd_info	cmd_info;
 }	t_command;
@@ -164,7 +165,7 @@ char	*ft_strdup(const char *s);
 /* token_utils.c */
 int		is_space(char c);
 int		is_redir(t_token_type type);
-char	*word_dup(char *line, int i, int wordlen);
+char	*word_dup(char *line, int i, int wordlen, char **qmask_out);
 int		word_len(char *line, int i);
 
 /* ************************************************************************** */
@@ -174,7 +175,7 @@ int		word_len(char *line, int i);
 t_token	*tokenizer(char *line);
 
 /* token_manage.c */
-t_token	*token_new(t_token_type type, char *value, int space);
+t_token	*token_new(t_token_type type, char *value, char *qmask, int space);
 void	token_add_back(t_token **lst, t_token *new_tok);
 void	token_free_one(t_token *tok);
 void	token_free_all(t_token **lst);
@@ -190,7 +191,7 @@ int			parse_simple_command(t_pipeline **lst, t_token **token,
 void		pipeline_add_back(t_pipeline **lst, t_pipeline *new_node);
 void		pipeline_free_all(t_pipeline **lst);
 void		pipeline_debug_print(const t_pipeline *lst);
-t_redir		*redir_new(t_token_type type, char *target);
+t_redir		*redir_new(t_token_type type, char *target, char *qmask);
 void		redir_add_back(t_redir **lst, t_redir *new_node);
 int			argv_len(t_token *token);
 int			validate_syntax(t_token *t, t_error *err);

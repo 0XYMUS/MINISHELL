@@ -6,11 +6,66 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/09 15:32:29 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/09 16:05:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+#include <errno.h>
+
+static int	word_has_quote(const char *line, int i, int wordlen)
+{
+	int		end;
+
+	end = i + wordlen;
+	while (i < end)
+	{
+		if (line[i] == '\\' && i + 1 < end)
+		{
+			i += 2;
+			continue ;
+		}
+		if (line[i] == '\'' || line[i] == '"')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static char	find_unclosed_quote(const char *line, int i)
+{
+	char	q;
+
+	q = 0;
+	while (line[i])
+	{
+		if (line[i] == '\\' && q != '\'' && line[i + 1])
+		{
+			i += 2;
+			continue ;
+		}
+		if (line[i] == '\'' || line[i] == '"')
+		{
+			if (q == 0)
+				q = line[i];
+			else if (q == line[i])
+				q = 0;
+		}
+		i++;
+	}
+	return (q);
+}
+
+static void	print_unclosed_quote(char q)
+{
+	if (!q)
+		q = '\'';
+	fprintf(stderr,
+		"minishell: unexpected EOF while looking for matching `%c'\n", q);
+	fprintf(stderr,
+		"minishell: syntax error: unexpected end of file\n");
+}
 
 static int	type_word(char *line, int *i, t_token **lst)
 {
@@ -21,15 +76,17 @@ static int	type_word(char *line, int *i, t_token **lst)
 	int		quoted;
 
 	token = NULL;
-	quoted = 0;
-	if (line[*i] == '\'' || line[*i] == '"')
-		quoted = 1;
 	wordlen = word_len(line, *i);
 	if (wordlen < 0)
+	{
+		if (errno == EINVAL)
+			print_unclosed_quote(find_unclosed_quote(line, *i));
 		return (-1);
+	}
 	word = word_dup(line, *i, wordlen);
 	if (!word)
 		return (-1);
+	quoted = word_has_quote(line, *i, wordlen);
 	space = 0;
 	if (is_space(line[*i + wordlen]))
 		space = 1;

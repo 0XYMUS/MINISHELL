@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/09 15:32:28 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 11:27:09 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,8 +216,10 @@ int		xy_echo(t_command *cmd, t_shell *sh);
 int		xy_pwd(t_command *cmd, t_shell *sh);
 /* env.c */
 int		xy_env(t_command *cmd, t_shell *sh);
-/* env.c */
+/* cd.c */
 int		xy_cd(t_command *cmd, t_shell *sh);
+/* exit.c */
+int		xy_exit(t_command *cmd, t_shell *sh);
 /* ************************************************************************** */
 /*                                   EXEC                                     */
 /* ************************************************************************** */

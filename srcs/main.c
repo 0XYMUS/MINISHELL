@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/10 11:29:27 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:27:03 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,12 @@ int	main(int argc, char **argv, char **envp)
 	(void)sh;
 	while(1)
 	{
-		line = readline("minishell$ ");
+		line = readline(
+		"\001\x1b[1;97;106m\002 minishell "
+		"\001\x1b[49;1;96m\002▓▒░ "
+		"\001\x1b[0m\002"
+	);
+
 		if (line == NULL)
 		{
 			// Ctrl+D (EOF)

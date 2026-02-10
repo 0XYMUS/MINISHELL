@@ -36,7 +36,8 @@ SRC_FILES	=	main.c \
 				builtins/unset.c \
 				builtins/env.c \
 				builtins/exit.c \
-				exec/exec.c
+				exec/exec.c \
+				expand/expand.c
 
 # Generación automática de rutas
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

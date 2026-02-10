@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/10 12:27:03 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/10 16:19:50 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	main(int argc, char **argv, char **envp)
 		exec_from_tokens_tmp(lst, &sh);
 		token_debug_print(lst); //(para probar tokenizer)
 		pl = parse(&lst, &err);
+		expand(pl, sh);
 		if (!pl)
 		{
 			sh.exit_status = error_status(&err);

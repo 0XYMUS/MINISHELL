@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 14:09:06 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/10 16:20:16 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,8 @@ int			validate_syntax(t_token *t, t_error *err);
 int			xy_streq(const char *a, const char *b);
 /* int			is_external(char *argv, t_pipeline **node, t_error *err); */
 t_near	near_from_token(t_token_type token);
+
+void    expand(t_pipeline *node, t_shell sh);
 
 /* ************************************************************************** */
 /*                                   ERROR                                    */

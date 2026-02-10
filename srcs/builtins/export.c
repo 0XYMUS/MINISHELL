@@ -6,12 +6,12 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 12:35:35 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/10 12:37:33 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/10 14:17:15 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/* 
 int	xy_export(t_command *cmd, t_shell *sh)
 {
 	char name;
@@ -19,3 +19,4 @@ int	xy_export(t_command *cmd, t_shell *sh)
 	name = cmd->argv[1];
 	export(name);
 }
+ */

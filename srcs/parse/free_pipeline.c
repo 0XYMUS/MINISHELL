@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 15:59:44 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/01/29 16:00:25 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,21 @@ static void	free_argv(char **argv)
 	free(argv);
 }
 
+static void	free_qmask(char **qmask)
+{
+	int	i;
+
+	if (!qmask)
+		return ;
+	i = 0;
+	while (qmask[i])
+	{
+		free(qmask[i]);
+		i++;
+	}
+	free(qmask);
+}
+
 static void	free_redirs(t_redir *redir)
 {
 	t_redir	*next;
@@ -35,6 +50,7 @@ static void	free_redirs(t_redir *redir)
 	{
 		next = redir->next;
 		free(redir->target);
+		free(redir->qmask);
 		free(redir);
 		redir = next;
 	}
@@ -45,6 +61,7 @@ static void	free_command(t_command *cmd)
 	if (!cmd)
 		return ;
 	free_argv(cmd->argv);
+	free_qmask(cmd->qmask);
 	free_redirs(cmd->redirs);
 	free(cmd);
 }

@@ -6,32 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/09 16:05:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 #include <errno.h>
-
-static int	word_has_quote(const char *line, int i, int wordlen)
-{
-	int		end;
-
-	end = i + wordlen;
-	while (i < end)
-	{
-		if (line[i] == '\\' && i + 1 < end)
-		{
-			i += 2;
-			continue ;
-		}
-		if (line[i] == '\'' || line[i] == '"')
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 static char	find_unclosed_quote(const char *line, int i)
 {
@@ -71,9 +52,9 @@ static int	type_word(char *line, int *i, t_token **lst)
 {
 	int		wordlen;
 	char	*word;
+	char	*qmask;
 	t_token	*token;
 	int		space;
-	int		quoted;
 
 	token = NULL;
 	wordlen = word_len(line, *i);
@@ -83,17 +64,20 @@ static int	type_word(char *line, int *i, t_token **lst)
 			print_unclosed_quote(find_unclosed_quote(line, *i));
 		return (-1);
 	}
-	word = word_dup(line, *i, wordlen);
+	qmask = NULL;
+	word = word_dup(line, *i, wordlen, &qmask);
 	if (!word)
 		return (-1);
-	quoted = word_has_quote(line, *i, wordlen);
 	space = 0;
 	if (is_space(line[*i + wordlen]))
 		space = 1;
-	token = token_new(TOK_WORD, word, space);
+	token = token_new(TOK_WORD, word, qmask, space);
 	if (!token)
-		return (free(word), -1);
-	token->quoted = quoted;
+	{
+		free(word);
+		free(qmask);
+		return (-1);
+	}
 	token_add_back(lst, token);
 	*i = *i + wordlen;
 	return (0);
@@ -105,9 +89,9 @@ static int	type_operator(t_token_type type, int *i, t_token **lst, char *line)
 	t_token	*token;
 
 	if (is_space(line[*i + 1]))
-		token = token_new(type, NULL, 1);
+		token = token_new(type, NULL, NULL, 1);
 	else
-		token = token_new(type, NULL, 0);
+		token = token_new(type, NULL, NULL, 0);
 	if (!token)
 		return (-1);
 	token_add_back(lst, token);

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/09 15:35:18 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_pipeline	*pipeline_new(void)
 	/* Ensure all fields are initialized even if t_command grows */
 	*node->cmd = (t_command){0};
 	node->cmd->argv = NULL;
-	node->cmd->space = NULL;
+	node->cmd->qmask = NULL;
 	node->cmd->redirs = NULL;
 	node->cmd->cmd_info.type = CMD_UNKNOWN;
 	node->cmd->cmd_info.builtin = BI_NONE;
@@ -87,9 +87,10 @@ void	pipeline_add_back(t_pipeline **lst, t_pipeline *new_node)
 		cur = cur->next;
 	cur->next = new_node;
 }
-t_redir	*redir_new(t_token_type type, char *target)
+t_redir	*redir_new(t_token_type type, char *target, char *qmask)
 {
 	t_redir	*node;
+	char	*mask_dup;
 
 	node = malloc(sizeof(t_redir));
 	if (!node)
@@ -108,6 +109,18 @@ t_redir	*redir_new(t_token_type type, char *target)
 		free(node);
 		return (NULL);
 	}
+	mask_dup = NULL;
+	if (qmask)
+	{
+		mask_dup = ft_strdup(qmask);
+		if (!mask_dup)
+		{
+			free(node->target);
+			free(node);
+			return (NULL);
+		}
+	}
+	node->qmask = mask_dup;
 	node->expand = 1;
 	node->next = NULL;
 	return (node);

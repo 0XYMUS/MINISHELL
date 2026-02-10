@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/09 20:50:53 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	token_to_command_tmp(t_token *toks, t_command *cmd)
 	}
 	cmd->argv[i] = NULL;
 
-	cmd->space = NULL;
+	cmd->qmask = NULL;
 	cmd->redirs = NULL;
 	cmd->cmd_info.type = CMD_UNKNOWN;
 	cmd->cmd_info.builtin = BI_NONE;

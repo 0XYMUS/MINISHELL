@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/10 14:09:06 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,16 +211,20 @@ int			error_status(const t_error *err);
 /* ************************************************************************** */
 /*                                 BUILT-INS                                  */
 /* ************************************************************************** */
-/* echo.c */
-int		xy_echo(t_command *cmd, t_shell *sh);
-/* pwd.c */
-int		xy_pwd(t_command *cmd, t_shell *sh);
-/* env.c */
-int		xy_env(t_command *cmd, t_shell *sh);
 /* cd.c */
 int		xy_cd(t_command *cmd, t_shell *sh);
+/* echo.c */
+int		xy_echo(t_command *cmd, t_shell *sh);
+/* env.c */
+int		xy_env(t_command *cmd, t_shell *sh);
 /* exit.c */
 int		xy_exit(t_command *cmd, t_shell *sh);
+/* exit.c */
+int		xy_export(t_command *cmd, t_shell *sh);
+/* pwd.c */
+int		xy_pwd(t_command *cmd, t_shell *sh);
+/* unset.c */
+int		xy_unset(t_command *cmd, t_shell *sh);
 /* ************************************************************************** */
 /*                                   EXEC                                     */
 /* ************************************************************************** */

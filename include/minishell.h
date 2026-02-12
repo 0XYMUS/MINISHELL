@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 16:20:16 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/12 16:30:28 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ int		is_space(char c);
 int		is_redir(t_token_type type);
 char	*word_dup(char *line, int i, int wordlen, char **qmask_out);
 int		word_len(char *line, int i);
+char	*xy_strdup(const char *s);
 
 /* ************************************************************************** */
 /*                                  TOKENIZER                                 */
@@ -200,7 +201,21 @@ int			xy_streq(const char *a, const char *b);
 /* int			is_external(char *argv, t_pipeline **node, t_error *err); */
 t_near	near_from_token(t_token_type token);
 
+/* ************************************************************************** */
+/*                                   EXPAND                                   */
+/* ************************************************************************** */
+
 void    expand(t_pipeline *node, t_shell sh);
+size_t	ft_strlen(const char *s);
+void	*ft_memmove(void *dest, const void *src, size_t n);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+void	ft_strcpy(char *dest, const char *src);
+void	str_move(char **str, int i, int move);
+int		expansion_len(char *word, int i);
+char	*update_qmask_after_expansion(char *qmask, int s, int len_q, int len);
+void 	complete_expansion(char *env, char *word, int i, char **expansion);
+int 	 expand_len(char *word, char *env, int i);
+int		get_end(char *word, int i);
 
 /* ************************************************************************** */
 /*                                   ERROR                                    */

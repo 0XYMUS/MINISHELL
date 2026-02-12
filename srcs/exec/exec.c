@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/12 13:59:29 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	xy_streq(const char *a, const char *b)
 	return (a[i] == '\0' && b[i] == '\0');
 }
 
-static char	*xy_strdup(const char *s)
+char	*xy_strdup(const char *s)
 {
 	size_t	i;
 	size_t	len;

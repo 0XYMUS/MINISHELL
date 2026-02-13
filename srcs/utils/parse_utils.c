@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 15:26:13 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/13 16:15:35 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,28 +84,6 @@ int is_redir(t_token_type type)
 	(*node)->cmd->cmd_info.type = CMD_UNKNOWN;
 	return (0);
 } */
-
-char	*ft_strdup(const char *s)
-{
-	size_t	len;
-	size_t	i;
-	char	*dup;
-
-	if (!s)
-		return (NULL);
-	len = xy_strlen(s);
-	dup = (char *)malloc(sizeof(char) * (len + 1));
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
 
 int	argv_len(t_token *token)
 {

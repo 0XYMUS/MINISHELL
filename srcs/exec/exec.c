@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/12 13:59:29 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/13 17:28:42 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,28 +34,6 @@ int	xy_streq(const char *a, const char *b)
 	while (a[i] && b[i] && a[i] == b[i])
 		i++;
 	return (a[i] == '\0' && b[i] == '\0');
-}
-
-char	*xy_strdup(const char *s)
-{
-	size_t	i;
-	size_t	len;
-	char	*dup;
-
-	if (!s)
-		return (NULL);
-	len = xy_strlen(s);
-	dup = (char *)malloc(len + 1);
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
 }
 
 static void	xy_free_argv(char **argv)
@@ -96,7 +74,7 @@ int	token_to_command_tmp(t_token *toks, t_command *cmd)
 	while (toks)
 	{
 		if (toks->type == TOK_WORD)
-			cmd->argv[i++] = xy_strdup(toks->value);
+			cmd->argv[i++] = ft_strdup(toks->value);
 		toks = toks->next;
 	}
 	cmd->argv[i] = NULL;
@@ -154,6 +132,8 @@ static int	exec_builtin(t_command *cmd, t_shell *sh)
         return (xy_cd(cmd, sh));
 	if (cmd->cmd_info.builtin == BI_EXIT)
         return (xy_exit(cmd, sh));
+	if (cmd->cmd_info.builtin == BI_EXPORT)
+        return (xy_export(cmd, sh));
 	/* TODO: resto de builtins */
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 12:15:58 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/13 17:26:26 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,14 @@
 
 #include <errno.h>
 
-int	is_space(char c) 
+static int	is_dquote_escapable(char c)
 {
-	return (c == ' '  || c == '\t' || c == '\n' || c == '\r' || c == '\v' ||
-			c == '\f');
+	return (c == '\\' || c == '"' || c == '$' || c == '`' || c == '\n');
 }
 
 static int	is_key(char c)
 {
 	return (c == '|'  || c == '<' || c == '>');
-}
-
-static int	is_dquote_escapable(char c)
-{
-	return (c == '\\' || c == '"' || c == '$' || c == '`' || c == '\n');
 }
 
 static int	is_quote(char c)

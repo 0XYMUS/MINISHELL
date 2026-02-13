@@ -22,6 +22,8 @@ SRC_FILES	=	main.c \
 				utils/errors.c \
 				utils/utils.c \
 				utils/parse_utils.c \
+				utils/initialize.c \
+				utils/char_checker_utils.c \
 				token/tokenization.c \
 				token/token_manage.c \
 				parse/parse.c \

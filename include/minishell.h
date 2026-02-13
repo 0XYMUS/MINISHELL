@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/12 16:30:28 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/13 17:28:09 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,6 @@ int		is_space(char c);
 int		is_redir(t_token_type type);
 char	*word_dup(char *line, int i, int wordlen, char **qmask_out);
 int		word_len(char *line, int i);
-char	*xy_strdup(const char *s);
 
 /* ************************************************************************** */
 /*                                  TOKENIZER                                 */

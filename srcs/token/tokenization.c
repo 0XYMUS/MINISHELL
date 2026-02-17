@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:43:50 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#include <errno.h>
+
 
 static char	find_unclosed_quote(const char *line, int i)
 {

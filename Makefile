@@ -18,12 +18,13 @@ INC_DIR		= include
 # Archivos Fuente (Añade aquí tus nuevos archivos .c)
 # Archivos Fuente
 SRC_FILES	=	main.c \
-				utils/token_utils.c \
-				utils/errors.c \
 				utils/utils.c \
+				utils/utils_1.c \
+				utils/token_utils.c \
 				utils/parse_utils.c \
-				utils/initialize.c \
-				utils/char_checker_utils.c \
+				errors/errors.c \
+				core/env_manage.c \
+				core/initialize.c \
 				token/tokenization.c \
 				token/token_manage.c \
 				parse/parse.c \
@@ -40,7 +41,6 @@ SRC_FILES	=	main.c \
 				builtins/exit.c \
 				exec/exec.c \
 				expand/expand.c \
-				expand/expand_utils.c \
 				expand/expand_auxiliars.c
 
 # Generación automática de rutas

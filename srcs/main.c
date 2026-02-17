@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/10 16:19:50 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/17 11:36:37 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*line;
-	t_token	*lst;
 	t_pipeline	*pl;
-	t_shell	sh;
-	t_error	err;
+	t_token		*lst;
+	t_error		err;
+	t_shell		sh;
+	char		*line;
 
 	(void)argc;
 	(void)argv;

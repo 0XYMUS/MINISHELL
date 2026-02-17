@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 12:22:52 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/21 13:36:32 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:10:38 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	xy_echo(t_command *cmd, t_shell *sh)
 	}
 	while(cmd->argv[i])
 	{
-		write(1, cmd->argv[i], xy_strlen(cmd->argv[i]));
+		write(1, cmd->argv[i], ft_strlen(cmd->argv[i]));
 		if(cmd->argv[i + 1])
 			write(1, " ", 1);
 		i++;

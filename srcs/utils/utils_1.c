@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 16:25:23 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/12 16:26:33 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:10:44 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {

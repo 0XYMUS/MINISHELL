@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 17:09:19 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/09 14:33:43 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:10:38 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	xy_cd(t_command *cmd, t_shell *sh)
         return (1);
     }
     write(1, "se ha cambiado a ", 17);
-    write(1, path, xy_strlen(path));
+    write(1, path, ft_strlen(path));
     write(1, "\n", 1);
     return (0);
 }

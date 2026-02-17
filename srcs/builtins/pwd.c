@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 12:22:52 by julepere          #+#    #+#             */
-/*   Updated: 2026/01/27 20:32:45 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:10:38 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	xy_pwd(t_command *cmd, t_shell *sh)
 		sh->exit_status = 1;
 		return (0);
 	}
-	write(1, cwd , xy_strlen(cwd));
+	write(1, cwd , ft_strlen(cwd));
 	write(1, "\n", 1);
 	free(cwd);
 	return (0);

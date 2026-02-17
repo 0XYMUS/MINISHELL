@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 13:21:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/04 12:15:39 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:10:38 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	xy_env(t_command *cmd, t_shell *sh)
     i = 0;
     while (envp[i])
     {
-        write(1, envp[i], xy_strlen(envp[i]));
+        write(1, envp[i], ft_strlen(envp[i]));
         write(1, "\n", 1);
         i++;
     }

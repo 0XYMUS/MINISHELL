@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:44:35 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-#include <errno.h>
 
 /* NOTE: En rutas OOM forzamos errno=ENOMEM para que perror() sea determinista */
 
@@ -24,7 +22,7 @@ static char	*qmask_dup(const char *src)
 
 	if (!src)
 		return (NULL);
-	len = xy_strlen(src);
+	len = ft_strlen(src);
 	dup = malloc(sizeof(char) * (len + 1));
 	if (!dup)
 		return (NULL);

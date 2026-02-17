@@ -6,13 +6,17 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/13 17:26:26 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:43:09 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#include <errno.h>
+int	is_space(char c) 
+{
+	return (c == ' '  || c == '\t' || c == '\n' || c == '\r' || c == '\v' ||
+			c == '\f');
+}
 
 static int	is_dquote_escapable(char c)
 {

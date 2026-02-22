@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/17 11:36:37 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/22 00:21:51 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_pipeline	*pl;
-	t_token		*lst;
-	t_error		err;
-	t_shell		sh;
 	char		*line;
+	t_token		*lst;
+	t_pipeline	*pl;
+	t_shell		sh;
+	t_error		err;
 
 	(void)argc;
 	(void)argv;
 	lst = NULL;
-	sh.envp = envp;
-	sh.exit_status = 0;
-	(void)sh;
+
+	if (shell_init(&sh, envp) != 0)
+		return (1);
 	while(1)
 	{
 		line = readline(

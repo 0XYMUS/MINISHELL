@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/13 17:28:42 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/25 20:56:44 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int	token_to_command_tmp(t_token *toks, t_command *cmd)
 
 	cmd->qmask = NULL;
 	cmd->redirs = NULL;
-	cmd->cmd_info.type = CMD_UNKNOWN;
-	cmd->cmd_info.builtin = BI_NONE;
+	cmd->type = CMD_UNKNOWN;
+	cmd->builtin = BI_NONE;
 	return (0);
 }
 
@@ -92,47 +92,47 @@ static void	identify_command_type(t_command *cmd)
 {
 	if (!cmd->argv || !cmd->argv[0])
 	{
-		cmd->cmd_info.type = CMD_UNKNOWN;
-		cmd->cmd_info.builtin = BI_NONE;
+		cmd->type = CMD_UNKNOWN;
+		cmd->builtin = BI_NONE;
 		return ;
 	}
 	if (xy_streq(cmd->argv[0], "echo"))
-		cmd->cmd_info.builtin = BI_ECHO;
+		cmd->builtin = BI_ECHO;
 	else if (xy_streq(cmd->argv[0], "cd"))
-		cmd->cmd_info.builtin = BI_CD;
+		cmd->builtin = BI_CD;
 	else if (xy_streq(cmd->argv[0], "pwd"))
-		cmd->cmd_info.builtin = BI_PWD;
+		cmd->builtin = BI_PWD;
 	else if (xy_streq(cmd->argv[0], "export"))
-		cmd->cmd_info.builtin = BI_EXPORT;
+		cmd->builtin = BI_EXPORT;
 	else if (xy_streq(cmd->argv[0], "unset"))
-		cmd->cmd_info.builtin = BI_UNSET;
+		cmd->builtin = BI_UNSET;
 	else if (xy_streq(cmd->argv[0], "env"))
-		cmd->cmd_info.builtin = BI_ENV;
+		cmd->builtin = BI_ENV;
 	else if (xy_streq(cmd->argv[0], "exit"))
-		cmd->cmd_info.builtin = BI_EXIT;
+		cmd->builtin = BI_EXIT;
 	else
-		cmd->cmd_info.builtin = BI_NONE;
-	if (cmd->cmd_info.builtin != BI_NONE)
-		cmd->cmd_info.type = CMD_BUILTIN;
+		cmd->builtin = BI_NONE;
+	if (cmd->builtin != BI_NONE)
+		cmd->type = CMD_BUILTIN;
 	else
-		cmd->cmd_info.type = CMD_EXTERNAL;
+		cmd->type = CMD_EXTERNAL;
 }
 
 /* -------- 3) dispatcher de builtins -------- */
 
 static int	exec_builtin(t_command *cmd, t_shell *sh)
 {
-	if (cmd->cmd_info.builtin == BI_ECHO)
+	if (cmd->builtin == BI_ECHO)
 		return (xy_echo(cmd, sh));
-	if (cmd->cmd_info.builtin == BI_PWD)
+	if (cmd->builtin == BI_PWD)
 		return (xy_pwd(cmd, sh));
-	if (cmd->cmd_info.builtin == BI_ENV)
+	if (cmd->builtin == BI_ENV)
 		return (xy_env(cmd, sh));
-	if (cmd->cmd_info.builtin == BI_CD)
+	if (cmd->builtin == BI_CD)
         return (xy_cd(cmd, sh));
-	if (cmd->cmd_info.builtin == BI_EXIT)
+	if (cmd->builtin == BI_EXIT)
         return (xy_exit(cmd, sh));
-	if (cmd->cmd_info.builtin == BI_EXPORT)
+	if (cmd->builtin == BI_EXPORT)
         return (xy_export(cmd, sh));
 	/* TODO: resto de builtins */
 	return (1);
@@ -143,7 +143,7 @@ static int	exec_builtin(t_command *cmd, t_shell *sh)
 int	cmd_type_and_exec_tmp(t_command *cmd, t_shell *sh)
 {
 	identify_command_type(cmd);
-	if (cmd->cmd_info.type == CMD_BUILTIN)
+	if (cmd->type == CMD_BUILTIN)
 		return (exec_builtin(cmd, sh));
 	/* CMD_EXTERNAL: por ahora no hace nada */
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,33 +47,26 @@ static void	print_argv(char **argv)
 	printf("\n");
 }
 
-t_pipeline	*pipeline_new(void)
+t_command	*pipeline_new(void)
 {
-	t_pipeline	*node;
+	t_command	*node;
 
-	node = (t_pipeline *)malloc(sizeof(t_pipeline));
+	node = (t_command *)malloc(sizeof(t_command));
 	if (!node)
 		return (NULL);
-	node->cmd = malloc(sizeof(t_command));
-	if (!node->cmd)
-	{
-		free(node);
-		return (NULL);
-	}
-	/* Ensure all fields are initialized even if t_command grows */
-	*node->cmd = (t_command){0};
-	node->cmd->argv = NULL;
-	node->cmd->qmask = NULL;
-	node->cmd->redirs = NULL;
-	node->cmd->cmd_info.type = CMD_UNKNOWN;
-	node->cmd->cmd_info.builtin = BI_NONE;
+	*node = (t_command){0};
+	node->argv = NULL;
+	node->qmask = NULL;
+	node->redirs = NULL;
+	node->type = CMD_UNKNOWN;
+	node->builtin = BI_NONE;
 	node->next = NULL;
 	return (node);
 }
 
-void	pipeline_add_back(t_pipeline **lst, t_pipeline *new_node)
+void	pipeline_add_back(t_command **lst, t_command *new_node)
 {
-	t_pipeline	*cur;
+	t_command	*cur;
 
 	if (!lst || !new_node)
 		return ;
@@ -143,7 +136,7 @@ void	redir_add_back(t_redir **lst, t_redir *new_node)
 	cur->next = new_node;
 }
 
-void	pipeline_debug_print(const t_pipeline *lst)
+void	pipeline_debug_print(const t_command *lst)
 {
 	int	i;
 
@@ -151,13 +144,8 @@ void	pipeline_debug_print(const t_pipeline *lst)
 	while (lst)
 	{
 		printf("cmd[%d]:\n", i);
-		if (!lst->cmd)
-			printf("    (null cmd)\n");
-		else
-		{
-			print_argv(lst->cmd->argv);
-			print_redir(lst->cmd->redirs);
-		}
+		print_argv(lst->argv);
+		print_redir(lst->redirs);
 		lst = lst->next;
 		i++;
 	}

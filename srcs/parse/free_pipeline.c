@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 15:59:44 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/10 12:09:34 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ static void	free_command(t_command *cmd)
 	free(cmd);
 }
 
-void	pipeline_free_all(t_pipeline **lst)
+void	pipeline_free_all(t_command **lst)
 {
-	t_pipeline	*cur;
-	t_pipeline	*next;
+	t_command	*cur;
+	t_command	*next;
 
 	if (!lst)
 		return ;
@@ -77,8 +77,7 @@ void	pipeline_free_all(t_pipeline **lst)
 	while (cur)
 	{
 		next = cur->next;
-		free_command(cur->cmd);
-		free(cur);
+		free_command(cur);
 		cur = next;
 	}
 	*lst = NULL;

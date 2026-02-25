@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/17 15:44:35 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 	return (0);
 }
 
-int	init_command(t_pipeline **node, t_token **token, t_error *err)
+int	init_command(t_command **node, t_token **token, t_error *err)
 {
 	int	n_argv;
 
@@ -115,15 +115,15 @@ int	init_command(t_pipeline **node, t_token **token, t_error *err)
 	n_argv = argv_len(*token);
 	if (n_argv < 0)
 		return (pipeline_free_all(node), -1);
-	(*node)->cmd->argv = malloc(sizeof (char *) * (n_argv + 1));
-	if (!(*node)->cmd->argv)
+	(*node)->argv = malloc(sizeof (char *) * (n_argv + 1));
+	if (!(*node)->argv)
 	{
 		errno = ENOMEM;
 		error_set(err, PERR_OOM, PNEAR_NONE);
 		return (pipeline_free_all(node), -1);
 	}
-	(*node)->cmd->qmask = malloc(sizeof(char *) * (n_argv + 1));
-	if (!(*node)->cmd->qmask)
+	(*node)->qmask = malloc(sizeof(char *) * (n_argv + 1));
+	if (!(*node)->qmask)
 	{
 		errno = ENOMEM;
 		error_set(err, PERR_OOM, PNEAR_NONE);
@@ -131,8 +131,8 @@ int	init_command(t_pipeline **node, t_token **token, t_error *err)
 	}
 	while (n_argv >= 0)
 	{
-		(*node)->cmd->argv[n_argv] = NULL;
-		(*node)->cmd->qmask[n_argv] = NULL;
+		(*node)->argv[n_argv] = NULL;
+		(*node)->qmask[n_argv] = NULL;
 		n_argv--;
 	}
 	return (0);
@@ -167,9 +167,9 @@ int	init_command(t_pipeline **node, t_token **token, t_error *err)
 	return (0);
 } */
 
-int	parse_simple_command(t_pipeline **lst, t_token **token, t_error *err)
+int	parse_simple_command(t_command **lst, t_token **token, t_error *err)
 {
-	t_pipeline	*node;
+	t_command	*node;
 	int	n_argv;
 
 	if (init_command(&node, token, err) == -1)
@@ -177,9 +177,9 @@ int	parse_simple_command(t_pipeline **lst, t_token **token, t_error *err)
 	n_argv = 0;
 	while (*token && (*token)->type != TOK_PIPE)
 	{
-		if (add_reddir(token, &node->cmd, err) == -1)
+		if (add_reddir(token, &node, err) == -1)
 			return (pipeline_free_all(&node), -1);
-		if (*token && add_word(token, &node->cmd, &n_argv, err) == -1)
+		if (*token && add_word(token, &node, &n_argv, err) == -1)
 			return (pipeline_free_all(&node), -1);
 	}
 	/* if (check_command(&node, err) == -1)
@@ -188,9 +188,9 @@ int	parse_simple_command(t_pipeline **lst, t_token **token, t_error *err)
 	return (0);
 }
 
-t_pipeline	*parse(t_token **token, t_error *err)
+t_command	*parse(t_token **token, t_error *err)
 {
-	t_pipeline	*lst;
+	t_command	*lst;
 
 	if (validate_syntax(*token, err) == -1)
 		return (NULL);

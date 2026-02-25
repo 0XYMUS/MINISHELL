@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/25 02:46:24 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:31:35 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,34 +108,24 @@ typedef struct s_redir
 	t_redir_type		type;
 	char				*target;
 	char				*qmask;
-	int				expand;
+	int					expand;
 	struct s_redir		*next;
 }	t_redir;
 
-typedef struct s_cmd_info
-{
-	t_cmd_type		type;
-	t_builtin_cmd	builtin;
-}	t_cmd_info;
-
 typedef struct s_command
 {
-	char		**argv;
-	char		**qmask;
-	t_redir		*redirs;
-	t_cmd_info	cmd_info;
+	char				**argv;  // User input
+	char				**qmask; // Comillas
+	t_redir				*redirs; 
+	t_cmd_type			type; 	 //command types (ENUM)
+	t_builtin_cmd		builtin; // Builtin type
+	struct s_command	*next;   //next command in line
 }	t_command;
-
-typedef struct s_pipeline
-{
-	t_command			*cmd;
-	struct s_pipeline	*next;
-}	t_pipeline;
 
 typedef struct s_error
 {
-	t_errcode	code;
-	t_near		near;
+	t_errcode			code;
+	t_near				near;
 }t_error;
 
 /*-------------------------------- [  shell  ] -------------------------------*/
@@ -146,7 +136,7 @@ typedef struct s_shell
 	char		**envp;			/* environment (temporary as char**) */
 	int			exit_status;	/* $? */
 	t_token		*tokens;		/* lexer output for current line */
-	t_pipeline	*pipeline;		/* parser output for current line */
+	t_command	*pipeline;		/* parser output for current line */
 	t_error		err;
 }	t_shell;
 
@@ -177,6 +167,7 @@ void	*ft_memmove(void *dest, const void *src, size_t n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 void	ft_strcpy(char *dest, const char *src);
 void	str_move(char **str, int i, int move);
+int		ft_strncmp(const char *s1, const char *s2, size_t size);
 
 /* token_utils.c */
 int		is_space(char c);
@@ -202,18 +193,18 @@ void	token_debug_print(const t_token *lst);
 /*-------------------------------- [  parser  ] ------------------------------*/
 
 /* parse.c */
-t_pipeline	*parse(t_token **token, t_error *err);
-int			parse_simple_command(t_pipeline **lst, t_token **token, t_error *err);
+t_command	*parse(t_token **token, t_error *err);
+int			parse_simple_command(t_command **lst, t_token **token, t_error *err);
 
 /* pipeline_utils.c */
-t_pipeline	*pipeline_new(void);
-void		pipeline_add_back(t_pipeline **lst, t_pipeline *new_node);
-void		pipeline_debug_print(const t_pipeline *lst);
+t_command	*pipeline_new(void);
+void		pipeline_add_back(t_command **lst, t_command *new_node);
+void		pipeline_debug_print(const t_command *lst);
 t_redir		*redir_new(t_token_type type, char *target, char *qmask);
 void		redir_add_back(t_redir **lst, t_redir *new_node);
 
 /* free_pipeline.c */
-void		pipeline_free_all(t_pipeline **lst);
+void		pipeline_free_all(t_command **lst);
 
 /* validate_syntax.c */
 t_near		near_from_token(t_token_type token);
@@ -228,15 +219,15 @@ int			error_status(const t_error *err);
 /* parse_utils.c */
 int			argv_len(t_token *token);
 int			xy_streq(const char *a, const char *b);
-/* void		is_builtin(char *argv, t_pipeline **node); */
-/* int			is_external(char *argv, t_pipeline **node, t_error *err); */
+/* void		is_builtin(char *argv, t_command **node); */
+/* int			is_external(char *argv, t_command **node, t_error *err); */
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   EXPAND                                   */
 /* ══════════════════════════════════════════════════════════════════════════ */
 
 /* expand.c */
-void    expand(t_pipeline *node, t_shell sh);
+void    expand(t_command *node, t_shell sh);
 
 /* expand_auxiliars.c*/
 int		get_end(char *word, int i);

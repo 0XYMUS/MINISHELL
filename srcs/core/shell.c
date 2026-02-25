@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 02:02:59 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/25 05:31:41 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	process_line(char *line, t_shell *sh)
 {
-	t_pipeline	*pl;
+	t_command	*pl;
 
 	sh->tokens = tokenizer(line);
 	exec_from_tokens_tmp(sh->tokens, sh);

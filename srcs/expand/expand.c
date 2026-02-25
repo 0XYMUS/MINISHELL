@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 11:41:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/12 16:29:01 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,12 +128,12 @@ static void expand_redirs(t_redir *redirs, t_shell sh)
 	}
 }
 
-void    expand(t_pipeline *node, t_shell sh)
+void    expand(t_command *node, t_shell sh)
 {
 	while (node)
 	{
-		expand_argv(node->cmd->argv, node->cmd->qmask, sh);
-		expand_redirs(node->cmd->redirs, sh);
+		expand_argv(node->argv, node->qmask, sh);
+		expand_redirs(node->redirs, sh);
 		node = node->next;
 	}
 }

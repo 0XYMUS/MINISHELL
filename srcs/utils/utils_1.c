@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 16:25:23 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/17 15:10:44 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:32:29 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,18 @@ void	str_move(char **str, int i, int move)
 		free(*str);
 		*str = new;
 	}
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t size)
+{
+	size_t	i;
+
+	i = 0;
+	while (size--)
+	{
+		if (s1[i] != s2[i] || s1[i] == 0 || s2[i] == 0)
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 12:35:35 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/13 17:30:49 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:25:05 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,12 @@ int	xy_export(t_command *cmd, t_shell *sh)
 	(void)cmd;
 	(void)sh;
 
-	return(0);
+	return 0;
+	/* int	i;
+
+	if (!cmd->argv[1])
+	{
+		xy_env(cmd, sh);
+	}
+	 */
 }

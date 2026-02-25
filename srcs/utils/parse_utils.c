@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/13 16:15:35 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,52 +18,52 @@ int is_redir(t_token_type type)
          || type == TOK_REDIR_OUT);
 }
 
-/* static void	is_builtin2(char *argv, t_pipeline **node)
+/* static void	is_builtin2(char *argv, t_command **node)
 {
 	if (xy_streq(argv, "unset"))
 	{
-		(*node)->cmd->cmd_info.type = CMD_BUILTIN;
-		(*node)->cmd->cmd_info.builtin = BI_UNSET;
+		(*node)->type = CMD_BUILTIN;
+		(*node)->builtin = BI_UNSET;
 	}
 	else if (xy_streq(argv, "env"))
 	{
-		(*node)->cmd->cmd_info.type = CMD_BUILTIN;
-		(*node)->cmd->cmd_info.builtin = BI_ENV;
+		(*node)->type = CMD_BUILTIN;
+		(*node)->builtin = BI_ENV;
 	}
 	else if (xy_streq(argv, "exit"))
 	{
-		(*node)->cmd->cmd_info.type = CMD_BUILTIN;
-		(*node)->cmd->cmd_info.builtin = BI_EXIT;
+		(*node)->type = CMD_BUILTIN;
+		(*node)->builtin = BI_EXIT;
 	}
 } */
 
-/* void	is_builtin(char *argv, t_pipeline **node)
+/* void	is_builtin(char *argv, t_command **node)
 {
 	if (xy_streq(argv, "echo"))
 	{
-		(*node)->cmd->cmd_info.type = CMD_BUILTIN;
-		(*node)->cmd->cmd_info.builtin = BI_ECHO;
+		(*node)->type = CMD_BUILTIN;
+		(*node)->builtin = BI_ECHO;
 	}
 	else if (xy_streq(argv, "cd"))
 	{
-		(*node)->cmd->cmd_info.type = CMD_BUILTIN;
-		(*node)->cmd->cmd_info.builtin = BI_CD;
+		(*node)->type = CMD_BUILTIN;
+		(*node)->builtin = BI_CD;
 	}
 	else if (xy_streq(argv, "pwd"))
 	{
-		(*node)->cmd->cmd_info.type = CMD_BUILTIN;
-		(*node)->cmd->cmd_info.builtin = BI_PWD;
+		(*node)->type = CMD_BUILTIN;
+		(*node)->builtin = BI_PWD;
 	}
 	else if (xy_streq(argv, "export"))
 	{
-		(*node)->cmd->cmd_info.type = CMD_BUILTIN;
-		(*node)->cmd->cmd_info.builtin = BI_EXPORT;
+		(*node)->type = CMD_BUILTIN;
+		(*node)->builtin = BI_EXPORT;
 	}
 	else
 		is_builtin2(argv, node);
 } */
 
-/* int	is_external(char *argv, t_pipeline **node, t_error *err)
+/* int	is_external(char *argv, t_command **node, t_error *err)
 {
 	if (argv[0] == '/' || (argv[0] == '.' && argv[1] == '/')
 	 || (argv[0] == '.' && argv[1] == '.' && argv[2] == '/'))
@@ -72,7 +72,7 @@ int is_redir(t_token_type type)
 		{
 			if (access(argv, X_OK) == 0)
 			{
-				(*node)->cmd->cmd_info.type = CMD_EXTERNAL;
+				(*node)->type = CMD_EXTERNAL;
 				return (0);
 			}
 				else
@@ -81,7 +81,7 @@ int is_redir(t_token_type type)
 		else
 			return(error_set(err, PERR_NOT_FOUND, PNEAR_NONE), -1);
 	}
-	(*node)->cmd->cmd_info.type = CMD_UNKNOWN;
+	(*node)->type = CMD_UNKNOWN;
 	return (0);
 } */
 

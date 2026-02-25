@@ -25,6 +25,7 @@ SRC_FILES	=	main.c \
 				errors/errors.c \
 				core/env_manage.c \
 				core/initialize.c \
+				core/shell.c \
 				token/tokenization.c \
 				token/token_manage.c \
 				parse/parse.c \

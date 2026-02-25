@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/22 00:21:28 by julepere         ###   ########.fr       */
+/*   Updated: 2026/02/25 02:46:24 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,10 @@ void	env_free(char **envp);
 char	**env_dup(char **envp);
 
 /* initialize.c */
-int	shell_init(t_shell *sh, char **envp);
+int		shell_init(t_shell *sh, char **envp);
+
+/* shell.c */
+void	shell_loop(t_shell *sh);
 
 /*-------------------------------- [  utils  ] -------------------------------*/
 
@@ -183,14 +186,6 @@ int		word_len(char *line, int i);
 
 /* expand_utils.c */
 size_t	ft_strlen(const char *s);
-
-/*-------------------------------- [  core  ] --------------------------------*/
-
-/* env_manage.c*/
-int		env_count(char **envp);
-
-/* Initialize.c*/
-int		init(t_shell *sh);
 
 /*------------------------------ [  tokenizer  ] -----------------------------*/
 

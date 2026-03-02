@@ -22,6 +22,7 @@ SRC_FILES	=	main.c \
 				utils/utils_1.c \
 				utils/token_utils.c \
 				utils/parse_utils.c \
+				utils/export_utils.c \
 				errors/errors.c \
 				core/env_manage.c \
 				core/initialize.c \

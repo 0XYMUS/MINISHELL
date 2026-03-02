@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 17:51:02 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/17 15:10:38 by julepere         ###   ########.fr       */
+/*   Updated: 2026/03/02 17:03:34 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,3 +48,20 @@ char	*ft_strdup(const char *s)
 	return (dup);
 }
 
+char	*ft_strchr(const char *s, int c)
+{
+	unsigned char	uc;
+
+	uc = (unsigned char)c;
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if ((unsigned char)*s == uc)
+			return ((char *)s);
+		s++;
+	}
+	if (uc == '\0')
+		return ((char *)s);
+	return (NULL);
+}

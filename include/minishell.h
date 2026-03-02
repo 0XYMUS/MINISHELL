@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+ /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/25 21:31:35 by julepere         ###   ########.fr       */
+/*   Updated: 2026/03/02 17:03:34 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ void	shell_loop(t_shell *sh);
 /* utils.c */
 size_t	ft_strlen(const char *s);
 char	*ft_strdup(const char *s);
+char	*ft_strchr(const char *s, int c);
 
 /* utils_1.c */
 void	*ft_memmove(void *dest, const void *src, size_t n);
@@ -258,8 +259,15 @@ int		xy_env(t_command *cmd, t_shell *sh);
 /* exit.c */
 int		xy_exit(t_command *cmd, t_shell *sh);
 
-/* exit.c */
+/* export.c */
 int		xy_export(t_command *cmd, t_shell *sh);
+
+/* export_utils.c */
+int		find_env_var(char **envp, const char *name);
+int		export_set_var(char *arg, t_shell *sh);
+int		export_with_value(char *arg, char *eq_pos, t_shell *sh);
+int		update_env_var(t_shell *sh, int idx, char *arg);
+int		add_env_var(t_shell *sh, char *new_var);
 
 /* pwd.c */
 int		xy_pwd(t_command *cmd, t_shell *sh);

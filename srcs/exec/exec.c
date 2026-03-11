@@ -14,16 +14,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/*
-TEMPORAL Y A PROPÓSITO "CUTRE":
-- Convierte tokens -> cmd->argv cogiendo SOLO TOK_WORD, sin redirs/pipes.
-- Detecta builtin por string SOLO para "echo".
-- Ejecuta echo.
-- Sin comprobaciones “serias” más allá de evitar segfaults básicos.
-*/
-
-/* -------- mini helpers (porque no tienes ft_strdup/ft_strcmp) -------- */
-
 int	xy_streq(const char *a, const char *b)
 {
 	int	i;
@@ -48,117 +38,99 @@ static void	xy_free_argv(char **argv)
 	free(argv);
 }
 
-/* -------- 1) converter: tokens -> command -------- */
-
-int	token_to_command_tmp(t_token *toks, t_command *cmd)
+void	run_parent_builtin(t_command *pl, t_shell *sh)
 {
-	int		i;
-	int		words;
-	t_token	*t;
+	if (pl->builtin == BI_CD)
+		return (xy_cd(pl, sh));
+	if (pl->builtin == BI_EXPORT)
+		return (xy_export(pl, sh));
+	if (pl->builtin == BI_UNSET)
+		return (xy_unset(pl, sh));
+	if (pl->builtin == BI_EXIT)
+		return (xy_exit(pl, sh));
+}
 
-	/* count TOK_WORD (sí, hay que contar para malloc) */
-	words = 0;
-	t = toks;
-	while (t)
-	{
-		if (t->type == TOK_WORD)
-			words++;
-		t = t->next;
-	}
-
-	cmd->argv = (char **)malloc(sizeof(char *) * (words + 1));
-	if (!cmd->argv)
-		return (-1);
-
-	i = 0;
-	while (toks)
-	{
-		if (toks->type == TOK_WORD)
-			cmd->argv[i++] = ft_strdup(toks->value);
-		toks = toks->next;
-	}
-	cmd->argv[i] = NULL;
-
-	cmd->qmask = NULL;
-	cmd->redirs = NULL;
-	cmd->type = CMD_UNKNOWN;
-	cmd->builtin = BI_NONE;
+int	is_parent_builtin(t_command *pl)
+{
+	if (pl->builtin == BI_CD || pl->builtin == BI_EXIT
+		|| pl->builtin == BI_EXPORT || pl->builtin == BI_UNSET)
+		return (1);
 	return (0);
 }
 
-/* -------- 2) identificar tipo de comando -------- */
-
-static void	identify_command_type(t_command *cmd)
+void	child_process(int prev_read, t_command *pl, int *pipefd)
 {
-	if (!cmd->argv || !cmd->argv[0])
+	if (prev_read != -1)// checkeo de si hay comando anterior
+		dup2(prev_read, STDIN_FILENO);//para que coja su salida como entarda del nuevo
+	if (pl->next)//si hay siguiente comando redirigimos la salida de este
+		dup2(pipefd[1], STDOUT_FILENO);// al siguiente comando
+	close(prev_read);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	apply_redirs();
+	exec_choice();
+	exit(status);
+}
+
+void	parent_process(int *prev_read, t_command *pl, int *pipefd)
+{
+	close((*prev_read));
+	if (pl->next)
 	{
-		cmd->type = CMD_UNKNOWN;
-		cmd->builtin = BI_NONE;
-		return ;
+		close(pipefd[1]);
+		prev_read = pipefd[0];
 	}
-	if (xy_streq(cmd->argv[0], "echo"))
-		cmd->builtin = BI_ECHO;
-	else if (xy_streq(cmd->argv[0], "cd"))
-		cmd->builtin = BI_CD;
-	else if (xy_streq(cmd->argv[0], "pwd"))
-		cmd->builtin = BI_PWD;
-	else if (xy_streq(cmd->argv[0], "export"))
-		cmd->builtin = BI_EXPORT;
-	else if (xy_streq(cmd->argv[0], "unset"))
-		cmd->builtin = BI_UNSET;
-	else if (xy_streq(cmd->argv[0], "env"))
-		cmd->builtin = BI_ENV;
-	else if (xy_streq(cmd->argv[0], "exit"))
-		cmd->builtin = BI_EXIT;
 	else
-		cmd->builtin = BI_NONE;
-	if (cmd->builtin != BI_NONE)
-		cmd->type = CMD_BUILTIN;
-	else
-		cmd->type = CMD_EXTERNAL;
+		prev_read = -1;
 }
 
-/* -------- 3) dispatcher de builtins -------- */
 
-static int	exec_builtin(t_command *cmd, t_shell *sh)
+int	execution(t_command *pl, t_shell *sh)
 {
-	if (cmd->builtin == BI_ECHO)
-		return (xy_echo(cmd, sh));
-	if (cmd->builtin == BI_PWD)
-		return (xy_pwd(cmd, sh));
-	if (cmd->builtin == BI_ENV)
-		return (xy_env(cmd, sh));
-	if (cmd->builtin == BI_CD)
-        return (xy_cd(cmd, sh));
-	if (cmd->builtin == BI_EXIT)
-        return (xy_exit(cmd, sh));
-	if (cmd->builtin == BI_EXPORT)
-        return (xy_export(cmd, sh));
-	/* TODO: resto de builtins */
-	return (1);
+	pid_t	pid; //retorno de fork()
+	int		pipefd[2]; //pipe del comando actual
+	int		prev_read; //fd de lectura del pipe anterior
+
+	prev_read = -1;
+
+	if (!pl->next && is_parent_builtin(pl)) //si solo hay un comando y es cd,expor,exit o unset
+		return (run_parent_builtin(pl, sh), 0); //se ejecuta sin entrar al bucle, no hace falta
+	while (pl)
+	{
+		if (pl->next && pipe(pipefd) == -1)//checkeo de si hay siguiente comando
+			return (perror("minishell"), 1);
+		pid = fork();
+		if (pid < 0)
+			return (perror("minishell"), 1);
+		if (pid == 0)//comiendo de proceso hijo
+		{
+			child_process(prev_read, pl, pipefd);
+		}
+		else//comienzo de proceso padre
+		{
+			parent_process(prev_read, pl, pipefd);
+		}
+		pl = pl->next;
+	}
+	return (wait_all_children());
 }
+/*Tabla mental de FDs
+Caso 1: comando único sin pipes
+Proceso		stdin		stdout			Qué hace
+Padre		terminal	terminal	Si es cd/export/unset/exit, ejecuta directamente
+Hijo		terminal	terminal	Si decides lanzar otros comandos normales
+Caso 2: primer comando de un pipeline
+Ejemplo: ls | grep x | wc
 
-/* -------- 4) ejecutor principal -------- */
-
-int	cmd_type_and_exec_tmp(t_command *cmd, t_shell *sh)
-{
-	identify_command_type(cmd);
-	if (cmd->type == CMD_BUILTIN)
-		return (exec_builtin(cmd, sh));
-	/* CMD_EXTERNAL: por ahora no hace nada */
-	return (0);
-}
-
-/* -------- 5) wrapper: de tokens a ejecución -------- */
-
-int	exec_from_tokens_tmp(t_token *toks, t_shell *sh)
-{
-	t_command	cmd;
-	int			ret;
-
-	if (token_to_command_tmp(toks, &cmd) == -1)
-		return (-1);
-	ret = cmd_type_and_exec_tmp(&cmd, sh);
-	xy_free_argv(cmd.argv);
-	return (ret);
-}
+Proceso		prev_read	pipefd[0]				pipefd[1]				Acción
+Hijo 1		-1			read del pipe nuevo		write del pipe nuevo	dup2(pipefd[1], STDOUT_FILENO)
+Padre		-1			read del pipe nuevo		write del pipe nuevo	cierra pipefd[1] y guarda prev_read = pipefd[0]
+Caso 3: comando intermedio
+Proceso		prev_read				pipefd[0]				pipefd[1]				Acción
+Hijo i		read del pipe anterior	read del pipe nuevo		write del pipe nuevo	dup2(prev_read, STDIN_FILENO) y dup2(pipefd[1], STDOUT_FILENO)
+Padre		read del pipe anterior	read del pipe nuevo		write del pipe nuevo	cierra prev_read, cierra pipefd[1], guarda prev_read = pipefd[0]
+Caso 4: último comando
+Proceso		prev_read						pipefd					Acción
+Hijo 		último read del pipe anterior	no hay pipe nuevo		dup2(prev_read, STDIN_FILENO)
+Padre		read del pipe anterior			no hay pipe nuevo		cierra prev_read, deja prev_read = -1
+*/

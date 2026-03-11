@@ -138,35 +138,6 @@ int	init_command(t_command **node, t_token **token, t_error *err)
 	return (0);
 }
 
-/* int	correct_command(char *argv, t_pipeline **node, t_error *err)
-{
-	is_builtin(argv, node);
-	if ((*node)->cmd->cmd_info.type == CMD_BUILTIN)
-		return (0);
-	if (is_external(argv, node, err) == -1)
-		return (-1);
-	return (0);
-} */
-
-/* int	check_command(t_pipeline **node, t_error *err)
-{
-	if (!(*node)->cmd->argv[0] && (*node)->cmd->redirs)
-		return (0);
-	if (!(*node)->cmd->argv[0] && !(*node)->cmd->redirs)
-	{
-		errno = ENOMEM;
-		error_set(err, PERR_NONE, PNEAR_NONE);
-		return (-1);
-	}
-	if (correct_command((*node)->cmd->argv[0], node, err) == -1)
-	{
-		errno = ENOMEM;
-		error_set(err, PERR_UNEXPECTED_TOKEN, PNEAR_WORD);
-		return (-1);
-	}
-	return (0);
-} */
-
 int	parse_simple_command(t_command **lst, t_token **token, t_error *err)
 {
 	t_command	*node;

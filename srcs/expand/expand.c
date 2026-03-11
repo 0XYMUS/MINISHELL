@@ -121,7 +121,7 @@ static void expand_redirs(t_redir *redirs, t_shell sh)
 		while (redirs->target[i])
 		{
 			if (redirs->target[i] == '$' && redirs->qmask[i] != '1')
-				expand_word(&redirs->target, &redirs->qmask, sh, i);
+				expand_word(&redirs->target, &redirs->qmask, sh, i + 1);
 			i++;
 		}
 		redirs = redirs->next;

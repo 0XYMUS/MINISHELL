@@ -281,8 +281,6 @@ int		xy_unset(t_command *cmd, t_shell *sh);
 /* ══════════════════════════════════════════════════════════════════════════ */
 
 /* exec.c */
-int		token_to_command_tmp(t_token *toks, t_command *cmd);
-int		cmd_type_and_exec_tmp(t_command *cmd, t_shell *sh);
-int		exec_from_tokens_tmp(t_token *toks, t_shell *sh);
+
 
 #endif

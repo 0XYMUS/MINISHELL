@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/25 20:56:44 by julepere         ###   ########.fr       */
+/*   Updated: 2026/03/30 17:01:04 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	xy_free_argv(char **argv)
 	free(argv);
 }
 
-void	run_parent_builtin(t_command *pl, t_shell *sh)
+int	run_parent_builtin(t_command *pl, t_shell *sh)
 {
 	if (pl->builtin == BI_CD)
 		return (xy_cd(pl, sh));
@@ -64,26 +64,50 @@ void	child_process(int prev_read, t_command *pl, int *pipefd)
 		dup2(prev_read, STDIN_FILENO);//para que coja su salida como entarda del nuevo
 	if (pl->next)//si hay siguiente comando redirigimos la salida de este
 		dup2(pipefd[1], STDOUT_FILENO);// al siguiente comando
-	close(prev_read);
-	close(pipefd[0]);
-	close(pipefd[1]);
+	if (prev_read != -1)
+		close(prev_read);
+	if (pl->next)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
 	apply_redirs();
 	exec_choice();
-	exit(status);
+	exit(1);
 }
 
 void	parent_process(int *prev_read, t_command *pl, int *pipefd)
 {
-	close((*prev_read));
+	if (*prev_read != -1)
+		close((*prev_read));
 	if (pl->next)
 	{
 		close(pipefd[1]);
-		prev_read = pipefd[0];
+		pipefd[0] = *prev_read;
 	}
 	else
-		prev_read = -1;
+		*prev_read = -1;
 }
 
+int	wait_all_children(void)
+{
+    int	status;
+    int	exit_code;
+
+    exit_code = 0;
+    while (waitpid(-1, &status, 0) > 0)  // Espera a CUALQUIER hijo (-1)
+    {
+        // Comprueba si terminó "normalmente" (sin signal)
+        if ((status & 0xFF) == 0)
+        {
+            // Extrae el código de salida (está en bits 8-15)
+            exit_code = (status >> 8) & 0xFF;
+        }
+        // Si fue killeado por signal, no hacemos nada
+        // (el padre sigue esperando otros hijos si los hay)
+    }
+    return (exit_code);  // Retorna el código del último hijo
+}
 
 int	execution(t_command *pl, t_shell *sh)
 {
@@ -92,7 +116,6 @@ int	execution(t_command *pl, t_shell *sh)
 	int		prev_read; //fd de lectura del pipe anterior
 
 	prev_read = -1;
-
 	if (!pl->next && is_parent_builtin(pl)) //si solo hay un comando y es cd,expor,exit o unset
 		return (run_parent_builtin(pl, sh), 0); //se ejecuta sin entrar al bucle, no hace falta
 	while (pl)
@@ -108,7 +131,7 @@ int	execution(t_command *pl, t_shell *sh)
 		}
 		else//comienzo de proceso padre
 		{
-			parent_process(prev_read, pl, pipefd);
+			parent_process(&prev_read, pl, pipefd);
 		}
 		pl = pl->next;
 	}

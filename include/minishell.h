@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 #include <sys/wait.h>
@@ -281,6 +282,16 @@ int		xy_unset(t_command *cmd, t_shell *sh);
 /* ══════════════════════════════════════════════════════════════════════════ */
 
 /* exec.c */
+int		execution(t_command *pl, t_shell *sh);
+int		run_parent_builtin(t_command *pl, t_shell *sh);
+int		is_parent_builtin(t_command *pl);
+void	parent_process(int *prev_read, t_command *pl, int *pipefd);
+int		wait_all_children(void);
+
+/* child_process.c */
+void	apply_redirs(t_redir *redirs);
+int		exec_choice(t_command *pl, t_shell *sh);
+void	child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh);
 
 
 #endif

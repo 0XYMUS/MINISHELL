@@ -6,37 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/03/30 17:01:04 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/03/31 12:56:19 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
 #include <unistd.h>
-
-int	xy_streq(const char *a, const char *b)
-{
-	int	i;
-
-	if (!a || !b)
-		return (0);
-	i = 0;
-	while (a[i] && b[i] && a[i] == b[i])
-		i++;
-	return (a[i] == '\0' && b[i] == '\0');
-}
-
-static void	xy_free_argv(char **argv)
-{
-	int	i;
-
-	if (!argv)
-		return ;
-	i = 0;
-	while (argv[i])
-		free(argv[i++]);
-	free(argv);
-}
 
 int	run_parent_builtin(t_command *pl, t_shell *sh)
 {
@@ -48,6 +24,7 @@ int	run_parent_builtin(t_command *pl, t_shell *sh)
 		return (xy_unset(pl, sh));
 	if (pl->builtin == BI_EXIT)
 		return (xy_exit(pl, sh));
+	return (0);
 }
 
 int	is_parent_builtin(t_command *pl)
@@ -58,23 +35,6 @@ int	is_parent_builtin(t_command *pl)
 	return (0);
 }
 
-void	child_process(int prev_read, t_command *pl, int *pipefd)
-{
-	if (prev_read != -1)// checkeo de si hay comando anterior
-		dup2(prev_read, STDIN_FILENO);//para que coja su salida como entarda del nuevo
-	if (pl->next)//si hay siguiente comando redirigimos la salida de este
-		dup2(pipefd[1], STDOUT_FILENO);// al siguiente comando
-	if (prev_read != -1)
-		close(prev_read);
-	if (pl->next)
-	{
-		close(pipefd[0]);
-		close(pipefd[1]);
-	}
-	apply_redirs();
-	exec_choice();
-	exit(1);
-}
 
 void	parent_process(int *prev_read, t_command *pl, int *pipefd)
 {
@@ -83,7 +43,7 @@ void	parent_process(int *prev_read, t_command *pl, int *pipefd)
 	if (pl->next)
 	{
 		close(pipefd[1]);
-		pipefd[0] = *prev_read;
+		*prev_read = pipefd[0];
 	}
 	else
 		*prev_read = -1;
@@ -127,7 +87,7 @@ int	execution(t_command *pl, t_shell *sh)
 			return (perror("minishell"), 1);
 		if (pid == 0)//comiendo de proceso hijo
 		{
-			child_process(prev_read, pl, pipefd);
+			child_process(prev_read, pl, pipefd, sh);
 		}
 		else//comienzo de proceso padre
 		{

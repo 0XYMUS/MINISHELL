@@ -172,6 +172,13 @@ void	ft_strcpy(char *dest, const char *src);
 void	str_move(char **str, int i, int move);
 int		ft_strncmp(const char *s1, const char *s2, size_t size);
 
+/* parse_utils.c */
+int			argv_len(t_token *token);
+int			xy_streq(const char *a, const char *b);
+/* void		is_builtin(char *argv, t_command **node); */
+/* int			is_external(char *argv, t_command **node, t_error *err); */
+
+
 /* token_utils.c */
 int		is_space(char c);
 int		is_redir(t_token_type type);
@@ -180,6 +187,16 @@ int		word_len(char *line, int i);
 
 /* expand_utils.c */
 size_t	ft_strlen(const char *s);
+
+/* export_utils.c */
+int		find_env_var(char **envp, const char *name);
+int		export_set_var(char *arg, t_shell *sh);
+int		export_with_value(char *arg, char *eq_pos, t_shell *sh);
+int		update_env_var(t_shell *sh, int idx, char *arg);
+int		add_env_var(t_shell *sh, char *new_var);
+
+/* unset_utils.c*/
+int	remove_env_var(t_shell *sh, char *new_var);
 
 /*------------------------------ [  tokenizer  ] -----------------------------*/
 
@@ -219,12 +236,6 @@ void		error_set(t_error *err, t_errcode code, t_near near);
 void		error_print(const t_error *err);
 int			error_status(const t_error *err);
 
-/* parse_utils.c */
-int			argv_len(t_token *token);
-int			xy_streq(const char *a, const char *b);
-/* void		is_builtin(char *argv, t_command **node); */
-/* int			is_external(char *argv, t_command **node, t_error *err); */
-
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   EXPAND                                   */
 /* ══════════════════════════════════════════════════════════════════════════ */
@@ -263,13 +274,6 @@ int		xy_exit(t_command *cmd, t_shell *sh);
 
 /* export.c */
 int		xy_export(t_command *cmd, t_shell *sh);
-
-/* export_utils.c */
-int		find_env_var(char **envp, const char *name);
-int		export_set_var(char *arg, t_shell *sh);
-int		export_with_value(char *arg, char *eq_pos, t_shell *sh);
-int		update_env_var(t_shell *sh, int idx, char *arg);
-int		add_env_var(t_shell *sh, char *new_var);
 
 /* pwd.c */
 int		xy_pwd(t_command *cmd, t_shell *sh);

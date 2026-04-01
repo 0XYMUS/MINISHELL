@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 02:02:59 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
+/*   Updated: 2026/03/13 02:47:53 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	process_line(char *line, t_shell *sh)
 
 	sh->tokens = tokenizer(line);
 	exec_from_tokens_tmp(sh->tokens, sh);
-	token_debug_print(sh->tokens);
+	/* token_debug_print(sh->tokens); */
 	pl = parse(&sh->tokens, &sh->err);
 	expand(pl, *sh);
 	if (!pl)
@@ -28,7 +28,7 @@ static void	process_line(char *line, t_shell *sh)
 	}
 	else
 	{
-		pipeline_debug_print(pl);
+		/* pipeline_debug_print(pl); */
 		pipeline_free_all(&pl);
 	}
 	token_free_all(&sh->tokens);

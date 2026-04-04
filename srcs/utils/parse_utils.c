@@ -18,72 +18,43 @@ int is_redir(t_token_type type)
          || type == TOK_REDIR_OUT);
 }
 
-/* static void	is_builtin2(char *argv, t_command **node)
+static t_builtin_cmd	get_builtin_type(char *cmd)
 {
-	if (xy_streq(argv, "unset"))
-	{
-		(*node)->type = CMD_BUILTIN;
-		(*node)->builtin = BI_UNSET;
-	}
-	else if (xy_streq(argv, "env"))
-	{
-		(*node)->type = CMD_BUILTIN;
-		(*node)->builtin = BI_ENV;
-	}
-	else if (xy_streq(argv, "exit"))
-	{
-		(*node)->type = CMD_BUILTIN;
-		(*node)->builtin = BI_EXIT;
-	}
-} */
+	if (!cmd)
+		return (BI_NONE);
+	if (xy_streq(cmd, "echo"))
+		return (BI_ECHO);
+	if (xy_streq(cmd, "cd"))
+		return (BI_CD);
+	if (xy_streq(cmd, "pwd"))
+		return (BI_PWD);
+	if (xy_streq(cmd, "export"))
+		return (BI_EXPORT);
+	if (xy_streq(cmd, "unset"))
+		return (BI_UNSET);
+	if (xy_streq(cmd, "env"))
+		return (BI_ENV);
+	if (xy_streq(cmd, "exit"))
+		return (BI_EXIT);
+	return (BI_NONE);
+}
 
-/* void	is_builtin(char *argv, t_command **node)
+void	set_command_type(t_command *node)
 {
-	if (xy_streq(argv, "echo"))
+	if (!node || !node->argv || !node->argv[0])
 	{
-		(*node)->type = CMD_BUILTIN;
-		(*node)->builtin = BI_ECHO;
+		node->type = CMD_UNKNOWN;
+		node->builtin = BI_NONE;
+		return ;
 	}
-	else if (xy_streq(argv, "cd"))
-	{
-		(*node)->type = CMD_BUILTIN;
-		(*node)->builtin = BI_CD;
-	}
-	else if (xy_streq(argv, "pwd"))
-	{
-		(*node)->type = CMD_BUILTIN;
-		(*node)->builtin = BI_PWD;
-	}
-	else if (xy_streq(argv, "export"))
-	{
-		(*node)->type = CMD_BUILTIN;
-		(*node)->builtin = BI_EXPORT;
-	}
+	node->builtin = get_builtin_type(node->argv[0]);
+	if (node->builtin != BI_NONE)
+		node->type = CMD_BUILTIN;
 	else
-		is_builtin2(argv, node);
-} */
+		node->type = CMD_EXTERNAL;
+}
 
-/* int	is_external(char *argv, t_command **node, t_error *err)
-{
-	if (argv[0] == '/' || (argv[0] == '.' && argv[1] == '/')
-	 || (argv[0] == '.' && argv[1] == '.' && argv[2] == '/'))
-	{
-		if (access(argv,F_OK) == 0)
-		{
-			if (access(argv, X_OK) == 0)
-			{
-				(*node)->type = CMD_EXTERNAL;
-				return (0);
-			}
-				else
-				return(error_set(err, PERR_PERMISSION_DENIED, PNEAR_NONE), -1);
-		}
-		else
-			return(error_set(err, PERR_NOT_FOUND, PNEAR_NONE), -1);
-	}
-	(*node)->type = CMD_UNKNOWN;
-	return (0);
-} */
+
 
 int	argv_len(t_token *token)
 {

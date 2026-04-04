@@ -76,7 +76,7 @@ int	xy_streq(const char *a, const char *b)
 		i++;
 	return (a[i] == '\0' && b[i] == '\0');
 }
-
+/*
 static void	xy_free_argv(char **argv)
 {
 	int	i;
@@ -87,4 +87,4 @@ static void	xy_free_argv(char **argv)
 	while (argv[i])
 		free(argv[i++]);
 	free(argv);
-}
+}*/

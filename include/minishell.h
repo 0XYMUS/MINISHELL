@@ -175,6 +175,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t size);
 /* parse_utils.c */
 int			argv_len(t_token *token);
 int			xy_streq(const char *a, const char *b);
+void		set_command_type(t_command *node);
 /* void		is_builtin(char *argv, t_command **node); */
 /* int			is_external(char *argv, t_command **node, t_error *err); */
 
@@ -235,6 +236,8 @@ void		error_init(t_error *err);
 void		error_set(t_error *err, t_errcode code, t_near near);
 void		error_print(const t_error *err);
 int			error_status(const t_error *err);
+int			error_emit(t_error *err, t_errcode code, t_near near);
+int			error_fail(t_error *err, t_errcode code, t_near near);
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   EXPAND                                   */

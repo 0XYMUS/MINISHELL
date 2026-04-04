@@ -58,14 +58,14 @@ static int	add_word(t_token **token, t_command **cmd, int *n_arg,
 		if (!(*cmd)->argv[*n_arg])
 		{
 			errno = ENOMEM;
-			error_set(err, PERR_OOM, PNEAR_NONE);
+			error_fail(err, PERR_OOM, PNEAR_NONE);
 			return (-1);
 		}
 		(*cmd)->qmask[*n_arg] = qmask_dup((*token)->qmask);
 		if ((*token)->qmask && !(*cmd)->qmask[*n_arg])
 		{
 			errno = ENOMEM;
-			error_set(err, PERR_OOM, PNEAR_NONE);
+			error_fail(err, PERR_OOM, PNEAR_NONE);
 			return (-1);
 		}
 		(*n_arg)++;
@@ -81,15 +81,16 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 	if (is_redir((*token)->type))
 	{
 		if (!(*token)->next)
-			return (error_set(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE), -1);
+			return (error_fail(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE));
 		if ((*token)->next->type != TOK_WORD)
-			return (error_set(err, PERR_REDIR_NO_TARGET, near_from_token((*token)->next->type)), -1);
+			return (error_fail(err, PERR_REDIR_NO_TARGET,
+					near_from_token((*token)->next->type)));
 		redir = redir_new((*token)->type, (*token)->next->value,
 			(*token)->next->qmask);
 		if (!redir)
 		{
 			errno = ENOMEM;
-			error_set(err, PERR_OOM, PNEAR_NONE);
+			error_fail(err, PERR_OOM, PNEAR_NONE);
 			return (-1);
 		}
 		if ((*token)->type == TOK_HEREDOC
@@ -109,7 +110,7 @@ int	init_command(t_command **node, t_token **token, t_error *err)
 	if (!(*node))
 	{
 		errno = ENOMEM;
-		error_set(err, PERR_OOM, PNEAR_NONE);
+		error_fail(err, PERR_OOM, PNEAR_NONE);
 		return (-1);
 	}
 	n_argv = argv_len(*token);
@@ -119,14 +120,14 @@ int	init_command(t_command **node, t_token **token, t_error *err)
 	if (!(*node)->argv)
 	{
 		errno = ENOMEM;
-		error_set(err, PERR_OOM, PNEAR_NONE);
+		error_fail(err, PERR_OOM, PNEAR_NONE);
 		return (pipeline_free_all(node), -1);
 	}
 	(*node)->qmask = malloc(sizeof(char *) * (n_argv + 1));
 	if (!(*node)->qmask)
 	{
 		errno = ENOMEM;
-		error_set(err, PERR_OOM, PNEAR_NONE);
+		error_fail(err, PERR_OOM, PNEAR_NONE);
 		return (pipeline_free_all(node), -1);
 	}
 	while (n_argv >= 0)
@@ -153,6 +154,7 @@ int	parse_simple_command(t_command **lst, t_token **token, t_error *err)
 		if (*token && add_word(token, &node, &n_argv, err) == -1)
 			return (pipeline_free_all(&node), -1);
 	}
+	set_command_type(node);
 	/* if (check_command(&node, err) == -1)
 		return (pipeline_free_all(&node), -1); */
 	pipeline_add_back(lst, node);

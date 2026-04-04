@@ -17,10 +17,8 @@ static void	process_line(char *line, t_shell *sh)
 	t_command	*pl;
 
 	sh->tokens = tokenizer(line);
-	exec_from_tokens_tmp(sh->tokens, sh);
 	/* token_debug_print(sh->tokens); */
 	pl = parse(&sh->tokens, &sh->err);
-	expand(pl, *sh);
 	if (!pl)
 	{
 		sh->exit_status = error_status(&sh->err);
@@ -28,6 +26,8 @@ static void	process_line(char *line, t_shell *sh)
 	}
 	else
 	{
+		expand(pl, *sh);
+		sh->exit_status = execution(pl, sh);
 		/* pipeline_debug_print(pl); */
 		pipeline_free_all(&pl);
 	}

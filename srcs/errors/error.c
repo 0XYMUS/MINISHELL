@@ -16,6 +16,10 @@ int	error_status(const t_error *err)
 {
 	if (!err || err->code == PERR_NONE)
 		return (0);
+	if (err->code == PERR_NOT_FOUND)
+		return (127);
+	if (err->code == PERR_PERMISSION_DENIED)
+		return (126);
 	if (err->code == PERR_OOM)
 		return (1);
 	return (2);
@@ -36,6 +40,19 @@ void	error_set(t_error *err, t_errcode code,
 		return ;
 	err->code = code;
 	err->near = near;
+}
+
+int	error_emit(t_error *err, t_errcode code, t_near near)
+{
+	error_set(err, code, near);
+	error_print(err);
+	return (error_status(err));
+}
+
+int	error_fail(t_error *err, t_errcode code, t_near near)
+{
+	error_set(err, code, near);
+	return (-1);
 }
 
 static const char	*near_to_str(t_near near)
@@ -63,6 +80,16 @@ void	error_print(const t_error *err)
 
 	if (!err || err->code == PERR_NONE)
 		return ;
+	if (err->code == PERR_NOT_FOUND)
+	{
+		fprintf(stderr, "minishell: command not found\n");
+		return ;
+	}
+	if (err->code == PERR_PERMISSION_DENIED)
+	{
+		fprintf(stderr, "minishell: Permission denied\n");
+		return ;
+	}
 	if (err->code == PERR_OOM)
 	{
 		perror("minishell");

@@ -33,22 +33,23 @@ int	validate_syntax(t_token *token, t_error *err)
 	if (!token)
 		return (0);
 	if (token->type == TOK_PIPE)
-		return (error_set(err, PERR_PIPE_START, PNEAR_PIPE), -1);
+		return (error_fail(err, PERR_PIPE_START, PNEAR_PIPE));
 	while (token)
 	{
 		if (token->type == TOK_PIPE)
 		{
 			if (!token->next)
-				return (error_set(err, PERR_PIPE_END, PNEAR_NEWLINE), -1);
+				return (error_fail(err, PERR_PIPE_END, PNEAR_NEWLINE));
 			if (token->next->type == TOK_PIPE)
-				return (error_set(err, PERR_PIPE_DOUBLE, PNEAR_PIPE), -1);
+				return (error_fail(err, PERR_PIPE_DOUBLE, PNEAR_PIPE));
 		}
 		if (is_redir(token->type))
 		{
 			if (!token->next)
-				return (error_set(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE), -1);
+				return (error_fail(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE));
 			if (token->next->type != TOK_WORD)
-				return (error_set(err, PERR_REDIR_NO_TARGET, near_from_token(token->next->type)), -1);
+				return (error_fail(err, PERR_REDIR_NO_TARGET,
+						near_from_token(token->next->type)));
 		}
 		token = token->next;
 	}

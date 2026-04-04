@@ -24,14 +24,13 @@ SRC_FILES	=	main.c \
 				utils/parse_utils.c \
 				utils/export_utils.c \
 				utils/unset_utils.c \
-				errors/errors.c \
+				errors/error.c \
 				core/env_manage.c \
 				core/initialize.c \
 				core/shell.c \
 				token/tokenization.c \
 				token/token_manage.c \
 				parse/parse.c \
-				parse/parse_error.c \
 				parse/validate_syntax.c \
 				parse/pipeline_utils.c \
 				parse/free_pipeline.c \
@@ -43,6 +42,7 @@ SRC_FILES	=	main.c \
 				builtins/env.c \
 				builtins/exit.c \
 				exec/exec.c \
+				exec/child_process.c \
 				expand/expand.c \
 				expand/expand_auxiliars.c
 				

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 17:51:02 by julepere          #+#    #+#             */
-/*   Updated: 2026/03/31 11:29:05 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/04 19:15:14 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,15 +76,3 @@ int	xy_streq(const char *a, const char *b)
 		i++;
 	return (a[i] == '\0' && b[i] == '\0');
 }
-/*
-static void	xy_free_argv(char **argv)
-{
-	int	i;
-
-	if (!argv)
-		return ;
-	i = 0;
-	while (argv[i])
-		free(argv[i++]);
-	free(argv);
-}*/

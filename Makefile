@@ -41,8 +41,9 @@ SRC_FILES	=	main.c \
 				builtins/unset.c \
 				builtins/env.c \
 				builtins/exit.c \
-				exec/exec.c \
+				exec/exec_utils.c \
 				exec/child_process.c \
+				exec/exec.c \
 				expand/expand.c \
 				expand/expand_auxiliars.c
 				

@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 02:16:43 by julepere          #+#    #+#             */
-/*   Updated: 2026/03/13 03:17:27 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/02 15:23:32 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	valid_unset_name(char *name)
 			return (0);
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 static int	unset_identifier_error(char *name)
@@ -62,5 +62,5 @@ int		xy_unset(t_command *cmd, t_shell *sh)
 			unset_one_var(sh, cmd->argv[i]);
 		i++;
 	}
-		return (0);
+	return (0);
 }

@@ -199,6 +199,10 @@ int		add_env_var(t_shell *sh, char *new_var);
 /* unset_utils.c*/
 int	remove_env_var(t_shell *sh, char *new_var);
 
+/* exec_utils.c */
+void	resolve_command_type(t_command *pl);
+char	*find_exec_path(char **envp, const char *cmd);
+
 /*------------------------------ [  tokenizer  ] -----------------------------*/
 
 /* tokenizaion.c */
@@ -296,8 +300,9 @@ void	parent_process(int *prev_read, t_command *pl, int *pipefd);
 int		wait_all_children(void);
 
 /* child_process.c */
-void	apply_redirs(t_redir *redirs);
+int	apply_redirs(t_redir *redirs);
 int		exec_choice(t_command *pl, t_shell *sh);
+int		execute_external(t_command *pl, t_shell *sh);
 void	child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh);
 
 

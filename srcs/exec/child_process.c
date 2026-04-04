@@ -3,87 +3,104 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/03/31 13:12:36 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/04 19:18:21 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void apply_redirs(t_redir *redirs)
+int	apply_redirs(t_redir *redirs)
 {
 	int fd;
 
 	while (redirs)
 	{
-		if (redirs->type == R_IN) // ENTRADA: < (2 params: archivo existe)
+		if (redirs->type == R_IN)
 		{
-			fd = open(redirs->target, O_RDONLY); // Solo lectura
-			dup2(fd, STDIN_FILENO);				 // Redirige entrada
+			fd = open(redirs->target, O_RDONLY);
+			if (fd < 0)
+				return (-1);
+			if (dup2(fd, STDIN_FILENO) == -1)
+				return (close(fd), -1);
 			close(fd);
 		}
-		else if (redirs->type == R_OUT) // SALIDA: > (3 params: O_TRUNC vacía)
+		else if (redirs->type == R_OUT)
 		{
-			fd = open(redirs->target, O_WRONLY | O_CREAT | O_TRUNC, 0644); // 0644 = rw-r--r--
-			dup2(fd, STDOUT_FILENO);									   // Redirige salida
+			fd = open(redirs->target, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd < 0)
+				return (-1);
+			if (dup2(fd, STDOUT_FILENO) == -1)
+				return (close(fd), -1);
 			close(fd);
 		}
-		else if (redirs->type == R_APPEND) // APPEND: >> (3 params: O_APPEND añade)
+		else if (redirs->type == R_APPEND)
 		{
 			fd = open(redirs->target, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			dup2(fd, STDOUT_FILENO); // Redirige salida
+			if (fd < 0)
+				return (-1);
+			if (dup2(fd, STDOUT_FILENO) == -1)
+				return (close(fd), -1);
 			close(fd);
 		}
-		redirs = redirs->next; // falta heredoc pero debe ir en el parseo
+		redirs = redirs->next;
 	}
-}
-
-int	child_builtins(t_command *pl, t_shell *sh)
-{
-	if (pl->builtin == BI_ECHO)
-		return (xy_echo(pl, sh));
-	if (pl->builtin == BI_PWD)
-		return (xy_pwd(pl, sh));
-	if (pl->builtin == BI_ENV)
-		return (xy_env(pl, sh));
 	return (0);
 }
 
-int	path_exec(t_command *pl, t_shell *sh, char *cmd)
+int	exec_choice(t_command *pl, t_shell *sh)
 {
-	if (access(cmd, F_OK) != 0)
-		return (error_emit(&sh->err, PERR_NOT_FOUND, PNEAR_NONE));
-	if (access(cmd, X_OK) != 0)
-		return (error_emit(&sh->err, PERR_PERMISSION_DENIED, PNEAR_NONE));
-	if (execve(cmd, pl->argv, sh->envp) == -1)
-	{
-		if (errno == EACCES)
-			return (error_emit(&sh->err, PERR_PERMISSION_DENIED, PNEAR_NONE));
-		if (errno == ENOENT)
-			return (error_emit(&sh->err, PERR_NOT_FOUND, PNEAR_NONE));
-		return (error_emit(&sh->err, PERR_OOM, PNEAR_NONE));
-	}
-	return (0);
-	}
-
-int exec_choice(t_command *pl, t_shell *sh)
-{
-	char	*cmd;
-
-	if (!pl->argv[0])
+	if (!pl || !pl->argv || !pl->argv[0])
 		return (0);
-	cmd = pl->argv[0];
-	if (pl->type == CMD_BUILTIN) //ejecucion directa de lo builtins childs
-		return (child_builtins(pl, sh));
-	else if (cmd[0] == '/' || cmd[0] == '.') //caso ruta o ejecutable
-		return (path_exec(pl, sh, cmd));
-	else //comando seco
+	if (pl->type == CMD_BUILTIN)
 	{
-		return (error_emit(&sh->err, PERR_NOT_FOUND, PNEAR_NONE));
-
+		if (pl->builtin == BI_ECHO)
+			return (xy_echo(pl, sh));
+		if (pl->builtin == BI_CD)
+			return (xy_cd(pl, sh));
+		if (pl->builtin == BI_PWD)
+			return (xy_pwd(pl, sh));
+		if (pl->builtin == BI_ENV)
+			return (xy_env(pl, sh));
+		if (pl->builtin == BI_EXPORT)
+			return (xy_export(pl, sh));
+		if (pl->builtin == BI_UNSET)
+			return (xy_unset(pl, sh));
+		if (pl->builtin == BI_EXIT)
+			return (xy_exit(pl, sh));
 	}
+	return (execute_external(pl, sh));
+}
+
+int	execute_external(t_command *pl, t_shell *sh)
+{
+	char	*path;
+
+	if (ft_strchr(pl->argv[0], '/'))
+		path = ft_strdup(pl->argv[0]);
+	else
+		path = find_exec_path(sh->envp, pl->argv[0]);
+	if (!path)
+	{
+		write(2, "minishell: ", 11);
+		write(2, pl->argv[0], ft_strlen(pl->argv[0]));
+		write(2, ": command not found\n", 20);
+		return (127);
+	}
+	execve(path, pl->argv, sh->envp);
+	free(path);
+	if (errno == EACCES)
+	{
+		write(2, "minishell: ", 11);
+		write(2, pl->argv[0], ft_strlen(pl->argv[0]));
+		write(2, ": permission denied\n", 21);
+		return (126);
+	}
+	write(2, "minishell: ", 11);
+	write(2, pl->argv[0], ft_strlen(pl->argv[0]));
+	write(2, ": command not found\n", 20);
 	return (127);
 }
 
@@ -100,6 +117,7 @@ void child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh)
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}
-	apply_redirs(pl->redirs);
+	if (apply_redirs(pl->redirs) == -1)
+		exit(1);
 	exit(exec_choice(pl, sh));
 }

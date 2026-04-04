@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/03/31 12:56:19 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/02 15:23:32 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,28 @@ int	execution(t_command *pl, t_shell *sh)
 	pid_t	pid; //retorno de fork()
 	int		pipefd[2]; //pipe del comando actual
 	int		prev_read; //fd de lectura del pipe anterior
+	int		saved_stdin;
+	int		saved_stdout;
 
+	if (!pl)
+		return (0);
+	resolve_command_type(pl);
 	prev_read = -1;
-	if (!pl->next && is_parent_builtin(pl)) //si solo hay un comando y es cd,expor,exit o unset
-		return (run_parent_builtin(pl, sh), 0); //se ejecuta sin entrar al bucle, no hace falta
+	if (!pl->next && is_parent_builtin(pl))
+	{
+		saved_stdin = dup(STDIN_FILENO);
+		saved_stdout = dup(STDOUT_FILENO);
+		if (saved_stdin == -1 || saved_stdout == -1)
+			return (perror("minishell"), 1);
+		if (apply_redirs(pl->redirs) == -1)
+			return (close(saved_stdin), close(saved_stdout), 1);
+		sh->exit_status = run_parent_builtin(pl, sh);
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdin);
+		close(saved_stdout);
+		return (sh->exit_status);
+	}
 	while (pl)
 	{
 		if (pl->next && pipe(pipefd) == -1)//checkeo de si hay siguiente comando

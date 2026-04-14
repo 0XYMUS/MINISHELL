@@ -25,6 +25,7 @@
 # include <readline/history.h>
 #include <sys/wait.h>
 # include <errno.h>
+#include <sys/stat.h>
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   ENUMS                                    */
@@ -77,6 +78,8 @@ typedef enum e_errcode
 	PERR_UNEXPECTED_TOKEN,
 	PERR_NOT_FOUND,
 	PERR_PERMISSION_DENIED,
+	PERR_IS_DIRECTORY,
+	PERR_EXEC_FORMAT,
 	PERR_OOM
 }	t_errcode;
 
@@ -128,6 +131,7 @@ typedef struct s_error
 {
 	t_errcode			code;
 	t_near				near;
+	const char			*subject;
 }t_error;
 
 /*-------------------------------- [  shell  ] -------------------------------*/
@@ -238,10 +242,16 @@ int			validate_syntax(t_token *t, t_error *err);
 /* parse_error.c */
 void		error_init(t_error *err);
 void		error_set(t_error *err, t_errcode code, t_near near);
+void	error_set_subject(t_error *err, t_errcode code, t_near near,
+		const char *subject);
 void		error_print(const t_error *err);
 int			error_status(const t_error *err);
 int			error_emit(t_error *err, t_errcode code, t_near near);
+int		error_emit_subject(t_error *err, t_errcode code, t_near near,
+		const char *subject);
 int			error_fail(t_error *err, t_errcode code, t_near near);
+int		error_fail_subject(t_error *err, t_errcode code, t_near near,
+		const char *subject);
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   EXPAND                                   */

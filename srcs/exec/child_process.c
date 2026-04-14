@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/04 19:18:21 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/14 15:57:37 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_directory_path(const char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == -1)
+		return (0);
+	return (S_ISDIR(st.st_mode));
+}
 
 int	apply_redirs(t_redir *redirs)
 {
@@ -46,7 +55,7 @@ int	apply_redirs(t_redir *redirs)
 			close(fd);
 		}
 		redirs = redirs->next;
-	}
+	} // falta heredoc
 	return (0);
 }
 
@@ -78,30 +87,42 @@ int	execute_external(t_command *pl, t_shell *sh)
 {
 	char	*path;
 
+	/* Si contiene '/', el usuario ya dio una ruta (absoluta o relativa). */
 	if (ft_strchr(pl->argv[0], '/'))
 		path = ft_strdup(pl->argv[0]);
 	else
+		/* Si no contiene '/', se busca en PATH. */
 		path = find_exec_path(sh->envp, pl->argv[0]);
 	if (!path)
-	{
-		write(2, "minishell: ", 11);
-		write(2, pl->argv[0], ft_strlen(pl->argv[0]));
-		write(2, ": command not found\n", 20);
-		return (127);
-	}
+		/* No existe en PATH (o no existe la ruta dada). */
+		return (error_emit_subject(&sh->err, PERR_NOT_FOUND,
+			PNEAR_WORD, pl->argv[0]));
+	/* Existe la ruta, pero es un directorio: no es ejecutable. */
+	if (is_directory_path(path))
+		return (free(path), error_emit_subject(&sh->err, PERR_IS_DIRECTORY,
+			PNEAR_WORD, pl->argv[0]));
+	/* Existe pero no tiene permiso de ejecución. */
+	if (access(path, X_OK) != 0)
+		return (free(path), error_emit_subject(&sh->err, PERR_PERMISSION_DENIED,
+			PNEAR_WORD, pl->argv[0]));
+	/* Si execve vuelve, siempre hubo error. */
 	execve(path, pl->argv, sh->envp);
 	free(path);
 	if (errno == EACCES)
-	{
-		write(2, "minishell: ", 11);
-		write(2, pl->argv[0], ft_strlen(pl->argv[0]));
-		write(2, ": permission denied\n", 21);
-		return (126);
-	}
-	write(2, "minishell: ", 11);
-	write(2, pl->argv[0], ft_strlen(pl->argv[0]));
-	write(2, ": command not found\n", 20);
-	return (127);
+		/* Error de permisos al ejecutar. */
+		return (error_emit_subject(&sh->err, PERR_PERMISSION_DENIED,
+			PNEAR_WORD, pl->argv[0]));
+	if (errno == EISDIR)
+		/* El destino era directorio. */
+		return (error_emit_subject(&sh->err, PERR_IS_DIRECTORY,
+			PNEAR_WORD, pl->argv[0]));
+	if (errno == ENOEXEC)
+		/* El archivo existe, pero no tiene formato ejecutable válido. */
+		return (error_emit_subject(&sh->err, PERR_EXEC_FORMAT,
+			PNEAR_WORD, pl->argv[0]));
+	/* Resto de errores de ruta/resolución se tratan como no encontrado. */
+	return (error_emit_subject(&sh->err, PERR_NOT_FOUND,
+		PNEAR_WORD, pl->argv[0]));
 }
 
 void child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh)

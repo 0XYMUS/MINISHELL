@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 11:41:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/14 15:51:36 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,29 +60,67 @@ static void expand_word(char **word, char **qmask, t_shell sh, int i)
 	}
 }
 
-static void	question_case(char **argv, char *qmask, t_shell sh)
+static int	question_len(int n)
 {
+	int	len;
+
+	len = 1;
+	while (n >= 10)
+	{
+		n /= 10;
+		len++;
+	}
+	return (len);
+}
+
+static void	question_fill(char *dst, int n, int len)
+{
+	while (len > 0)
+	{
+		len--;
+		dst[len] = (n % 10) + '0';
+		n /= 10;
+	}
+}
+
+static void	question_case(char **argv, char **qmask, t_shell sh)
+{
+	char	*new_argv;
+	char	*new_qmask;
+	int		old_len;
+	int		num_len;
 	int		i;
 
 	i = 0;
 	while ((*argv)[i])
 	{
-		if ((*argv)[i] == '$' && (*argv)[i + 1] == '?' && qmask[i] != '1')
+		if ((*argv)[i] == '$' && (*argv)[i + 1] == '?' && (*qmask)[i] != '1')
 		{
-			if (sh.exit_status == 0)
+			old_len = ft_strlen(*argv);
+			num_len = question_len(sh.exit_status);
+			new_argv = malloc(old_len - 2 + num_len + 1);
+			new_qmask = malloc(old_len - 2 + num_len + 1);
+			if (!new_argv || !new_qmask)
+				return (free(new_argv), free(new_qmask), (void)0);
+			ft_memcpy(new_argv, *argv, i);
+			ft_memcpy(new_qmask, *qmask, i);
+			question_fill(new_argv + i, sh.exit_status, num_len);
+			old_len = num_len;
+			while (num_len > 0)
 			{
-				(*argv)[i] = '0';
-				str_move(argv, i + 1, -1);
+				num_len--;
+				new_qmask[i + num_len] = '0';
 			}
-			else if (sh.exit_status == 127)
-			{
-				str_move(argv, i + 2, 1);
-				(*argv)[i] = '1';
-				(*argv)[i + 1] = '2';
-				(*argv)[i + 2] = '7';
-			}
+			ft_strcpy(new_argv + i + old_len, *argv + i + 2);
+			ft_strcpy(new_qmask + i + old_len, *qmask + i + 2);
+			free(*argv);
+			free(*qmask);
+			*argv = new_argv;
+			*qmask = new_qmask;
+			i += old_len;
 		}
-		i++;
+		else
+			i++;
 	}
 }
 
@@ -98,7 +136,7 @@ static void expand_argv(char **argv, char **qmask, t_shell sh)
 		while (argv[i][j])
 		{
 			if (argv[i][j] == '$' && argv[i][j + 1] == '?' && qmask[i][j] != '1')
-				question_case(&argv[i], qmask[i], sh);
+				question_case(&argv[i], &qmask[i], sh);
 			else if (argv[i][j] == '$' && qmask[i][j] != '1')
 				{
 					if (!argv[i][j + 1])

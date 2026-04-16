@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 11:41:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/14 15:51:36 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:14:54 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,45 +83,86 @@ static void	question_fill(char *dst, int n, int len)
 	}
 }
 
-static void	question_case(char **argv, char **qmask, t_shell sh)
+static void	question_fill_qmask(char *qmask, int i, int len)
+{
+	while (len > 0)
+	{
+		len--;
+		qmask[i + len] = '0';
+	}
+}
+
+static int	question_is_valid(char *qmask, int i)
+{
+	if (!qmask || !qmask[i])
+		return (0);
+	if (qmask[i] == '1')
+		return (0);
+	if (!qmasq_diference(qmask))
+		return (0);
+	return (1);
+}
+
+static void	question_replace(char **argv, char **qmask, int i, t_shell sh)
 {
 	char	*new_argv;
 	char	*new_qmask;
 	int		old_len;
 	int		num_len;
-	int		i;
+
+	old_len = ft_strlen(*argv);
+	num_len = question_len(sh.exit_status);
+	new_argv = malloc(old_len - 2 + num_len + 1);
+	new_qmask = malloc(old_len - 2 + num_len + 1);
+	if (!new_argv || !new_qmask)
+		return (free(new_argv), free(new_qmask), (void)0);
+	ft_memcpy(new_argv, *argv, i);
+	ft_memcpy(new_qmask, *qmask, i);
+	question_fill(new_argv + i, sh.exit_status, num_len);
+	old_len = num_len;
+	question_fill_qmask(new_qmask, i, num_len);
+	ft_strcpy(new_argv + i + old_len, *argv + i + 2);
+	ft_strcpy(new_qmask + i + old_len, *qmask + i + 2);
+	free(*argv);
+	free(*qmask);
+	*argv = new_argv;
+	*qmask = new_qmask;
+}
+
+static void	question_case(char **argv, char **qmask, t_shell sh)
+{
+	int	i;
 
 	i = 0;
 	while ((*argv)[i])
 	{
-		if ((*argv)[i] == '$' && (*argv)[i + 1] == '?' && (*qmask)[i] != '1')
+		if ((*argv)[i] == '$' && (*argv)[i + 1] == '?'
+			&& question_is_valid(*qmask, i))
 		{
-			old_len = ft_strlen(*argv);
-			num_len = question_len(sh.exit_status);
-			new_argv = malloc(old_len - 2 + num_len + 1);
-			new_qmask = malloc(old_len - 2 + num_len + 1);
-			if (!new_argv || !new_qmask)
-				return (free(new_argv), free(new_qmask), (void)0);
-			ft_memcpy(new_argv, *argv, i);
-			ft_memcpy(new_qmask, *qmask, i);
-			question_fill(new_argv + i, sh.exit_status, num_len);
-			old_len = num_len;
-			while (num_len > 0)
-			{
-				num_len--;
-				new_qmask[i + num_len] = '0';
-			}
-			ft_strcpy(new_argv + i + old_len, *argv + i + 2);
-			ft_strcpy(new_qmask + i + old_len, *qmask + i + 2);
-			free(*argv);
-			free(*qmask);
-			*argv = new_argv;
-			*qmask = new_qmask;
-			i += old_len;
+			question_replace(argv, qmask, i, sh);
+			i += question_len(sh.exit_status);
 		}
 		else
 			i++;
 	}
+}
+
+int	qmasq_diference(char *qmask)
+{
+	char	c;
+	int		i;
+
+	if (!qmask || !qmask[0])
+		return (0);
+	c = qmask[0];
+	i = 1;
+	while (qmask[i])
+	{
+		if (qmask[i] != c)
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 static void expand_argv(char **argv, char **qmask, t_shell sh)
@@ -135,9 +176,12 @@ static void expand_argv(char **argv, char **qmask, t_shell sh)
 		j = 0;
 		while (argv[i][j])
 		{
-			if (argv[i][j] == '$' && argv[i][j + 1] == '?' && qmask[i][j] != '1')
+			if (qmasq_diference(qmask[i])
+				&& argv[i][j] == '$' && argv[i][j + 1] == '?'
+				&& qmask[i][j] != '1')
 				question_case(&argv[i], &qmask[i], sh);
-			else if (argv[i][j] == '$' && qmask[i][j] != '1')
+			else if (qmasq_diference(qmask[i]) && argv[i][j] == '$'
+				&& qmask[i][j] != '1')
 				{
 					if (!argv[i][j + 1])
 						return ;

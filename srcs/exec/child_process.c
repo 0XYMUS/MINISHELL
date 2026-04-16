@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/14 15:57:37 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:33:17 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static int	is_directory_path(const char *path)
 {
 	struct stat	st;
 
-	if (stat(path, &st) == -1)
+	if (stat(path, &st) == -1) //stat sirve paa consutar metadatos
 		return (0);
-	return (S_ISDIR(st.st_mode));
+	return (S_ISDIR(st.st_mode)); // s_ISDIR devuelbve 1 si es un directorio y 0 si no
 }
 
 int	apply_redirs(t_redir *redirs)

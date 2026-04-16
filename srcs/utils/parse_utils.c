@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:36:14 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,11 @@ int	argv_len(t_token *token)
 	{
 		if (is_redir(token->type))
 		{
-			if (!token->next || token->next->type != TOK_WORD)
+			if (!token->next)
+				return (-1);
+			if (token->type == TOK_HEREDOC && token->next->type != TOK_DELIMITER)
+				return (-1);
+			if (token->type != TOK_HEREDOC && token->next->type != TOK_WORD)
 				return (-1);
 			token = token->next->next;
 		}

@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:36:14 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,10 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 	{
 		if (!(*token)->next)
 			return (error_fail(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE));
-		if ((*token)->next->type != TOK_WORD)
+		if ((*token)->type == TOK_HEREDOC && (*token)->next->type != TOK_DELIMITER)
+			return (error_fail(err, PERR_REDIR_NO_TARGET,
+					near_from_token((*token)->next->type)));
+		if ((*token)->type != TOK_HEREDOC && (*token)->next->type != TOK_WORD)
 			return (error_fail(err, PERR_REDIR_NO_TARGET,
 					near_from_token((*token)->next->type)));
 		redir = redir_new((*token)->type, (*token)->next->value,

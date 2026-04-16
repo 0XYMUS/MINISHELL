@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_syntax.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/06 15:47:56 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:36:14 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ int	validate_syntax(t_token *token, t_error *err)
 		{
 			if (!token->next)
 				return (error_fail(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE));
-			if (token->next->type != TOK_WORD)
+			if (token->type == TOK_HEREDOC && token->next->type != TOK_DELIMITER)
+				return (error_fail(err, PERR_REDIR_NO_TARGET,
+						near_from_token(token->next->type)));
+			if (token->type != TOK_HEREDOC && token->next->type != TOK_WORD)
 				return (error_fail(err, PERR_REDIR_NO_TARGET,
 						near_from_token(token->next->type)));
 		}

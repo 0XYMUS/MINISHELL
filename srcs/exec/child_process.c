@@ -3,14 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/14 15:57:37 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:40:16 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	heredoc_write_loop(int fd, const char *delimiter)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+			break ;
+		if (xy_streq(line, delimiter))
+		{
+			free(line);
+			break ;
+		}
+		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
+		{
+			free(line);
+			return (-1);
+		}
+		free(line);
+	}
+	return (0);
+}
+
+static int	apply_heredoc_redir(const char *delimiter)
+{
+	char	tmp_name[] = "/tmp/minishell_heredoc_XXXXXX";
+	int		fd;
+
+	fd = mkstemp(tmp_name);
+	if (fd < 0)
+		return (-1);
+	if (heredoc_write_loop(fd, delimiter) == -1)
+		return (close(fd), unlink(tmp_name), -1);
+	if (lseek(fd, 0, SEEK_SET) == -1)
+		return (close(fd), unlink(tmp_name), -1);
+	if (dup2(fd, STDIN_FILENO) == -1)
+		return (close(fd), unlink(tmp_name), -1);
+	close(fd);
+	unlink(tmp_name);
+	return (0);
+}
 
 static int	is_directory_path(const char *path)
 {
@@ -54,14 +97,21 @@ int	apply_redirs(t_redir *redirs)
 				return (close(fd), -1);
 			close(fd);
 		}
+		else if (redirs->type == R_HEREDOC)
+		{
+			if (apply_heredoc_redir(redirs->target) == -1)
+				return (-1);
+		}
 		redirs = redirs->next;
-	} // falta heredoc
+	}
 	return (0);
 }
 
 int	exec_choice(t_command *pl, t_shell *sh)
 {
 	if (!pl || !pl->argv || !pl->argv[0])
+		return (0);
+	if (pl->argv [0][0] == '\0')
 		return (0);
 	if (pl->type == CMD_BUILTIN)
 	{

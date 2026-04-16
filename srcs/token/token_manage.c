@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/13 17:28:51 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:36:14 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static const char	*token_type_str(t_token_type t)
 {
 	if (t == TOK_WORD)
 		return ("WORD");
+	if (t == TOK_DELIMITER)
+		return ("DELIMITER");
 	if (t == TOK_PIPE)
 		return ("PIPE");
 	if (t == TOK_REDIR_IN)
@@ -51,7 +53,7 @@ t_token	*token_new(t_token_type type, char *value, char *qmask, int space)
 	if (!token)
 		return (NULL);
 	token->type = type;
-	if (type != TOK_WORD)
+	if (type != TOK_WORD && type != TOK_DELIMITER)
 	{
 		token->value = NULL;
 		token->qmask = NULL;
@@ -137,7 +139,7 @@ void	token_debug_print(const t_token *lst)
 {
 	while (lst)
 	{
-		if (lst->type == TOK_WORD)
+		if (lst->type == TOK_WORD || lst->type == TOK_DELIMITER)
 			printf("[%s:%s]", token_type_str(lst->type), lst->value);
 		else
 			printf("[%s]", token_type_str(lst->type));

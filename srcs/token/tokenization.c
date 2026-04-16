@@ -6,7 +6,7 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:58:11 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/17 15:43:50 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:36:14 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,12 @@ static int	type_operator(t_token_type type, int *i, t_token **lst, char *line)
 static int	tokenizer2(char *line, t_token	**lst, int *i)
 {
 	int	error;
+	t_token	*last;
+	t_token	*prev;
 	
 	error = 0;
+	last = NULL;
+	prev = NULL;
 	if (line[*i] == '|')
 		error = type_operator(TOK_PIPE, i, lst, line);
 	else if (line[*i] == '<' && line[*i + 1] == '<')
@@ -121,6 +125,17 @@ static int	tokenizer2(char *line, t_token	**lst, int *i)
 		error = -1;
 	if (error == -1)
 		return (token_free_all(lst), -1);
+	if (*lst)
+	{
+		last = *lst;
+		while (last->next)
+		{
+			prev = last;
+			last = last->next;
+		}
+		if (last->type == TOK_WORD && prev && prev->type == TOK_HEREDOC)
+			last->type = TOK_DELIMITER;
+	}
 	return (0);
 }
 

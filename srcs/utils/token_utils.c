@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/17 15:43:09 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/16 17:48:00 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,19 +175,33 @@ char	*word_dup(char *line, int i, int wordlen, char **qmask_out)
 	int		end;
 	int		j;
 	char	q;
+	char	pending_q;
 
 	end = i + wordlen;
 	if (!alloc_word_qmask(wordlen, &word, &qmask))
 		return (NULL);
 	j = 0;
 	q = 0;
+	pending_q = 0;
 	while (i < end)
 	{
+		if (q == 0 && (line[i] == '\'' || line[i] == '"')
+			&& line[i + 1] == line[i] && i + 1 < end)
+		{
+			pending_q = qmask_from_quote(line[i]);
+			i += 2;
+			continue ;
+		}
 		if (handle_backslash(line, &i, end, q, word, qmask, &j))
 			continue ;
 		if (handle_quote(line, &i, &q))
 			continue ;
 		append_quoted(word, qmask, &j, q, line[i]);
+		if (pending_q && j > 0)
+		{
+			qmask[j - 1] = pending_q;
+			pending_q = 0;
+		}
 		i++;
 	}
 	word_dup_finish(word, qmask, j, qmask_out);

@@ -6,11 +6,31 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 11:41:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/16 17:03:35 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/16 17:56:13 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	fill_expansion(char *env, char *word, char *expansion, int *pos)
+{
+	int	j;
+	int	k;
+
+	j = 0;
+	while (j < pos[0])
+	{
+		expansion[j] = word[j];
+		j++;
+	}
+	k = 0;
+	while (env[k] && env[k] != '=')
+		k++;
+	while (env[k + 1])
+		expansion[j++] = env[++k];
+	while (word[pos[1]])
+		expansion[j++] = word[pos[1]++];
+}
 
 static void	get_expansion(char *env, char **word, int i, char **qmask)
 {
@@ -18,14 +38,17 @@ static void	get_expansion(char *env, char **word, int i, char **qmask)
 	char	*newq;
 	int		len;
 	int		len_q;
+	int		pos[2];
 
-	len = expand_len(*word, env, i);
+	len = expand_len(*word, env, *qmask, i);
 	expansion = malloc(sizeof(char) * len + 1);
 	if (!expansion)
 		return ;
-	complete_expansion(env, *word, i, &expansion);
+	pos[0] = i;
+	pos[1] = get_end(*word, *qmask, i);
+	fill_expansion(env, *word, expansion, pos);
 	expansion[len] = '\0';
-	len_q = expansion_len(*word, i);
+	len_q = expansion_len(*word, *qmask, i);
 	newq = update_qmask_after_expansion(*qmask, i, len_q,len);
 	if (!newq)
 		return (free(expansion), (void)0);
@@ -67,18 +90,29 @@ static int	same_qmask_context(char *qmask, int i)
 	return (qmask[i] == qmask[i + 1]);
 }
 
+static void	remove_dollar_only(char **word, char **qmask, int i)
+{
+	int	len;
+
+	len = ft_strlen(*word);
+	ft_memmove(*word + i, *word + i + 1, len - i);
+	ft_memmove(*qmask + i, *qmask + i + 1, len - i);
+}
+
 static int	match_env(char *env, char *word, char *qmask, int i)
 {
 	int	k;
+	char	ctx;
 
 	k = 0;
-	while (env[k] && word[i] && env[k] == word[i])
+	ctx = qmask[i];
+	while (env[k] && word[i] && env[k] == word[i] && qmask[i] == ctx)
 	{
 		k++;
 		i++;
 		if (env[k] == '='
 			&& (!word[i] || !is_var_char(word[i])
-				|| qmask[i] != qmask[i - 1]))
+				|| qmask[i] != ctx))
 			return (1);
 	}
 	return (0);
@@ -89,9 +123,11 @@ static void	remove_word(char **word, char **qmask, int start)
 {
 	int	end;
 	int	len;
+	char	ctx;
 
 	end = start + 1;
-	while ((*word)[end] && is_var_char((*word)[end]))
+	ctx = (*qmask)[end];
+	while ((*word)[end] && is_var_char((*word)[end]) && (*qmask)[end] == ctx)
 		end++;
 	end--;
 	len = ft_strlen(*word);
@@ -318,6 +354,13 @@ static void	expand_argv(char **argv, char **qmask, t_shell sh)
 					continue ;
 				}
 				expand_word(&argv[i], &qmask[i], sh, j + 1);
+				j = -1;
+			}
+			else if (argv[i][j] == '$' && qmask[i][j] == '0'
+				&& argv[i][j + 1] && is_var_char(argv[i][j + 1])
+				&& !same_qmask_context(qmask[i], j))
+			{
+				remove_dollar_only(&argv[i], &qmask[i], j);
 				j = -1;
 			}
 			j++;

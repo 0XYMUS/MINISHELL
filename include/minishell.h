@@ -262,11 +262,10 @@ int		error_fail_subject(t_error *err, t_errcode code, t_near near,
 void    expand(t_command *node, t_shell sh);
 
 /* expand_auxiliars.c*/
-int		get_end(char *word, int i);
-int 	 expand_len(char *word, char *env, int i);
-void 	complete_expansion(char *env, char *word, int i, char **expansion);
+int		get_end(char *word, char *qmask, int i);
+int		expand_len(char *word, char *env, char *qmask, int i);
 char	*update_qmask_after_expansion(char *qmask, int s, int len_q, int len);
-int		expansion_len(char *word, int i);
+int		expansion_len(char *word, char *qmask, int i);
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   ERRORS                                   */

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 16:28:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/16 16:27:16 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/16 17:56:13 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,19 @@ static int	is_var_char(char c)
 	return (0);
 }
 
-int	get_end(char *word, int i)
+int	get_end(char *word, char *qmask, int i)
 {
 	int	end;
+	char	ctx;
 
 	end = i + 1;
-	while (word[end] && is_var_char(word[end]))
+	ctx = qmask[i];
+	while (word[end] && is_var_char(word[end]) && qmask[end] == ctx)
 		end++;
 	return (end);
 }
 
-int  expand_len(char *word, char *env, int i)
+int	expand_len(char *word, char *env, char *qmask, int i)
 {
 	int	j;
 	int	len;
@@ -41,7 +43,7 @@ int  expand_len(char *word, char *env, int i)
 
 	j = 0;
 	len = i;
-	end = get_end(word, i);
+	end = get_end(word, qmask, i);
 	while (env[j] && env[j] != '=')
 		j++;
 	while (env[j + 1])
@@ -55,28 +57,6 @@ int  expand_len(char *word, char *env, int i)
 		len++;
 	}
 	return (len);
-}
-
-void complete_expansion(char *env, char *word, int i, char **expansion)
-{
-	int	j;
-	int	k;
-	int	end;
-
-	j = 0;
-	while (j < i)
-	{
-		(*expansion)[j] = word[j];
-		j++;
-	}
-	k = 0;
-	while (env[k] && env[k] != '=')
-		k++;
-	while (env[k + 1])
-		(*expansion)[j++] = env[++k];
-	end = get_end(word, i);
-	while (word[end])
-		(*expansion)[j++] = word[end++];
 }
 
 char	*update_qmask_after_expansion(char *qmask, int s, int len_q, int len)
@@ -105,10 +85,10 @@ char	*update_qmask_after_expansion(char *qmask, int s, int len_q, int len)
 	return (new);
 }
 
-int	expansion_len(char *word, int i)
+int	expansion_len(char *word, char *qmask, int i)
 {
 	int	end;
 
-	end = get_end(word, i);
+	end = get_end(word, qmask, i);
 	return (end - i);
 }

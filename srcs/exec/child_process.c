@@ -59,9 +59,9 @@ static int	is_directory_path(const char *path)
 {
 	struct stat	st;
 
-	if (stat(path, &st) == -1)
+	if (stat(path, &st) == -1) //stat sirve paa consutar metadatos
 		return (0);
-	return (S_ISDIR(st.st_mode));
+	return (S_ISDIR(st.st_mode)); // s_ISDIR devuelbve 1 si es un directorio y 0 si no
 }
 
 int	apply_redirs(t_redir *redirs)

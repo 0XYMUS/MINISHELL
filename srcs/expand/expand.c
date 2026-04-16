@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 11:41:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/16 16:27:16 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/16 17:03:35 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,13 @@ static int	has_quoted_char(char *qmask)
 		i++;
 	}
 	return (0);
+}
+
+static int	same_qmask_context(char *qmask, int i)
+{
+	if (!qmask || !qmask[i] || !qmask[i + 1])
+		return (0);
+	return (qmask[i] == qmask[i + 1]);
 }
 
 static int	match_env(char *env, char *word, char *qmask, int i)
@@ -226,6 +233,8 @@ static int	question_is_valid(char *qmask, int i)
 		return (0);
 	if (qmask[i] == '1')
 		return (0);
+	if (!same_qmask_context(qmask, i))
+		return (0);
 	return (1);
 }
 
@@ -287,19 +296,21 @@ static void	expand_argv(char **argv, char **qmask, t_shell sh)
 		while (argv[i][j])
 		{
 			if (argv[i][j] == '$'
-				&& argv[i][j + 1] == '?' && qmask[i][j] != '1')
+				&& argv[i][j + 1] == '?' && qmask[i][j] != '1'
+				&& same_qmask_context(qmask[i], j))
 			{
 				question_case(&argv[i], &qmask[i], sh);
 				j = -1;
 			}
 			else if (argv[i][j] == '$'
-				&& argv[i][j + 1] == '$' && qmask[i][j] != '1')
+				&& argv[i][j + 1] == '$' && qmask[i][j] != '1'
+				&& same_qmask_context(qmask[i], j))
 			{
 				pid_replace(&argv[i], &qmask[i], j);
 				j = -1;
 			}
 			else if (argv[i][j] == '$'
-				&& qmask[i][j] != '1')
+				&& qmask[i][j] != '1' && same_qmask_context(qmask[i], j))
 			{
 				if (!argv[i][j + 1])
 				{

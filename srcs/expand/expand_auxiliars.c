@@ -6,18 +6,29 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 16:28:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/12 16:30:19 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:27:16 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_var_char(char c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	if (c >= '0' && c <= '9')
+		return (1);
+	if (c == '_')
+		return (1);
+	return (0);
+}
 
 int	get_end(char *word, int i)
 {
 	int	end;
 
 	end = i + 1;
-	while (word[end] && word[end] != ' ' && word[end] != '$')
+	while (word[end] && is_var_char(word[end]))
 		end++;
 	return (end);
 }
@@ -53,7 +64,7 @@ void complete_expansion(char *env, char *word, int i, char **expansion)
 	int	end;
 
 	j = 0;
-	while (word[j] && word[j] != '$')
+	while (j < i)
 	{
 		(*expansion)[j] = word[j];
 		j++;

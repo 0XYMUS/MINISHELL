@@ -3,52 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/16 16:36:14 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/17 12:49:21 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* NOTE: En rutas OOM forzamos errno=ENOMEM para que perror() sea determinista */
-
-static char	*qmask_dup(const char *src)
-{
-	char	*dup;
-	size_t	len;
-	size_t	i;
-
-	if (!src)
-		return (NULL);
-	len = ft_strlen(src);
-	dup = malloc(sizeof(char) * (len + 1));
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		dup[i] = src[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
-
-static int	qmask_has_quote(const char *qmask)
-{
-	if (!qmask)
-		return (0);
-	while (*qmask)
-	{
-		if (*qmask != '0')
-			return (1);
-		qmask++;
-	}
-	return (0);
-}
-
+/*si el token es una palabrala anade a la sestructura final*/
 static int	add_word(t_token **token, t_command **cmd, int *n_arg,
 			t_error *err)
 {
@@ -56,24 +20,17 @@ static int	add_word(t_token **token, t_command **cmd, int *n_arg,
 	{
 		(*cmd)->argv[*n_arg] = ft_strdup((*token)->value);
 		if (!(*cmd)->argv[*n_arg])
-		{
-			errno = ENOMEM;
-			error_fail(err, PERR_OOM, PNEAR_NONE);
-			return (-1);
-		}
+			return (ft_fail(NULL, err));
 		(*cmd)->qmask[*n_arg] = qmask_dup((*token)->qmask);
 		if ((*token)->qmask && !(*cmd)->qmask[*n_arg])
-		{
-			errno = ENOMEM;
-			error_fail(err, PERR_OOM, PNEAR_NONE);
-			return (-1);
-		}
+			return (ft_fail(NULL, err));
 		(*n_arg)++;
 		*token = (*token)->next;
 	}
 	return (0);
 }
 
+/*si el token es un redir lo valida y lo anade a la estructura final*/
 static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 {
 	t_redir	*redir;
@@ -82,20 +39,17 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 	{
 		if (!(*token)->next)
 			return (error_fail(err, PERR_REDIR_NO_TARGET, PNEAR_NEWLINE));
-		if ((*token)->type == TOK_HEREDOC && (*token)->next->type != TOK_DELIMITER)
+		if ((*token)->type == TOK_HEREDOC
+			&& (*token)->next->type != TOK_DELIMITER)
 			return (error_fail(err, PERR_REDIR_NO_TARGET,
 					near_from_token((*token)->next->type)));
 		if ((*token)->type != TOK_HEREDOC && (*token)->next->type != TOK_WORD)
 			return (error_fail(err, PERR_REDIR_NO_TARGET,
 					near_from_token((*token)->next->type)));
 		redir = redir_new((*token)->type, (*token)->next->value,
-			(*token)->next->qmask);
+				(*token)->next->qmask);
 		if (!redir)
-		{
-			errno = ENOMEM;
-			error_fail(err, PERR_OOM, PNEAR_NONE);
-			return (-1);
-		}
+			return (ft_fail(NULL, err));
 		if ((*token)->type == TOK_HEREDOC
 			&& qmask_has_quote((*token)->next->qmask))
 			redir->expand = 0;
@@ -105,34 +59,23 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 	return (0);
 }
 
+/*inicializa los nodos a partir de la tokenizacion y crea la estructura final*/
 int	init_command(t_command **node, t_token **token, t_error *err)
 {
 	int	n_argv;
 
 	*node = pipeline_new();
 	if (!(*node))
-	{
-		errno = ENOMEM;
-		error_fail(err, PERR_OOM, PNEAR_NONE);
-		return (-1);
-	}
+		return (ft_fail(NULL, err));
 	n_argv = argv_len(*token);
 	if (n_argv < 0)
 		return (pipeline_free_all(node), -1);
 	(*node)->argv = malloc(sizeof (char *) * (n_argv + 1));
 	if (!(*node)->argv)
-	{
-		errno = ENOMEM;
-		error_fail(err, PERR_OOM, PNEAR_NONE);
-		return (pipeline_free_all(node), -1);
-	}
+		return (ft_fail(node, err));
 	(*node)->qmask = malloc(sizeof(char *) * (n_argv + 1));
 	if (!(*node)->qmask)
-	{
-		errno = ENOMEM;
-		error_fail(err, PERR_OOM, PNEAR_NONE);
-		return (pipeline_free_all(node), -1);
-	}
+		return (ft_fail(node, err));
 	while (n_argv >= 0)
 	{
 		(*node)->argv[n_argv] = NULL;
@@ -142,10 +85,11 @@ int	init_command(t_command **node, t_token **token, t_error *err)
 	return (0);
 }
 
+/*construye los comandos hasta la siguinte pipe*/
 int	parse_simple_command(t_command **lst, t_token **token, t_error *err)
 {
 	t_command	*node;
-	int	n_argv;
+	int			n_argv;
 
 	if (init_command(&node, token, err) == -1)
 		return (-1);
@@ -158,12 +102,11 @@ int	parse_simple_command(t_command **lst, t_token **token, t_error *err)
 			return (pipeline_free_all(&node), -1);
 	}
 	set_command_type(node);
-	/* if (check_command(&node, err) == -1)
-		return (pipeline_free_all(&node), -1); */
 	pipeline_add_back(lst, node);
 	return (0);
 }
 
+/*funcion rincipal que convierte tokens a estructura final paseada*/
 t_command	*parse(t_token **token, t_error *err)
 {
 	t_command	*lst;

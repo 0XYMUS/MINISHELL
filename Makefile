@@ -25,13 +25,16 @@ SRC_FILES	=	main.c \
 				utils/export_utils.c \
 				utils/unset_utils.c \
 				errors/error.c \
+				errors/error_print.c \
 				core/env_manage.c \
 				core/initialize.c \
 				core/shell.c \
 				token/tokenization.c \
+				token/tokenization_aux.c \
 				token/token_manage.c \
 				parse/parse.c \
 				parse/validate_syntax.c \
+				parse/qmask.c \
 				parse/pipeline_utils.c \
 				parse/free_pipeline.c \
 				builtins/echo.c \
@@ -45,7 +48,12 @@ SRC_FILES	=	main.c \
 				exec/child_process.c \
 				exec/exec.c \
 				expand/expand.c \
-				expand/expand_auxiliars.c
+				expand/expand_env.c \
+				expand/expand_special.c \
+							expand/expand_qmask.c \
+							expand/expand_cleanup.c \
+							expand/expand_utils.c \
+				expand/expand_auxiliars.c \
 				
 
 # Generación automática de rutas

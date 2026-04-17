@@ -3,45 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   free_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 15:59:44 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/17 12:43:14 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	free_argv(char **argv)
+/*libera o argv o qmask*/
+static void	free_argv_or_qmask(char **argv_or_qmask)
 {
 	int	i;
 
-	if (!argv)
+	if (!argv_or_qmask)
 		return ;
 	i = 0;
-	while (argv[i])
+	while (argv_or_qmask[i])
 	{
-		free(argv[i]);
+		free(argv_or_qmask[i]);
 		i++;
 	}
-	free(argv);
+	free(argv_or_qmask);
 }
 
-static void	free_qmask(char **qmask)
-{
-	int	i;
-
-	if (!qmask)
-		return ;
-	i = 0;
-	while (qmask[i])
-	{
-		free(qmask[i]);
-		i++;
-	}
-	free(qmask);
-}
-
+/*libera la lista de las redirecciones*/
 static void	free_redirs(t_redir *redir)
 {
 	t_redir	*next;
@@ -56,16 +43,7 @@ static void	free_redirs(t_redir *redir)
 	}
 }
 
-static void	free_command(t_command *cmd)
-{
-	if (!cmd)
-		return ;
-	free_argv(cmd->argv);
-	free_qmask(cmd->qmask);
-	free_redirs(cmd->redirs);
-	free(cmd);
-}
-
+/*libera toda la lista de comandos de pipeline*/
 void	pipeline_free_all(t_command **lst)
 {
 	t_command	*cur;
@@ -77,7 +55,10 @@ void	pipeline_free_all(t_command **lst)
 	while (cur)
 	{
 		next = cur->next;
-		free_command(cur);
+		free_argv_or_qmask(cur->argv);
+		free_argv_or_qmask(cur->qmask);
+		free_redirs(cur->redirs);
+		free(cur);
 		cur = next;
 	}
 	*lst = NULL;

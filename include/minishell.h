@@ -1,12 +1,12 @@
- /* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/03/02 17:03:34 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/17 17:24:36 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-#include <sys/wait.h>
+# include <sys/wait.h>
 # include <errno.h>
-#include <sys/stat.h>
+# include <sys/stat.h>
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   ENUMS                                    */
@@ -60,7 +60,7 @@ typedef enum e_builtin_cmd
 	BI_UNSET,
 	BI_ENV,
 	BI_EXIT
-} t_builtin_cmd;
+}	t_builtin_cmd;
 
 typedef enum e_cmd_type
 {
@@ -120,12 +120,12 @@ typedef struct s_redir
 
 typedef struct s_command
 {
-	char				**argv;  // User input
-	char				**qmask; // Comillas
-	t_redir				*redirs; 
-	t_cmd_type			type; 	 //command types (ENUM)
-	t_builtin_cmd		builtin; // Builtin type
-	struct s_command	*next;   //next command in line
+	char				**argv;
+	char				**qmask;
+	t_redir				*redirs;
+	t_cmd_type			type;
+	t_builtin_cmd		builtin;
+	struct s_command	*next;
 }	t_command;
 
 typedef struct s_error
@@ -133,7 +133,7 @@ typedef struct s_error
 	t_errcode			code;
 	t_near				near;
 	const char			*subject;
-}t_error;
+}	t_error;
 
 /*-------------------------------- [  shell  ] -------------------------------*/
 
@@ -178,12 +178,9 @@ void	str_move(char **str, int i, int move);
 int		ft_strncmp(const char *s1, const char *s2, size_t size);
 
 /* parse_utils.c */
-int			argv_len(t_token *token);
-int			xy_streq(const char *a, const char *b);
-void		set_command_type(t_command *node);
-/* void		is_builtin(char *argv, t_command **node); */
-/* int			is_external(char *argv, t_command **node, t_error *err); */
-
+int		argv_len(t_token *token);
+int		xy_streq(const char *a, const char *b);
+void	set_command_type(t_command *node);
 
 /* token_utils.c */
 int		is_space(char c);
@@ -202,7 +199,7 @@ int		update_env_var(t_shell *sh, int idx, char *arg);
 int		add_env_var(t_shell *sh, char *new_var);
 
 /* unset_utils.c*/
-int	remove_env_var(t_shell *sh, char *new_var);
+int		remove_env_var(t_shell *sh, char *new_var);
 
 /* exec_utils.c */
 void	resolve_command_type(t_command *pl);
@@ -212,6 +209,10 @@ char	*find_exec_path(char **envp, const char *cmd);
 
 /* tokenizaion.c */
 t_token	*tokenizer(char *line);
+char	find_unclosed_quote(const char *line, int i);
+void	print_unclosed_quote(char q);
+int		token_add_word(char *line, int *i, t_token **lst);
+void	token_mark_delimiter(t_token *lst);
 
 /* token_manage.c */
 t_token	*token_new(t_token_type type, char *value, char *qmask, int space);
@@ -223,45 +224,66 @@ void	token_debug_print(const t_token *lst);
 /*-------------------------------- [  parser  ] ------------------------------*/
 
 /* parse.c */
+int		parse_simple_command(t_command **lst, t_token **token,
+			t_error *err);
+
 t_command	*parse(t_token **token, t_error *err);
-int			parse_simple_command(t_command **lst, t_token **token, t_error *err);
 
 /* pipeline_utils.c */
-t_command	*pipeline_new(void);
-void		pipeline_add_back(t_command **lst, t_command *new_node);
-void		pipeline_debug_print(const t_command *lst);
-t_redir		*redir_new(t_token_type type, char *target, char *qmask);
-void		redir_add_back(t_redir **lst, t_redir *new_node);
+t_command		*pipeline_new(void);
+void	pipeline_add_back(t_command **lst, t_command *new_node);
+void	pipeline_debug_print(const t_command *lst);
+t_redir	*redir_new(t_token_type type, char *target, char *qmask);
+void	redir_add_back(t_redir **lst, t_redir *new_node);
 
 /* free_pipeline.c */
-void		pipeline_free_all(t_command **lst);
+void	pipeline_free_all(t_command **lst);
 
 /* validate_syntax.c */
-t_near		near_from_token(t_token_type token);
-int			validate_syntax(t_token *t, t_error *err);
+t_near	near_from_token(t_token_type token);
+int		validate_syntax(t_token *t, t_error *err);
+
+/*qmask.c*/
+char	*qmask_dup(const char *src);
+int		qmask_has_quote(const char *qmask);
 
 /* parse_error.c */
-void		error_init(t_error *err);
-void		error_set(t_error *err, t_errcode code, t_near near);
-void	error_set_subject(t_error *err, t_errcode code, t_near near,
-		const char *subject);
-void		error_print(const t_error *err);
-int			error_status(const t_error *err);
-int			error_emit(t_error *err, t_errcode code, t_near near);
+void	error_init(t_error *err);
+void	error_print(const t_error *err);
+int		error_status(const t_error *err);
 int		error_emit_subject(t_error *err, t_errcode code, t_near near,
-		const char *subject);
-int			error_fail(t_error *err, t_errcode code, t_near near);
-int		error_fail_subject(t_error *err, t_errcode code, t_near near,
-		const char *subject);
+			const char *subject);
+int		error_fail(t_error *err, t_errcode code, t_near near);
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   EXPAND                                   */
 /* ══════════════════════════════════════════════════════════════════════════ */
 
 /* expand.c */
-void    expand(t_command *node, t_shell sh);
+void	expand(t_command *node, t_shell sh);
 
-/* expand_auxiliars.c*/
+/* expand_env.c */
+void	expand_word(char **word, char **qmask, t_shell sh, int i);
+
+/* expand_special.c */
+int		qmasq_diference(char *qmask);
+int		question_len(int n);
+void	question_fill(char *new_argv, int n, int len);
+void	question_fill_qmask(char *qmask, int i, int len);
+void	question_case(char **argv, char **qmask, t_shell sh);
+void	handle_pid_expansion(char **argv, char **qmask, int j);
+
+/* expand_qmask.c */
+int		has_quoted_char(char *qmask);
+int		same_qmask_context(char *qmask, int i);
+int		is_var_char(char c);
+
+/* expand_cleanup.c */
+void	remove_dollar_only(char **word, char **qmask, int i);
+void	remove_word(char **word, char **qmask, int start);
+void	remove_empty_unquoted_arg(char **argv, char **qmask, int i);
+
+/* expand_auxiliars.c */
 int		get_end(char *word, char *qmask, int i);
 int		expand_len(char *word, char *env, char *qmask, int i);
 char	*update_qmask_after_expansion(char *qmask, int s, int len_q, int len);
@@ -272,6 +294,7 @@ int		expansion_len(char *word, char *qmask, int i);
 /* ══════════════════════════════════════════════════════════════════════════ */
 
 /* errors.c */
+int		ft_fail(t_command **node, t_error *err);
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                 BUILT-INS                                  */
@@ -310,10 +333,9 @@ void	parent_process(int *prev_read, t_command *pl, int *pipefd);
 int		wait_all_children(void);
 
 /* child_process.c */
-int	apply_redirs(t_redir *redirs);
+int		apply_redirs(t_redir *redirs);
 int		exec_choice(t_command *pl, t_shell *sh);
 int		execute_external(t_command *pl, t_shell *sh);
 void	child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh);
-
 
 #endif

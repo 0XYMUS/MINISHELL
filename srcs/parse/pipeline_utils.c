@@ -3,50 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/25 21:27:40 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/17 12:52:21 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	print_redir(const t_redir *r)
-{
-	while (r)
-	{
-		if (r->type == R_IN)
-			printf("    redir: < %s\n", r->target);
-		else if (r->type == R_OUT)
-			printf("    redir: > %s\n", r->target);
-		else if (r->type == R_APPEND)
-			printf("    redir: >> %s\n", r->target);
-		else if (r->type == R_HEREDOC)
-			printf("    redir: << %s\n", r->target);
-		r = r->next;
-	}
-}
-
-static void	print_argv(char **argv)
-{
-	int	i;
-
-	if (!argv)
-	{
-		printf("    argv: (null)\n");
-		return ;
-	}
-	i = 0;
-	printf("    argv:");
-	while (argv[i])
-	{
-		printf(" [%s]", argv[i]);
-		i++;
-	}
-	printf("\n");
-}
-
+/*reserva e inicializa memoria para la estructura final*/
 t_command	*pipeline_new(void)
 {
 	t_command	*node;
@@ -64,6 +30,7 @@ t_command	*pipeline_new(void)
 	return (node);
 }
 
+/*anade comando al fina de la lista*/
 void	pipeline_add_back(t_command **lst, t_command *new_node)
 {
 	t_command	*cur;
@@ -80,12 +47,25 @@ void	pipeline_add_back(t_command **lst, t_command *new_node)
 		cur = cur->next;
 	cur->next = new_node;
 }
+
+/*majedo de error y liberacion de memoria en las redirecciones*/
+static t_redir	*redir_fail(t_redir *node)
+{
+	if (node)
+	{
+		free(node->target);
+		free(node->qmask);
+		free(node);
+	}
+	return (NULL);
+}
+
+/*reserva e inicializa las redirecciones de la estructura final*/
 t_redir	*redir_new(t_token_type type, char *target, char *qmask)
 {
 	t_redir	*node;
-	char	*mask_dup;
 
-	node = malloc(sizeof(t_redir));
+	node = (t_redir *)calloc(1, sizeof(t_redir));
 	if (!node)
 		return (NULL);
 	if (type == TOK_APPEND)
@@ -94,31 +74,22 @@ t_redir	*redir_new(t_token_type type, char *target, char *qmask)
 		node->type = R_HEREDOC;
 	else if (type == TOK_REDIR_IN)
 		node->type = R_IN;
-	else if (type == TOK_REDIR_OUT)
+	else
 		node->type = R_OUT;
 	node->target = ft_strdup(target);
 	if (!node->target)
-	{
-		free(node);
-		return (NULL);
-	}
-	mask_dup = NULL;
+		return (redir_fail(node));
 	if (qmask)
 	{
-		mask_dup = ft_strdup(qmask);
-		if (!mask_dup)
-		{
-			free(node->target);
-			free(node);
-			return (NULL);
-		}
+		node->qmask = ft_strdup(qmask);
+		if (!node->qmask)
+			return (redir_fail(node));
 	}
-	node->qmask = mask_dup;
 	node->expand = 1;
-	node->next = NULL;
 	return (node);
 }
 
+/*anade las redirecciones al final de la lista*/
 void	redir_add_back(t_redir **lst, t_redir *new_node)
 {
 	t_redir	*cur;
@@ -134,19 +105,4 @@ void	redir_add_back(t_redir **lst, t_redir *new_node)
 	while (cur->next)
 		cur = cur->next;
 	cur->next = new_node;
-}
-
-void	pipeline_debug_print(const t_command *lst)
-{
-	int	i;
-
-	i = 0;
-	while (lst)
-	{
-		printf("cmd[%d]:\n", i);
-		print_argv(lst->argv);
-		print_redir(lst->redirs);
-		lst = lst->next;
-		i++;
-	}
 }

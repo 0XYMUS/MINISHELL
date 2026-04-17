@@ -6,26 +6,17 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 16:28:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/16 17:56:13 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/17 16:44:33 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_var_char(char c)
-{
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		return (1);
-	if (c >= '0' && c <= '9')
-		return (1);
-	if (c == '_')
-		return (1);
-	return (0);
-}
-
+/*encuentra donde termina la variable que empieza en i,
+teniendo en cuenta caracteres y qmask*/
 int	get_end(char *word, char *qmask, int i)
 {
-	int	end;
+	int		end;
 	char	ctx;
 
 	end = i + 1;
@@ -35,6 +26,7 @@ int	get_end(char *word, char *qmask, int i)
 	return (end);
 }
 
+/*calcula la nueva longitud e word tras expansiom*/
 int	expand_len(char *word, char *env, char *qmask, int i)
 {
 	int	j;
@@ -59,6 +51,7 @@ int	expand_len(char *word, char *env, char *qmask, int i)
 	return (len);
 }
 
+/*actualiza tamno de qmask tras expansion*/
 char	*update_qmask_after_expansion(char *qmask, int s, int len_q, int len)
 {
 	int		oldt;
@@ -85,6 +78,7 @@ char	*update_qmask_after_expansion(char *qmask, int s, int len_q, int len)
 	return (new);
 }
 
+/*devuelve cuanto ocupa la expansion*/
 int	expansion_len(char *word, char *qmask, int i)
 {
 	int	end;

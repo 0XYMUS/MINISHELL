@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/16 16:36:14 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:29:15 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int is_redir(t_token_type type)
+int	is_redir(t_token_type type)
 {
-    return (type == TOK_APPEND || type == TOK_HEREDOC || type == TOK_REDIR_IN
-         || type == TOK_REDIR_OUT);
+	return (type == TOK_APPEND || type == TOK_HEREDOC || type == TOK_REDIR_IN
+		|| type == TOK_REDIR_OUT);
 }
 
 static t_builtin_cmd	get_builtin_type(char *cmd)
@@ -54,8 +54,6 @@ void	set_command_type(t_command *node)
 		node->type = CMD_EXTERNAL;
 }
 
-
-
 int	argv_len(t_token *token)
 {
 	int	n_argv;
@@ -67,7 +65,8 @@ int	argv_len(t_token *token)
 		{
 			if (!token->next)
 				return (-1);
-			if (token->type == TOK_HEREDOC && token->next->type != TOK_DELIMITER)
+			if (token->type == TOK_HEREDOC
+				&& token->next->type != TOK_DELIMITER)
 				return (-1);
 			if (token->type != TOK_HEREDOC && token->next->type != TOK_WORD)
 				return (-1);

@@ -45,8 +45,10 @@ SRC_FILES	=	main.c \
 				builtins/env.c \
 				builtins/exit.c \
 				exec/exec_utils.c \
+				exec/exec_utils_2.c \
 				exec/child_process.c \
 				exec/child_process_2.c \
+				exec/exec_heredoc.c \
 				exec/exec.c \
 				expand/expand.c \
 				expand/expand_env.c \

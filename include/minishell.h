@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 10:53:59 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:54:42 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,7 +332,8 @@ void	parent_process(int *prev_read, t_command *pl, int *pipefd);
 int		wait_all_children(void);
 
 /* child_process.c */
-int		apply_redirs(t_redir *redirs);
+int		apply_redirs(t_redir *redirs, t_shell sh);
+int		apply_heredoc_redir(t_redir *redir, t_shell sh);
 int		exec_choice(t_command *pl, t_shell *sh);
 int		execute_external(t_command *pl, t_shell *sh);
 void	child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh);

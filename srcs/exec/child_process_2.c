@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   child_process_2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/19 00:00:00 by julepere           #+#    #+#             */
-/*   Updated: 2026/04/20 10:53:27 by julepere         ###   ########.fr       */
+/*   Created: 2026/04/19 00:00:00 by julepere          #+#    #+#             */
+/*   Updated: 2026/04/20 12:07:02 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*ejecuta el builtin correspondiente dentro del hijo*/
 static int	exec_builtin(t_command *pl, t_shell *sh)
 {
 	if (pl->builtin == BI_ECHO)
@@ -31,6 +32,7 @@ static int	exec_builtin(t_command *pl, t_shell *sh)
 	return (0);
 }
 
+/*comprueba si la ruta apunta a un directorio*/
 static int	is_directory_path(const char *path)
 {
 	struct stat	st;
@@ -40,6 +42,7 @@ static int	is_directory_path(const char *path)
 	return (S_ISDIR(st.st_mode));
 }
 
+/*resuelve la ruta del ejecutable entre acceso directo o PATH*/
 static int	resolve_exec_path(t_command *pl, t_shell *sh, char **path)
 {
 	if (ft_strchr(pl->argv[0], '/'))
@@ -49,9 +52,10 @@ static int	resolve_exec_path(t_command *pl, t_shell *sh, char **path)
 	return (*path != NULL);
 }
 
+/*ejecuta un comando externo y gestiona los errores previos a execve*/
 int	execute_external(t_command *pl, t_shell *sh)
 {
-	char	*path;
+	char		*path;
 	t_errcode	code;
 
 	if (!resolve_exec_path(pl, sh, &path))
@@ -76,6 +80,7 @@ int	execute_external(t_command *pl, t_shell *sh)
 	return (error_emit_subject(&sh->err, code, PNEAR_WORD, pl->argv[0]));
 }
 
+/*elige entre builtin o ejecución externa*/
 int	exec_choice(t_command *pl, t_shell *sh)
 {
 	if (!pl || !pl->argv || !pl->argv[0])

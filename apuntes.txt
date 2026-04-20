@@ -1,3 +1,24 @@
 - Los errores NO se pasan como argumento a otro comando del pipe
 a | cat
 el error: 'a' command not found, no se pasa como argumento al cat
+
+/*Tabla mental de FDs
+Caso 1: comando único sin pipes
+Proceso		stdin		stdout			Qué hace
+Padre		terminal	terminal	Si es cd/export/unset/exit, ejecuta directamente
+Hijo		terminal	terminal	Si decides lanzar otros comandos normales
+Caso 2: primer comando de un pipeline
+Ejemplo: ls | grep x | wc
+
+Proceso		prev_read	pipefd[0]				pipefd[1]				Acción
+Hijo 1		-1			read del pipe nuevo		write del pipe nuevo	dup2(pipefd[1], STDOUT_FILENO)
+Padre		-1			read del pipe nuevo		write del pipe nuevo	cierra pipefd[1] y guarda prev_read = pipefd[0]
+Caso 3: comando intermedio
+Proceso		prev_read				pipefd[0]				pipefd[1]				Acción
+Hijo i		read del pipe anterior	read del pipe nuevo		write del pipe nuevo	dup2(prev_read, STDIN_FILENO) y dup2(pipefd[1], STDOUT_FILENO)
+Padre		read del pipe anterior	read del pipe nuevo		write del pipe nuevo	cierra prev_read, cierra pipefd[1], guarda prev_read = pipefd[0]
+Caso 4: último comando
+Proceso		prev_read						pipefd					Acción
+Hijo 		último read del pipe anterior	no hay pipe nuevo		dup2(prev_read, STDIN_FILENO)
+Padre		read del pipe anterior			no hay pipe nuevo		cierra prev_read, deja prev_read = -1
+*/

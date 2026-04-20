@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 10:53:24 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:54:42 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_space(char c) 
+int	is_space(char c)
 {
-	return (c == ' '  || c == '\t' || c == '\n' || c == '\r' || c == '\v' ||
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v' ||
 			c == '\f');
 }
 
@@ -25,7 +25,7 @@ static int	is_dquote_escapable(char c)
 
 static int	is_key(char c)
 {
-	return (c == '|'  || c == '<' || c == '>');
+	return (c == '|' || c == '<' || c == '>');
 }
 
 static int	is_quote(char c)

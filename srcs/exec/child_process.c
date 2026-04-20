@@ -3,58 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 10:53:23 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:30:37 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	heredoc_write_loop(int fd, const char *delimiter)
-{
-	char	*line;
-
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-			break ;
-		if (xy_streq(line, delimiter))
-		{
-			free(line);
-			break ;
-		}
-		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
-		{
-			free(line);
-			return (-1);
-		}
-		free(line);
-	}
-	return (0);
-}
-
-static int	apply_heredoc_redir(const char *delimiter)
-{
-	char	tmp_name[] = "/tmp/minishell_heredoc_XXXXXX";
-	int		fd;
-
-	fd = mkstemp(tmp_name);
-	if (fd < 0)
-		return (-1);
-	if (heredoc_write_loop(fd, delimiter) == -1)
-		return (close(fd), unlink(tmp_name), -1);
-	if (lseek(fd, 0, SEEK_SET) == -1)
-		return (close(fd), unlink(tmp_name), -1);
-	if (dup2(fd, STDIN_FILENO) == -1)
-		return (close(fd), unlink(tmp_name), -1);
-	close(fd);
-	unlink(tmp_name);
-	return (0);
-}
-
+/*abre y conecta una redirección de archivo con stdin o stdout*/
 static int	apply_file_redir(t_redir *redir)
 {
 	int	fd;
@@ -75,26 +33,36 @@ static int	apply_file_redir(t_redir *redir)
 	return (0);
 }
 
-int	apply_redirs(t_redir *redirs)
+/*aplica todas las redirecciones asociadas al comando*/
+int	apply_redirs(t_redir *redirs, t_shell sh)
 {
+	int	stdin_backup;
+
+	stdin_backup = dup(STDIN_FILENO);
+	if (stdin_backup == -1)
+		return (-1);
 	while (redirs)
 	{
 		if (redirs->type == R_IN || redirs->type == R_OUT
 			|| redirs->type == R_APPEND)
 		{
 			if (apply_file_redir(redirs) == -1)
-				return (-1);
+				return (close(stdin_backup), -1);
 		}
 		else if (redirs->type == R_HEREDOC)
 		{
-			if (apply_heredoc_redir(redirs->target) == -1)
-				return (-1);
+			if (dup2(stdin_backup, STDIN_FILENO) == -1)
+				return (close(stdin_backup), -1);
+			if (apply_heredoc_redir(redirs, sh) == -1)
+				return (close(stdin_backup), -1);
 		}
 		redirs = redirs->next;
 	}
+	close(stdin_backup);
 	return (0);
 }
 
+/*prepara los descriptores del hijo y ejecuta el comando*/
 void	child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh)
 {
 	if (prev_read != -1)
@@ -108,7 +76,7 @@ void	child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh)
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}
-	if (apply_redirs(pl->redirs) == -1)
+	if (apply_redirs(pl->redirs, *sh) == -1)
 		exit(1);
 	exit(exec_choice(pl, sh));
 }

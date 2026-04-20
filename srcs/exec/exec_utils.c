@@ -3,36 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 00:00:00 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/02 15:24:12 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 13:53:28 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	builtin_from_name(const char *name, t_builtin_cmd *builtin)
-{
-	if (xy_streq(name, "echo"))
-		*builtin = BI_ECHO;
-	else if (xy_streq(name, "cd"))
-		*builtin = BI_CD;
-	else if (xy_streq(name, "pwd"))
-		*builtin = BI_PWD;
-	else if (xy_streq(name, "export"))
-		*builtin = BI_EXPORT;
-	else if (xy_streq(name, "unset"))
-		*builtin = BI_UNSET;
-	else if (xy_streq(name, "env"))
-		*builtin = BI_ENV;
-	else if (xy_streq(name, "exit"))
-		*builtin = BI_EXIT;
-	else
-		return (0);
-	return (1);
-}
-
+/*clasifica cada comando como builtin, external o desconocido*/
 void	resolve_command_type(t_command *pl)
 {
 	while (pl)
@@ -41,12 +21,27 @@ void	resolve_command_type(t_command *pl)
 		pl->builtin = BI_NONE;
 		if (!pl->argv || !pl->argv[0])
 			pl->type = CMD_UNKNOWN;
-		else if (builtin_from_name(pl->argv[0], &pl->builtin))
+		else if (xy_streq(pl->argv[0], "echo"))
+			pl->builtin = BI_ECHO;
+		else if (xy_streq(pl->argv[0], "cd"))
+			pl->builtin = BI_CD;
+		else if (xy_streq(pl->argv[0], "pwd"))
+			pl->builtin = BI_PWD;
+		else if (xy_streq(pl->argv[0], "export"))
+			pl->builtin = BI_EXPORT;
+		else if (xy_streq(pl->argv[0], "unset"))
+			pl->builtin = BI_UNSET;
+		else if (xy_streq(pl->argv[0], "env"))
+			pl->builtin = BI_ENV;
+		else if (xy_streq(pl->argv[0], "exit"))
+			pl->builtin = BI_EXIT;
+		if (pl->builtin != BI_NONE)
 			pl->type = CMD_BUILTIN;
 		pl = pl->next;
 	}
 }
 
+/*duplica una subcadena con memoria nueva*/
 static char	*substr_dup(const char *s, int start, int len)
 {
 	char	*dup;
@@ -65,11 +60,12 @@ static char	*substr_dup(const char *s, int start, int len)
 	return (dup);
 }
 
-static char	*join_path(const char *dir, const char *cmd)
+/*une un segmento de PATH con un comando*/
+static char	*path_join(const char *dir, const char *cmd)
 {
+	char	*path;
 	int		dir_len;
 	int		cmd_len;
-	char	*path;
 
 	dir_len = ft_strlen(dir);
 	cmd_len = ft_strlen(cmd);
@@ -84,40 +80,44 @@ static char	*join_path(const char *dir, const char *cmd)
 	return (path);
 }
 
-char	*find_exec_path(char **envp, const char *cmd)
+/*busca el ejecutable dentro de una entrada PATH concreta*/
+static char	*search_path_entry(const char *entry, const char *cmd)
 {
-	int		i;
 	int		start;
 	int		end;
 	char	*dir;
 	char	*path;
 
-	i = 0;
-	while (envp && envp[i])
+	start = 5;
+	while (entry[start])
 	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-		{
-			start = 5;
-			while (envp[i][start])
-			{
-				end = start;
-				while (envp[i][end] && envp[i][end] != ':')
-					end++;
-				dir = substr_dup(envp[i], start, end - start);
-				if (!dir)
-					return (NULL);
-				path = join_path(dir, cmd);
-				free(dir);
-				if (path && access(path, X_OK) == 0)
-					return (path);
-				free(path);
-				if (envp[i][end] == ':')
-					start = end + 1;
-				else
-					break ;
-			}
-		}
-		i++;
+		end = start;
+		while (entry[end] && entry[end] != ':')
+			end++;
+		dir = substr_dup(entry, start, end - start);
+		if (!dir)
+			return (NULL);
+		path = path_join(dir, cmd);
+		free(dir);
+		if (path && access(path, X_OK) == 0)
+			return (path);
+		free(path);
+		if (entry[end] == ':')
+			start = end + 1;
+		else
+			break ;
+	}
+	return (NULL);
+}
+
+/*busca la ruta ejecutable del comando en PATH*/
+char	*find_exec_path(char **envp, const char *cmd)
+{
+	while (envp && *envp)
+	{
+		if (ft_strncmp(*envp, "PATH=", 5) == 0)
+			return (search_path_entry(*envp, cmd));
+		envp++;
 	}
 	return (NULL);
 }

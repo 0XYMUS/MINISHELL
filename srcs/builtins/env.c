@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 13:21:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/17 15:10:38 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:47:32 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,22 @@
 
 int	xy_env(t_command *cmd, t_shell *sh)
 {
-    int		i;
-    char	**envp;
+	int		i;
+	char	**envp;
 
-    (void)cmd;
-    if (!sh)
-        return (0);
-    sh->exit_status = 0;
-    envp = sh->envp;
-    if (!envp)
-        return (0);
-    i = 0;
-    while (envp[i])
-    {
-        write(1, envp[i], ft_strlen(envp[i]));
-        write(1, "\n", 1);
-        i++;
-    }
-    return (0);
+	(void)cmd;
+	if (!sh)
+		return (0);
+	sh->exit_status = 0;
+	envp = sh->envp;
+	if (!envp)
+		return (0);
+	i = 0;
+	while (envp[i])
+	{
+		write(1, envp[i], ft_strlen(envp[i]));
+		write(1, "\n", 1);
+		i++;
+	}
+	return (0);
 }

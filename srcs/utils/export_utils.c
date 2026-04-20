@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 21:56:48 by julepere          #+#    #+#             */
-/*   Updated: 2026/03/13 03:13:44 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:27:07 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	export_set_var(char *arg, t_shell *sh)
 
 int	export_with_value(char *arg, char *eq_pos, t_shell *sh)
 {
-	int	idx;
+	int		idx;
 	char	*new_var;
 
 	(void)eq_pos;

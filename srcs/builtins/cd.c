@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 17:09:19 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 10:53:18 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:49:42 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	xy_cd(t_command *cmd, t_shell *sh)
 {
-	const char  *path;
+	const char	*path;
 
 	if (!sh)
 		return (0);

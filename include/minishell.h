@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 17:24:36 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 10:53:59 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,13 +224,12 @@ void	token_debug_print(const t_token *lst);
 /*-------------------------------- [  parser  ] ------------------------------*/
 
 /* parse.c */
-int		parse_simple_command(t_command **lst, t_token **token,
-			t_error *err);
+int		parse_simple_command(t_command **lst, t_token **token, t_error *err);
 
 t_command	*parse(t_token **token, t_error *err);
 
 /* pipeline_utils.c */
-t_command		*pipeline_new(void);
+t_command	*pipeline_new(void);
 void	pipeline_add_back(t_command **lst, t_command *new_node);
 void	pipeline_debug_print(const t_command *lst);
 t_redir	*redir_new(t_token_type type, char *target, char *qmask);

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 11:41:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 16:12:32 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ static void	expand_redirs(t_redir *redirs, t_shell sh)
 }
 
 /*funcion general de expansiones*/
-void	expand(t_command *node, t_shell sh)
+void	expand(t_cmd *node, t_shell sh)
 {
 	while (node)
 	{

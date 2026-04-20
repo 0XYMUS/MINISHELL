@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 15:29:15 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static t_builtin_cmd	get_builtin_type(char *cmd)
 	return (BI_NONE);
 }
 
-void	set_command_type(t_command *node)
+void	set_cmd_type(t_cmd *node)
 {
 	if (!node || !node->argv || !node->argv[0])
 	{

@@ -6,14 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 00:00:00 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 12:07:02 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*ejecuta el builtin correspondiente dentro del hijo*/
-static int	exec_builtin(t_command *pl, t_shell *sh)
+static int	exec_builtin(t_cmd *pl, t_shell *sh)
 {
 	if (pl->builtin == BI_ECHO)
 		return (xy_echo(pl, sh));
@@ -43,7 +43,7 @@ static int	is_directory_path(const char *path)
 }
 
 /*resuelve la ruta del ejecutable entre acceso directo o PATH*/
-static int	resolve_exec_path(t_command *pl, t_shell *sh, char **path)
+static int	resolve_exec_path(t_cmd *pl, t_shell *sh, char **path)
 {
 	if (ft_strchr(pl->argv[0], '/'))
 		*path = ft_strdup(pl->argv[0]);
@@ -53,7 +53,7 @@ static int	resolve_exec_path(t_command *pl, t_shell *sh, char **path)
 }
 
 /*ejecuta un comando externo y gestiona los errores previos a execve*/
-int	execute_external(t_command *pl, t_shell *sh)
+int	execute_external(t_cmd *pl, t_shell *sh)
 {
 	char		*path;
 	t_errcode	code;
@@ -81,7 +81,7 @@ int	execute_external(t_command *pl, t_shell *sh)
 }
 
 /*elige entre builtin o ejecución externa*/
-int	exec_choice(t_command *pl, t_shell *sh)
+int	exec_choice(t_cmd *pl, t_shell *sh)
 {
 	if (!pl || !pl->argv || !pl->argv[0])
 		return (0);

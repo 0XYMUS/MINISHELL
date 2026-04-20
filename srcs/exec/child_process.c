@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 15:30:37 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	apply_redirs(t_redir *redirs, t_shell sh)
 }
 
 /*prepara los descriptores del hijo y ejecuta el comando*/
-void	child_process(int prev_read, t_command *pl, int *pipefd, t_shell *sh)
+void	child_process(int prev_read, t_cmd *pl, int *pipefd, t_shell *sh)
 {
 	if (prev_read != -1)
 		dup2(prev_read, STDIN_FILENO);

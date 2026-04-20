@@ -6,14 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 16:50:21 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*maneja error ENOMEM*/
-int	ft_fail(t_command **node, t_error *err)
+int	ft_fail(t_cmd **node, t_error *err)
 {
 	errno = ENOMEM;
 	error_fail(err, PERR_OOM, PNEAR_NONE);

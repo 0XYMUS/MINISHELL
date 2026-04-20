@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 15:59:44 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 12:43:14 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ static void	free_redirs(t_redir *redir)
 }
 
 /*libera toda la lista de comandos de pipeline*/
-void	pipeline_free_all(t_command **lst)
+void	pipeline_free_all(t_cmd **lst)
 {
-	t_command	*cur;
-	t_command	*next;
+	t_cmd	*cur;
+	t_cmd	*next;
 
 	if (!lst)
 		return ;

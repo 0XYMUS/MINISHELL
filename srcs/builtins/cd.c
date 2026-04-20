@@ -6,13 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 17:09:19 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 15:49:42 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	xy_cd(t_command *cmd, t_shell *sh)
+int	xy_cd(t_cmd *cmd, t_shell *sh)
 {
 	const char	*path;
 

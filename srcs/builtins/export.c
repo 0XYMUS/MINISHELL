@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 12:35:35 by julepere          #+#    #+#             */
-/*   Updated: 2026/03/02 17:17:26 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	print_declare_x(char **envp)
 	}
 }
 
-int	xy_export(t_command *cmd, t_shell *sh)
+int	xy_export(t_cmd *cmd, t_shell *sh)
 {
 	char	*arg;
 

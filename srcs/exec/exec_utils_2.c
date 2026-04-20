@@ -6,14 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 11:13:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 13:53:08 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*ejecuta el builtin que debe correr en el proceso padre*/
-int	run_parent_builtin(t_command *pl, t_shell *sh)
+int	run_parent_builtin(t_cmd *pl, t_shell *sh)
 {
 	if (pl->builtin == BI_CD)
 		return (xy_cd(pl, sh));
@@ -27,7 +27,7 @@ int	run_parent_builtin(t_command *pl, t_shell *sh)
 }
 
 /*comprueba si el builtin debe ejecutarse en el padre*/
-int	is_parent_builtin(t_command *pl)
+int	is_parent_builtin(t_cmd *pl)
 {
 	if (pl->builtin == BI_CD || pl->builtin == BI_EXIT
 		|| pl->builtin == BI_EXPORT || pl->builtin == BI_UNSET)

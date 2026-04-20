@@ -6,14 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 16:09:49 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 12:49:21 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 20:14:33 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*si el token es una palabrala anade a la sestructura final*/
-static int	add_word(t_token **token, t_command **cmd, int *n_arg,
+static int	add_word(t_token **token, t_cmd **cmd, int *n_arg,
 			t_error *err)
 {
 	if ((*token)->type == TOK_WORD)
@@ -31,7 +31,7 @@ static int	add_word(t_token **token, t_command **cmd, int *n_arg,
 }
 
 /*si el token es un redir lo valida y lo anade a la estructura final*/
-static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
+static int	add_reddir(t_token **token, t_cmd **cmd, t_error *err)
 {
 	t_redir	*redir;
 
@@ -60,7 +60,7 @@ static int	add_reddir(t_token **token, t_command **cmd, t_error *err)
 }
 
 /*inicializa los nodos a partir de la tokenizacion y crea la estructura final*/
-int	init_command(t_command **node, t_token **token, t_error *err)
+int	init_cmd(t_cmd **node, t_token **token, t_error *err)
 {
 	int	n_argv;
 
@@ -86,12 +86,12 @@ int	init_command(t_command **node, t_token **token, t_error *err)
 }
 
 /*construye los comandos hasta la siguinte pipe*/
-int	parse_simple_command(t_command **lst, t_token **token, t_error *err)
+int	parse_simple_command(t_cmd **lst, t_token **token, t_error *err)
 {
-	t_command	*node;
+	t_cmd		*node;
 	int			n_argv;
 
-	if (init_command(&node, token, err) == -1)
+	if (init_cmd(&node, token, err) == -1)
 		return (-1);
 	n_argv = 0;
 	while (*token && (*token)->type != TOK_PIPE)
@@ -101,17 +101,17 @@ int	parse_simple_command(t_command **lst, t_token **token, t_error *err)
 		if (*token && add_word(token, &node, &n_argv, err) == -1)
 			return (pipeline_free_all(&node), -1);
 	}
-	set_command_type(node);
+	set_cmd_type(node);
 	pipeline_add_back(lst, node);
 	return (0);
 }
 
 /*funcion rincipal que convierte tokens a estructura final paseada*/
-t_command	*parse(t_token **token, t_error *err)
+t_cmd	*parse(t_token **token, t_error *err)
 {
-	t_command	*lst;
+	t_cmd	*lst;
 
-	if (validate_syntax(*token, err) == -1)
+	if (validate_syntax(*token, err) != 0)
 		return (NULL);
 	lst = NULL;
 	while (*token)

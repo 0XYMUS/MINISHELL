@@ -6,14 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 00:00:00 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 13:53:28 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*clasifica cada comando como builtin, external o desconocido*/
-void	resolve_command_type(t_command *pl)
+void	resolve_command_type(t_cmd *pl)
 {
 	while (pl)
 	{

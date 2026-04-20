@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 02:02:59 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/04 19:14:33 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 
 static void	process_line(char *line, t_shell *sh)
 {
-	t_command	*pl;
+	t_cmd	*pl;
 
 	sh->tokens = tokenizer(line);
-	/* token_debug_print(sh->tokens); */
 	pl = parse(&sh->tokens, &sh->err);
 	if (!pl)
 	{
@@ -28,7 +27,6 @@ static void	process_line(char *line, t_shell *sh)
 	{
 		expand(pl, *sh);
 		sh->exit_status = execution(pl, sh);
-		/* pipeline_debug_print(pl); */
 		pipeline_free_all(&pl);
 	}
 	token_free_all(&sh->tokens);
@@ -42,14 +40,13 @@ void	shell_loop(t_shell *sh)
 	while (1)
 	{
 		line = readline(
-			"\001\x1b[1;97;106m\002 minishell "
-			"\001\x1b[49;1;96m\002▓▒░ "
-			"\001\x1b[0m\002"
-		);
+				"\001\x1b[1;97;106m\002 minishell "
+				"\001\x1b[49;1;96m\002▓▒░ "
+				"\001\x1b[0m\002");
 		if (line == NULL)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
 		if (line[0] != '\0')
 		{

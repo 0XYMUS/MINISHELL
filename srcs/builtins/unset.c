@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 02:16:43 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 15:49:28 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	unset_one_var(t_shell *sh, char *name)
 	remove_env_var(sh, name);
 }
 
-int	xy_unset(t_command *cmd, t_shell *sh)
+int	xy_unset(t_cmd *cmd, t_shell *sh)
 {
 	int	i;
 

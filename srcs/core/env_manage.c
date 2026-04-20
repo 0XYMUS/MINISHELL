@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_manage.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 14:54:42 by julepere          #+#    #+#             */
-/*   Updated: 2026/02/22 00:19:17 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:57:47 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 // Cuenta cuantas posiciones tiene el env
 int	env_count(char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!envp)
 		return (0);
-	while(envp[i])
+	while (envp[i])
 		i++;
 	return (i);
 }
@@ -55,7 +55,7 @@ void	env_free(char **envp)
 	int	i;
 
 	if (!envp)
-		return;
+		return ;
 	i = 0;
 	while (envp[i])
 	{

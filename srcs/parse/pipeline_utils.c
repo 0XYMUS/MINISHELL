@@ -6,21 +6,21 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 12:52:21 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*reserva e inicializa memoria para la estructura final*/
-t_command	*pipeline_new(void)
+t_cmd	*pipeline_new(void)
 {
-	t_command	*node;
+	t_cmd	*node;
 
-	node = (t_command *)malloc(sizeof(t_command));
+	node = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!node)
 		return (NULL);
-	*node = (t_command){0};
+	*node = (t_cmd){0};
 	node->argv = NULL;
 	node->qmask = NULL;
 	node->redirs = NULL;
@@ -31,9 +31,9 @@ t_command	*pipeline_new(void)
 }
 
 /*anade comando al fina de la lista*/
-void	pipeline_add_back(t_command **lst, t_command *new_node)
+void	pipeline_add_back(t_cmd **lst, t_cmd *new_node)
 {
-	t_command	*cur;
+	t_cmd	*cur;
 
 	if (!lst || !new_node)
 		return ;

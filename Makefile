@@ -20,7 +20,10 @@ INC_DIR		= include
 SRC_FILES	=	main.c \
 				utils/utils.c \
 				utils/utils_1.c \
-				utils/token_utils.c \
+				token/token_word_build.c \
+				token/token_char_class.c \
+				token/token_escape_quote.c \
+				token/token_word_fill.c \
 				utils/parse_utils.c \
 				utils/export_utils.c \
 				utils/unset_utils.c \

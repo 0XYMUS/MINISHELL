@@ -21,5 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	if (shell_init(&sh, envp) != 0)
 		return (1);
 	shell_loop(&sh);
+	env_free(sh.envp);
+	clear_history();
 	return (0);
 }

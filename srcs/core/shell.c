@@ -15,9 +15,11 @@
 static void	process_line(char *line, t_shell *sh)
 {
 	t_cmd	*pl;
+	t_token	*tok_cursor;
 
 	sh->tokens = tokenizer(line);
-	pl = parse(&sh->tokens, &sh->err);
+	tok_cursor = sh->tokens;
+	pl = parse(&tok_cursor, &sh->err);
 	if (!pl)
 	{
 		sh->exit_status = error_status(&sh->err);

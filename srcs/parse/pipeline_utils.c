@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/21 11:18:45 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,24 @@ static t_redir	*redir_fail(t_redir *node)
 	return (NULL);
 }
 
+static void	init_node(t_redir *node)
+{
+	node->type = R_IN;
+	node->target = NULL;
+	node->qmask = NULL;
+	node->expand = 0;
+	node->next = NULL;
+}
+
 /*reserva e inicializa las redirecciones de la estructura final*/
 t_redir	*redir_new(t_token_type type, char *target, char *qmask)
 {
 	t_redir	*node;
 
-	node = (t_redir *)calloc(1, sizeof(t_redir));
+	node = (t_redir *)malloc(sizeof(t_redir));
 	if (!node)
 		return (NULL);
+	init_node(node);
 	if (type == TOK_APPEND)
 		node->type = R_APPEND;
 	else if (type == TOK_HEREDOC)
@@ -87,22 +97,4 @@ t_redir	*redir_new(t_token_type type, char *target, char *qmask)
 	}
 	node->expand = 1;
 	return (node);
-}
-
-/*anade las redirecciones al final de la lista*/
-void	redir_add_back(t_redir **lst, t_redir *new_node)
-{
-	t_redir	*cur;
-
-	if (!lst || !new_node)
-		return ;
-	if (!*lst)
-	{
-		*lst = new_node;
-		return ;
-	}
-	cur = *lst;
-	while (cur->next)
-		cur = cur->next;
-	cur->next = new_node;
 }

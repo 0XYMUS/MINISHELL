@@ -22,3 +22,45 @@ Proceso		prev_read						pipefd					Acción
 Hijo 		último read del pipe anterior	no hay pipe nuevo		dup2(prev_read, STDIN_FILENO)
 Padre		read del pipe anterior			no hay pipe nuevo		cierra prev_read, deja prev_read = -1
 */
+
+
+ARCHIVO DE PREUBAS OK
+echo hola\ mundo
+echo \$USER
+echo \"hola\"
+echo 'a\b\$c'
+echo "a\qb"
+echo "a\\b"
+echo hola mundo
+echo "hola   mundo"  'y  adios'
+echo 'comillas "dobles" dentro'
+echo "comillas 'simples' dentro"
+echo "" '' " "
+echo hola | cat
+echo uno dos tres | wc -w
+printf "a\nb\nc\n" | grep b | wc -l
+echo "a b  c" | tr -s ' ' | sed 's/ /_/g'
+echo hola > out.txt
+cat < out.txt
+echo linea1 > out.txt | cat
+echo linea2 >> out.txt
+cat < out.txt | wc -l
+echo test > out.txt | cat < out.txt
+cat << EOF
+cat << EOF | wc -l
+cat << EOF > out.txt
+cat << 'EOF'
+echo $USER
+echo "$USER"
+echo '$USER'
+echo "$?"
+echo "$HOME/test"
+cd /ruta/que/no/existe
+export VAR=hola
+echo $VAR
+unset VAR
+echo $VAR
+  echo     hola     mundo  
+echo    "  a   b  "   | cat
+echo "a  b"    >    out.txt
+cat    <   out.txt

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 12:31:13 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 20:08:59 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/21 10:57:13 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,24 +103,23 @@ int	apply_heredoc_redir(t_redir *redir, t_shell sh)
 	int	pipefd[2];
 	int	saved_in;
 	int	saved_out;
-	int	terminal_fd;
-	int	terminal_status;
+	int	tty_fd;
+	int	tty_status;
 
 	if (pipe(pipefd) == -1)
 		return (-1);
 	saved_in = -1;
 	saved_out = -1;
-	terminal_fd = -1;
-	terminal_status = setup_heredoc_terminal(&saved_in, &saved_out,
-		&terminal_fd);
-	if (terminal_status == -1)
+	tty_fd = -1;
+	tty_status = setup_heredoc_terminal(&saved_in, &saved_out, &tty_fd);
+	if (tty_status == -1)
 		return (close(pipefd[1]), close(pipefd[0]), -1);
 	if (heredoc_write_loop(pipefd[1], redir->target, redir->expand, sh) == -1)
 	{
-		restore_heredoc_terminal(saved_in, saved_out, terminal_fd);
+		restore_heredoc_terminal(saved_in, saved_out, tty_fd);
 		return (close(pipefd[1]), close(pipefd[0]), -1);
 	}
-	restore_heredoc_terminal(saved_in, saved_out, terminal_fd);
+	restore_heredoc_terminal(saved_in, saved_out, tty_fd);
 	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
 		return (close(pipefd[0]), -1);

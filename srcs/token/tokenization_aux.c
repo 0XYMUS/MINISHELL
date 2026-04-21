@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 13:40:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 13:41:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/21 11:12:39 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,14 @@ void	print_unclosed_quote(char q)
 {
 	if (!q)
 		q = '\'';
-	fprintf(stderr,
-		"minishell: unexpected EOF while looking for matching `%c'\n", q);
-	fprintf(stderr,
-		"minishell: syntax error: unexpected end of file\n");
+	write(STDERR_FILENO,
+		"minishell: unexpected EOF while looking for matching `",
+		ft_strlen("minishell: unexpected EOF while looking for matching `"));
+	write(STDERR_FILENO, &q, 1);
+	write(STDERR_FILENO, "'\n", 2);
+	write(STDERR_FILENO,
+		"minishell: syntax error: unexpected end of file\n",
+		ft_strlen("minishell: syntax error: unexpected end of file\n"));
 }
 
 /*extrae una palabra y crea el token a la lista*/

@@ -6,11 +6,18 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 17:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 16:50:21 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/21 11:12:39 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	write_err_str(const char *s)
+{
+	if (!s)
+		return ;
+	write(STDERR_FILENO, s, ft_strlen(s));
+}
 
 static const char	*near_to_str(t_near near)
 {
@@ -52,9 +59,19 @@ static int	print_known_error(const t_error *err)
 	if (!msg)
 		return (0);
 	if (err->subject)
-		fprintf(stderr, "minishell: %s: %s\n", err->subject, msg);
+	{
+		write_err_str("minishell: ");
+		write_err_str(err->subject);
+		write_err_str(": ");
+		write_err_str(msg);
+		write_err_str("\n");
+	}
 	else
-		fprintf(stderr, "minishell: %s\n", msg);
+	{
+		write_err_str("minishell: ");
+		write_err_str(msg);
+		write_err_str("\n");
+	}
 	return (1);
 }
 
@@ -72,5 +89,7 @@ void	error_print(const t_error *err)
 		return ;
 	}
 	s = near_to_str(err->near);
-	fprintf(stderr, "minishell: syntax error near unexpected token `%s'\n", s);
+	write_err_str("minishell: syntax error near unexpected token `");
+	write_err_str(s);
+	write_err_str("'\n");
 }

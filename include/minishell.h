@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 19:34:29 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/21 17:42:53 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <sys/stat.h>
+# include <signal.h>
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   ENUMS                                    */
@@ -144,7 +145,7 @@ typedef struct s_word_ctx
 	char	pending_q;
 }	t_word_ctx;
 
-/*-------------------------------- [  shell  ] -------------------------------*/
+/*-------------------------------- [  shell  ] ------------------------------*/
 
 typedef struct s_shell
 {
@@ -155,6 +156,9 @@ typedef struct s_shell
 	t_cmd		*pipeline;		/* parser output for current line */
 	t_error		err;
 }	t_shell;
+/*----------------------------- [  Variable global  ] -----------------------*/
+
+extern volatile sig_atomic_t	g_signal;
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                  FUNCTIONS                                 */
@@ -171,6 +175,13 @@ int		shell_init(t_shell *sh, char **envp);
 
 /* shell.c */
 void	shell_loop(t_shell *sh);
+
+/*signals*/
+
+void	catch_signal_father(void);
+void	catch_signal_child(void);
+void	catch_signal_wait_parent(void);
+void	catch_signal_heredoc(void);
 
 /*-------------------------------- [  utils  ] -------------------------------*/
 
@@ -348,8 +359,8 @@ void	parent_process(int *prev_read, t_cmd *pl, int *pipefd);
 int		wait_all_children(void);
 
 /* child_process.c */
-int		apply_redirs(t_redir *redirs, t_shell sh);
-int		apply_heredoc_redir(t_redir *redir, t_shell sh);
+int		apply_redirs(t_redir *redirs, t_shell *sh);
+int		apply_heredoc_redir(t_redir *redir, t_shell *sh);
 int		exec_choice(t_cmd *pl, t_shell *sh);
 int		execute_external(t_cmd *pl, t_shell *sh);
 void	child_process(int prev_read, t_cmd *pl, int *pipefd, t_shell *sh);

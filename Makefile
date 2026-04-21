@@ -32,6 +32,7 @@ SRC_FILES	=	main.c \
 				core/env_manage.c \
 				core/initialize.c \
 				core/shell.c \
+				core/signals.c \
 				token/tokenization.c \
 				token/tokenization_aux.c \
 				token/token_manage.c \
@@ -56,9 +57,9 @@ SRC_FILES	=	main.c \
 				expand/expand.c \
 				expand/expand_env.c \
 				expand/expand_special.c \
-							expand/expand_qmask.c \
-							expand/expand_cleanup.c \
-							expand/expand_utils.c \
+				expand/expand_qmask.c \
+				expand/expand_cleanup.c \
+				expand/expand_utils.c \
 				expand/expand_auxiliars.c \
 				
 

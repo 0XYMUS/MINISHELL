@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 02:02:59 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/21 17:50:33 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ void	shell_loop(t_shell *sh)
 {
 	char	*line;
 
+	g_signal = 0;
 	while (1)
 	{
+		catch_signal_father();
 		line = readline(
 				"\001\x1b[1;97;106m\002 minishell "
 				"\001\x1b[49;1;96m\002▓▒░ "
@@ -54,6 +56,11 @@ void	shell_loop(t_shell *sh)
 		{
 			add_history(line);
 			process_line(line, sh);
+		}
+		if (g_signal == SIGINT)
+		{
+			sh->exit_status = 130;
+			g_signal = 0;
 		}
 		free(line);
 	}

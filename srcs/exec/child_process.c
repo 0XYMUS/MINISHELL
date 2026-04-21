@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/21 18:05:21 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	apply_file_redir(t_redir *redir)
 }
 
 /*aplica todas las redirecciones asociadas al comando*/
-int	apply_redirs(t_redir *redirs, t_shell sh)
+int	apply_redirs(t_redir *redirs, t_shell *sh)
 {
 	int	stdin_backup;
 
@@ -76,7 +76,11 @@ void	child_process(int prev_read, t_cmd *pl, int *pipefd, t_shell *sh)
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}
-	if (apply_redirs(pl->redirs, *sh) == -1)
+	if (apply_redirs(pl->redirs, sh) == -1)
+	{
+		if (sh->exit_status == 130)
+			exit(130);
 		exit(1);
+	}
 	exit(exec_choice(pl, sh));
 }

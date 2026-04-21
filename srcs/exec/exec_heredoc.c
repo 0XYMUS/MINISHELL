@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 12:31:13 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 10:57:13 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/21 18:52:09 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,12 @@ static int	heredoc_expand_line(char **line, t_shell sh)
 	return (0);
 }
 
+static void	heredoc_child_sigint(int sign)
+{
+	(void)sign;
+	exit(130);
+}
+
 /*lee el heredoc y guarda su contenido en un pipe*/
 int	heredoc_write_loop(int temp_fd, const char *delimiter,
 	int expand, t_shell sh)
@@ -85,6 +91,8 @@ int	heredoc_write_loop(int temp_fd, const char *delimiter,
 	while (1)
 	{
 		input_line = readline("> ");
+		if (g_signal == SIGINT)
+			return (free(input_line), -1);
 		if (!input_line || xy_streq(input_line, delimiter))
 			return (free(input_line), 0);
 		if (expand && heredoc_expand_line(&input_line, sh) == -1)
@@ -97,14 +105,25 @@ int	heredoc_write_loop(int temp_fd, const char *delimiter,
 	return (0);
 }
 
+static int	heredoc_child_write(int temp_fd, t_redir *redir, t_shell sh)
+{
+	signal(SIGINT, heredoc_child_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	if (heredoc_write_loop(temp_fd, redir->target, redir->expand, sh) == -1)
+		exit(130);
+	exit(0);
+}
+
 /*crea y prepara una redirección heredoc para stdin*/
-int	apply_heredoc_redir(t_redir *redir, t_shell sh)
+int	apply_heredoc_redir(t_redir *redir, t_shell *sh)
 {
 	int	pipefd[2];
+	int	status;
 	int	saved_in;
 	int	saved_out;
 	int	tty_fd;
 	int	tty_status;
+	pid_t	pid;
 
 	if (pipe(pipefd) == -1)
 		return (-1);
@@ -114,13 +133,27 @@ int	apply_heredoc_redir(t_redir *redir, t_shell sh)
 	tty_status = setup_heredoc_terminal(&saved_in, &saved_out, &tty_fd);
 	if (tty_status == -1)
 		return (close(pipefd[1]), close(pipefd[0]), -1);
-	if (heredoc_write_loop(pipefd[1], redir->target, redir->expand, sh) == -1)
+	pid = fork();
+	if (pid < 0)
+		return (restore_heredoc_terminal(saved_in, saved_out, tty_fd),
+			close(pipefd[1]), close(pipefd[0]), -1);
+	if (pid == 0)
 	{
-		restore_heredoc_terminal(saved_in, saved_out, tty_fd);
-		return (close(pipefd[1]), close(pipefd[0]), -1);
+		close(pipefd[0]);
+		heredoc_child_write(pipefd[1], redir, *sh);
 	}
-	restore_heredoc_terminal(saved_in, saved_out, tty_fd);
 	close(pipefd[1]);
+	catch_signal_wait_parent();
+	waitpid(pid, &status, 0);
+	restore_heredoc_terminal(saved_in, saved_out, tty_fd);
+	catch_signal_father();
+	g_signal = 0;
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	{
+		sh->exit_status = 130;
+		close(pipefd[0]);
+		return (-1);
+	}
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
 		return (close(pipefd[0]), -1);
 	close(pipefd[0]);

@@ -33,6 +33,7 @@ SRC_FILES	=	main.c \
 				core/initialize.c \
 				core/shell.c \
 				core/signals.c \
+				core/signal_heredoc.c \
 				token/tokenization.c \
 				token/tokenization_aux.c \
 				token/token_manage.c \
@@ -53,6 +54,7 @@ SRC_FILES	=	main.c \
 				exec/child_process.c \
 				exec/child_process_2.c \
 				exec/exec_heredoc.c \
+				exec/exec_heredoc_2.c \
 				exec/exec.c \
 				expand/expand.c \
 				expand/expand_env.c \

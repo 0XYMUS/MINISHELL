@@ -6,7 +6,64 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 16:20:03 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/22 16:20:04 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:47:57 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
+
+/*restaura stdin/stdout originales tras leer el heredoc*/
+void	restore_heredoc_terminal(int saved_in, int saved_out,
+	int terminal_fd)
+{
+	if (terminal_fd == -1)
+		return ;
+	dup2(saved_in, STDIN_FILENO);
+	dup2(saved_out, STDOUT_FILENO);
+	close(saved_in);
+	close(saved_out);
+	close(terminal_fd);
+}
+
+/*redirecciona stdin y stdout y usa tty para leer el heredoc visible*/
+int	setup_heredoc_terminal(int *saved_in, int *saved_out,
+	int *terminal_fd)
+{
+	*terminal_fd = open("/dev/tty", O_RDWR);
+	if (*terminal_fd == -1)
+		return (0);
+	*saved_in = dup(STDIN_FILENO);
+	*saved_out = dup(STDOUT_FILENO);
+	if (*saved_in == -1 || *saved_out == -1)
+	{
+		close(*terminal_fd);
+		return (-1);
+	}
+	if (dup2(*terminal_fd, STDIN_FILENO) == -1
+		|| dup2(*terminal_fd, STDOUT_FILENO) == -1)
+	{
+		close(*terminal_fd);
+		close(*saved_in);
+		close(*saved_out);
+		return (-1);
+	}
+	return (1);
+}
+
+int	wait_heredoc_child(pid_t pid, t_shell *sh, int pfd0, int *tty)
+{
+	int	status;
+
+	catch_signal_wait_parent();
+	waitpid(pid, &status, 0);
+	restore_heredoc_terminal(tty[1], tty[2], tty[0]);
+	catch_signal_father();
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		return (sh->exit_status = 130, g_signal = 0, close(pfd0), -1);
+	g_signal = 0;
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+		return (sh->exit_status = 130, close(pfd0), -1);
+	if (dup2(pfd0, STDIN_FILENO) == -1)
+		return (close(pfd0), -1);
+	return (close(pfd0), 0);
+}

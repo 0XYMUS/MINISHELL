@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 17:42:53 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:42:01 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,9 +360,18 @@ int		wait_all_children(void);
 
 /* child_process.c */
 int		apply_redirs(t_redir *redirs, t_shell *sh);
-int		apply_heredoc_redir(t_redir *redir, t_shell *sh);
 int		exec_choice(t_cmd *pl, t_shell *sh);
 int		execute_external(t_cmd *pl, t_shell *sh);
 void	child_process(int prev_read, t_cmd *pl, int *pipefd, t_shell *sh);
+
+/*exec_heredoc.c*/
+int		apply_heredoc_redir(t_redir *redir, t_shell *sh);
+
+/*exec_heredoc_2.c*/
+void	restore_heredoc_terminal(int saved_in, int saved_out,
+	int terminal_fd);
+int		setup_heredoc_terminal(int *saved_in, int *saved_out,
+	int *terminal_fd);
+int	wait_heredoc_child(pid_t pid, t_shell *sh, int pfd0, int *tty);
 
 #endif

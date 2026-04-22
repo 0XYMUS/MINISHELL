@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 02:02:59 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/21 17:50:33 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:26:02 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ static void	process_line(char *line, t_shell *sh)
 	sh->tokens = NULL;
 }
 
+static void	handle_signal(t_shell *sh)
+{
+	sh->exit_status = 130;
+	g_signal = 0;
+}
+
 void	shell_loop(t_shell *sh)
 {
 	char	*line;
@@ -58,10 +64,7 @@ void	shell_loop(t_shell *sh)
 			process_line(line, sh);
 		}
 		if (g_signal == SIGINT)
-		{
-			sh->exit_status = 130;
-			g_signal = 0;
-		}
+			handle_signal(sh);
 		free(line);
 	}
 }

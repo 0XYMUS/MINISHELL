@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 12:31:13 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 18:52:09 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:14:01 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,6 @@ static int	heredoc_expand_line(char **line, t_shell sh)
 	return (0);
 }
 
-static void	heredoc_child_sigint(int sign)
-{
-	(void)sign;
-	exit(130);
-}
-
 /*lee el heredoc y guarda su contenido en un pipe*/
 int	heredoc_write_loop(int temp_fd, const char *delimiter,
 	int expand, t_shell sh)
@@ -107,7 +101,8 @@ int	heredoc_write_loop(int temp_fd, const char *delimiter,
 
 static int	heredoc_child_write(int temp_fd, t_redir *redir, t_shell sh)
 {
-	signal(SIGINT, heredoc_child_sigint);
+	g_signal = 0;
+	catch_signal_heredoc();
 	signal(SIGQUIT, SIG_IGN);
 	if (heredoc_write_loop(temp_fd, redir->target, redir->expand, sh) == -1)
 		exit(130);
@@ -130,6 +125,7 @@ int	apply_heredoc_redir(t_redir *redir, t_shell *sh)
 	saved_in = -1;
 	saved_out = -1;
 	tty_fd = -1;
+	g_signal = 0;
 	tty_status = setup_heredoc_terminal(&saved_in, &saved_out, &tty_fd);
 	if (tty_status == -1)
 		return (close(pipefd[1]), close(pipefd[0]), -1);
@@ -147,6 +143,13 @@ int	apply_heredoc_redir(t_redir *redir, t_shell *sh)
 	waitpid(pid, &status, 0);
 	restore_heredoc_terminal(saved_in, saved_out, tty_fd);
 	catch_signal_father();
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		sh->exit_status = 130;
+		g_signal = 0;
+		close(pipefd[0]);
+		return (-1);
+	}
 	g_signal = 0;
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{

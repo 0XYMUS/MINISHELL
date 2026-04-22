@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/21 11:52:58 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 18:33:52 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:14:01 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	handle_heredoc(int sign)
 {
 	(void)sign;
 	g_signal = SIGINT;
-	rl_done = 1;
+	close(STDIN_FILENO);
 	write(STDOUT_FILENO, "\n", 1);
 }
 
@@ -48,7 +48,6 @@ static void	handle_wait_sigint(int sign)
 {
 	(void)sign;
 	g_signal = SIGINT;
-	write(STDOUT_FILENO, "\n", 1);
 }
 
 void	catch_signal_wait_parent(void)

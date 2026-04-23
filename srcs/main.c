@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 16:14:08 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 17:45:34 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <readline/history.h>
 #include "minishell.h"
+
+volatile sig_atomic_t	g_signal;
 
 int	main(int argc, char **argv, char **envp)
 {

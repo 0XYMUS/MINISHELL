@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/21 11:52:58 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 16:20:04 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 17:45:28 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <readline/readline.h>
 #include "minishell.h"
-
-volatile sig_atomic_t	g_signal;
 
 static void	handle_father_sigint(int sign)
 {

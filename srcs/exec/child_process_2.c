@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process_2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 00:00:00 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 16:42:39 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 17:26:38 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	execute_external(t_cmd *pl, t_shell *sh)
 {
 	char	*path;
 	t_ercod	code;
+	int		err_status;
 
 	if (!resolve_exec_path(pl, sh, &path))
 		return (error_emit_subject(&sh->err, PERR_NOT_FOUND,
@@ -69,8 +70,9 @@ int	execute_external(t_cmd *pl, t_shell *sh)
 	if (is_directory_path(path))
 		return (free(path), error_emit_subject(&sh->err, PERR_IS_DIRECTORY,
 				PNEAR_WORD, pl->argv[0]));
-	if (return_exec_path_error(pl, sh, path) != 0)
-		return (1);
+	err_status = return_exec_path_error(pl, sh, path);
+	if (err_status != 0)
+		return (err_status);
 	execve(path, pl->argv, sh->envp);
 	free(path);
 	code = execve_errno_code();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 12:31:13 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/22 16:47:54 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/23 11:21:30 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,14 @@ int	heredoc_write_loop(int temp_fd, const char *delimiter,
 	return (0);
 }
 
-static int	heredoc_child_write(int temp_fd, t_redir *redir, t_shell sh)
+static void	heredoc_child_write(int temp_fd, t_redir *redir, t_shell *sh)
 {
 	g_signal = 0;
 	catch_signal_heredoc();
 	signal(SIGQUIT, SIG_IGN);
-	if (heredoc_write_loop(temp_fd, redir->target, redir->expand, sh) == -1)
-		exit(130);
-	exit(0);
+	if (heredoc_write_loop(temp_fd, redir->target, redir->expand, *sh) == -1)
+		child_cleanup_and_exit(sh, 130);
+	child_cleanup_and_exit(sh, 0);
 }
 
 /*crea y prepara una redirección heredoc para stdin*/
@@ -91,7 +91,7 @@ int	apply_heredoc_redir(t_redir *redir, t_shell *sh)
 		return (restore_heredoc_terminal(tty[1], tty[2], tty[0]),
 			close(pipefd[1]), close(pipefd[0]), -1);
 	if (pid == 0)
-		(close(pipefd[0]), heredoc_child_write(pipefd[1], redir, *sh));
+		(close(pipefd[0]), heredoc_child_write(pipefd[1], redir, sh));
 	close(pipefd[1]);
 	return (wait_heredoc_child(pid, sh, pipefd[0], tty));
 }

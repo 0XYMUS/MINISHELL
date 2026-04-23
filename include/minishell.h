@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/22 16:42:01 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/23 11:16:47 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,6 +357,7 @@ int		run_parent_builtin(t_cmd *pl, t_shell *sh);
 int		is_parent_builtin(t_cmd *pl);
 void	parent_process(int *prev_read, t_cmd *pl, int *pipefd);
 int		wait_all_children(void);
+void	child_cleanup_and_exit(t_shell *sh, int status);
 
 /* child_process.c */
 int		apply_redirs(t_redir *redirs, t_shell *sh);
@@ -369,9 +370,9 @@ int		apply_heredoc_redir(t_redir *redir, t_shell *sh);
 
 /*exec_heredoc_2.c*/
 void	restore_heredoc_terminal(int saved_in, int saved_out,
-	int terminal_fd);
+			int terminal_fd);
 int		setup_heredoc_terminal(int *saved_in, int *saved_out,
-	int *terminal_fd);
-int	wait_heredoc_child(pid_t pid, t_shell *sh, int pfd0, int *tty);
+			int *terminal_fd);
+int		wait_heredoc_child(pid_t pid, t_shell *sh, int pfd0, int *tty);
 
 #endif

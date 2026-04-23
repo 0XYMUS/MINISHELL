@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 18:05:21 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 11:17:43 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ void	child_process(int prev_read, t_cmd *pl, int *pipefd, t_shell *sh)
 	if (apply_redirs(pl->redirs, sh) == -1)
 	{
 		if (sh->exit_status == 130)
-			exit(130);
-		exit(1);
+			child_cleanup_and_exit(sh, 130);
+		child_cleanup_and_exit(sh, 1);
 	}
-	exit(exec_choice(pl, sh));
+	child_cleanup_and_exit(sh, exec_choice(pl, sh));
 }

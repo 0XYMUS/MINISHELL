@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 02:02:59 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/22 16:26:02 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 11:16:47 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	process_line(char *line, t_shell *sh)
 	sh->tokens = tokenizer(line);
 	tok_cursor = sh->tokens;
 	pl = parse(&tok_cursor, &sh->err);
+	sh->pipeline = pl;
 	if (!pl)
 	{
 		sh->exit_status = error_status(&sh->err);
@@ -30,6 +31,7 @@ static void	process_line(char *line, t_shell *sh)
 		expand(pl, *sh);
 		sh->exit_status = execution(pl, sh);
 		pipeline_free_all(&pl);
+		sh->pipeline = NULL;
 	}
 	token_free_all(&sh->tokens);
 	sh->tokens = NULL;

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 11:13:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 11:16:47 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,18 @@ int	is_parent_builtin(t_cmd *pl)
 		|| pl->builtin == BI_EXPORT || pl->builtin == BI_UNSET)
 		return (1);
 	return (0);
+}
+
+/*libera estado heredado en el hijo y termina sin pasar por atexit*/
+void	child_cleanup_and_exit(t_shell *sh, int status)
+{
+	if (!sh)
+		_exit(status);
+	if (sh->tokens)
+		token_free_all(&sh->tokens);
+	if (sh->pipeline)
+		pipeline_free_all(&sh->pipeline);
+	env_free(sh->envp);
+	clear_history();
+	_exit(status);
 }

@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:31:36 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 11:16:47 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	exit_cleanup(t_cmd *cmd, t_shell *sh)
 {
-	if (cmd)
+	if (cmd && (!sh || cmd != sh->pipeline))
 		pipeline_free_all(&cmd);
 	if (sh->tokens)
 		token_free_all(&sh->tokens);

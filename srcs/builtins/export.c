@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 12:35:35 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:50:06 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,39 @@ static void	print_declare_x(char **envp)
 	}
 }
 
+static int	export_identifier_error(char *name)
+{
+	write(2, "minishell: export: `", 20);
+	write(2, name, ft_strlen(name));
+	write(2, "': not a valid identifier\n", 26);
+	return (1);
+}
+
+static int	valid_export_name(char *name)
+{
+	int	i;
+
+	if (!name || name[0] == '\0')
+		return (0);
+	if (!((name[0] >= 'A' && name[0] <= 'Z')
+			|| (name[0] >= 'a' && name[0] <= 'z') || name[0] == '_'))
+		return (0);
+	i = 1;
+	while (name[i] && name[i] != '=')
+	{
+		if (!((name[i] >= 'A' && name[i] <= 'Z')
+				|| (name[i] >= 'a' && name[i] <= 'z')
+				|| (name[i] >= '0' && name[i] <= '9') || name[i] == '_'))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	xy_export(t_cmd *cmd, t_shell *sh)
 {
-	char	*arg;
+	int	i;
+	int	status;
 
 	if (!sh)
 		return (0);
@@ -43,11 +73,18 @@ int	xy_export(t_cmd *cmd, t_shell *sh)
 	{
 		sh->exit_status = 0;
 		print_declare_x(sh->envp);
+		return (0);
 	}
-	else
+	status = 0;
+	i = 1;
+	while (cmd->argv[i])
 	{
-		arg = cmd->argv[1];
-		sh->exit_status = export_set_var(arg, sh);
+		if (!valid_export_name(cmd->argv[i]))
+			status = export_identifier_error(cmd->argv[i]);
+		else
+			export_set_var(cmd->argv[i], sh);
+		i++;
 	}
-	return (0);
+	sh->exit_status = status;
+	return (status);
 }

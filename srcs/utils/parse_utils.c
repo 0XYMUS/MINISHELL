@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:59:05 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 15:36:10 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ int	is_redir(t_token_type type)
 		|| type == TOK_REDIR_OUT);
 }
 
-static t_builtin_cmd	get_builtin_type(char *cmd)
+t_built	get_builtin_type(char *cmd)
 {
 	if (!cmd)
 		return (BI_NONE);
+	if (xy_streq(cmd, ":"))
+		return (BI_COLON);
 	if (xy_streq(cmd, "echo"))
 		return (BI_ECHO);
 	if (xy_streq(cmd, "cd"))

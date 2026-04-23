@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 17:09:19 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 12:57:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 15:15:06 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,16 @@ int	xy_cd(t_cmd *cmd, t_shell *sh)
 	sh->exit_status = 0;
 	if (!cmd || !cmd->argv || !cmd->argv[1])
 		return (1);
+	if (cmd->argv[2])
+	{
+		write(2, "minishell: cd: too many arguments\n", 35);
+		sh->exit_status = 1;
+		return (1);
+	}
 	path = cmd->argv[1];
 	if (chdir(path) != 0)
 	{
-		write(1, "minishell: cd: No such file or directory\n", 41);
+		perror("minishell: cd");
 		sh->exit_status = 1;
 		return (1);
 	}

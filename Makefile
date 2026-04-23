@@ -53,6 +53,7 @@ SRC_FILES	=	main.c \
 				exec/exec_utils_2.c \
 				exec/child_process.c \
 				exec/child_process_2.c \
+				exec/child_error.c \
 				exec/exec_heredoc.c \
 				exec/exec_heredoc_2.c \
 				exec/exec.c \

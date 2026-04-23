@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 15:37:49 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,14 @@ int	error_status(const t_error *err)
 		return (0);
 	if (err->code == PERR_NOT_FOUND)
 		return (127);
+	if (err->code == PERR_NO_SUCH_FILE)
+		return (127);
 	if (err->code == PERR_PERMISSION_DENIED)
 		return (126);
+	if (err->code == PERR_NOT_A_DIRECTORY)
+		return (126);
+	if (err->code == PERR_FILENAME_REQUIRED)
+		return (2);
 	if (err->code == PERR_IS_DIRECTORY)
 		return (126);
 	if (err->code == PERR_EXEC_FORMAT)
@@ -48,7 +54,7 @@ void	error_init(t_error *err)
 	err->subject = NULL;
 }
 
-int	error_emit_subject(t_error *err, t_errcode code, t_near near,
+int	error_emit_subject(t_error *err, t_ercod code, t_near near,
 		const char *subject)
 {
 	if (err)
@@ -61,7 +67,7 @@ int	error_emit_subject(t_error *err, t_errcode code, t_near near,
 	return (error_status(err));
 }
 
-int	error_fail(t_error *err, t_errcode code, t_near near)
+int	error_fail(t_error *err, t_ercod code, t_near near)
 {
 	if (err)
 	{

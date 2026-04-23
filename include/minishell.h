@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 11:16:47 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 15:38:16 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef enum e_redir_type
 typedef enum e_builtin_cmd
 {
 	BI_NONE,
+	BI_COLON,
 	BI_ECHO,
 	BI_CD,
 	BI_PWD,
@@ -61,7 +62,7 @@ typedef enum e_builtin_cmd
 	BI_UNSET,
 	BI_ENV,
 	BI_EXIT
-}	t_builtin_cmd;
+}	t_built;
 
 typedef enum e_cmd_type
 {
@@ -80,10 +81,13 @@ typedef enum e_errcode
 	PERR_UNEXPECTED_TOKEN,
 	PERR_NOT_FOUND,
 	PERR_PERMISSION_DENIED,
+	PERR_NO_SUCH_FILE,
+	PERR_NOT_A_DIRECTORY,
+	PERR_FILENAME_REQUIRED,
 	PERR_IS_DIRECTORY,
 	PERR_EXEC_FORMAT,
 	PERR_OOM
-}	t_errcode;
+}	t_ercod;
 
 typedef enum e_near
 {
@@ -125,15 +129,15 @@ typedef struct s_command
 	char				**qmask;
 	t_redir				*redirs;
 	t_cmd_type			type;
-	t_builtin_cmd		builtin;
+	t_built				builtin;
 	struct s_command	*next;
 }	t_cmd;
 
 typedef struct s_error
 {
-	t_errcode			code;
-	t_near				near;
-	const char			*subject;
+	t_ercod			code;
+	t_near			near;
+	const char		*subject;
 }	t_error;
 
 typedef struct s_word_ctx
@@ -201,6 +205,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t size);
 int		argv_len(t_token *token);
 int		xy_streq(const char *a, const char *b);
 void	set_cmd_type(t_cmd *node);
+t_built	get_builtin_type(char *cmd);
 
 /* token helpers */
 int		is_space(char c);
@@ -277,9 +282,9 @@ int		qmask_has_quote(const char *qmask);
 void	error_init(t_error *err);
 void	error_print(const t_error *err);
 int		error_status(const t_error *err);
-int		error_emit_subject(t_error *err, t_errcode code, t_near near,
+int		error_emit_subject(t_error *err, t_ercod code, t_near near,
 			const char *subject);
-int		error_fail(t_error *err, t_errcode code, t_near near);
+int		error_fail(t_error *err, t_ercod code, t_near near);
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   EXPAND                                   */
@@ -374,5 +379,9 @@ void	restore_heredoc_terminal(int saved_in, int saved_out,
 int		setup_heredoc_terminal(int *saved_in, int *saved_out,
 			int *terminal_fd);
 int		wait_heredoc_child(pid_t pid, t_shell *sh, int pfd0, int *tty);
+
+/*child_error.c*/
+int		return_exec_path_error(t_cmd *pl, t_shell *sh, char *path);
+t_ercod	execve_errno_code(void);
 
 #endif

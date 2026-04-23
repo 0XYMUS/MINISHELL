@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 00:00:00 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 15:38:36 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 /*ejecuta el builtin correspondiente dentro del hijo*/
 static int	exec_builtin(t_cmd *pl, t_shell *sh)
 {
+	if (pl->builtin == BI_COLON)
+		return (0);
 	if (pl->builtin == BI_ECHO)
 		return (xy_echo(pl, sh));
 	if (pl->builtin == BI_CD)
@@ -55,8 +57,8 @@ static int	resolve_exec_path(t_cmd *pl, t_shell *sh, char **path)
 /*ejecuta un comando externo y gestiona los errores previos a execve*/
 int	execute_external(t_cmd *pl, t_shell *sh)
 {
-	char		*path;
-	t_errcode	code;
+	char	*path;
+	t_ercod	code;
 
 	if (!resolve_exec_path(pl, sh, &path))
 		return (error_emit_subject(&sh->err, PERR_NOT_FOUND,
@@ -64,19 +66,11 @@ int	execute_external(t_cmd *pl, t_shell *sh)
 	if (is_directory_path(path))
 		return (free(path), error_emit_subject(&sh->err, PERR_IS_DIRECTORY,
 				PNEAR_WORD, pl->argv[0]));
-	if (access(path, X_OK) != 0)
-		return (free(path), error_emit_subject(&sh->err, PERR_PERMISSION_DENIED,
-				PNEAR_WORD, pl->argv[0]));
+	if (return_exec_path_error(pl, sh, path) != 0)
+		return (1);
 	execve(path, pl->argv, sh->envp);
 	free(path);
-	if (errno == EACCES)
-		code = PERR_PERMISSION_DENIED;
-	else if (errno == EISDIR)
-		code = PERR_IS_DIRECTORY;
-	else if (errno == ENOEXEC)
-		code = PERR_EXEC_FORMAT;
-	else
-		code = PERR_NOT_FOUND;
+	code = execve_errno_code();
 	return (error_emit_subject(&sh->err, code, PNEAR_WORD, pl->argv[0]));
 }
 
@@ -87,6 +81,9 @@ int	exec_choice(t_cmd *pl, t_shell *sh)
 		return (0);
 	if (pl->argv[0][0] == '\0')
 		return (0);
+	if (xy_streq(pl->argv[0], ".") && !pl->argv[1])
+		return (error_emit_subject(&sh->err, PERR_FILENAME_REQUIRED,
+				PNEAR_WORD, pl->argv[0]));
 	if (pl->type == CMD_BUILTIN)
 		return (exec_builtin(pl, sh));
 	return (execute_external(pl, sh));

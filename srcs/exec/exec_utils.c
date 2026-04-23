@@ -6,37 +6,26 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 00:00:00 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 15:30:50 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*clasifica cada comando como builtin, external o desconocido*/
+/*clasifica cada comando en la pipeline como builtin, external o desconocido*/
 void	resolve_command_type(t_cmd *pl)
 {
 	while (pl)
 	{
 		pl->type = CMD_EXTERNAL;
-		pl->builtin = BI_NONE;
 		if (!pl->argv || !pl->argv[0])
 			pl->type = CMD_UNKNOWN;
-		else if (xy_streq(pl->argv[0], "echo"))
-			pl->builtin = BI_ECHO;
-		else if (xy_streq(pl->argv[0], "cd"))
-			pl->builtin = BI_CD;
-		else if (xy_streq(pl->argv[0], "pwd"))
-			pl->builtin = BI_PWD;
-		else if (xy_streq(pl->argv[0], "export"))
-			pl->builtin = BI_EXPORT;
-		else if (xy_streq(pl->argv[0], "unset"))
-			pl->builtin = BI_UNSET;
-		else if (xy_streq(pl->argv[0], "env"))
-			pl->builtin = BI_ENV;
-		else if (xy_streq(pl->argv[0], "exit"))
-			pl->builtin = BI_EXIT;
-		if (pl->builtin != BI_NONE)
-			pl->type = CMD_BUILTIN;
+		else
+		{
+			pl->builtin = get_builtin_type(pl->argv[0]);
+			if (pl->builtin != BI_NONE)
+				pl->type = CMD_BUILTIN;
+		}
 		pl = pl->next;
 	}
 }

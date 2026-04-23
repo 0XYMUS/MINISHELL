@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 17:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 11:12:39 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 15:37:49 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,18 @@ static const char	*near_to_str(t_near near)
 	return ("?");
 }
 
-static const char	*error_msg(t_errcode code)
+static const char	*error_msg(t_ercod code)
 {
 	if (code == PERR_NOT_FOUND)
 		return ("command not found");
 	if (code == PERR_PERMISSION_DENIED)
 		return ("Permission denied");
+	if (code == PERR_NO_SUCH_FILE)
+		return ("No such file or directory");
+	if (code == PERR_NOT_A_DIRECTORY)
+		return ("Not a directory");
+	if (code == PERR_FILENAME_REQUIRED)
+		return ("filename argument required");
 	if (code == PERR_IS_DIRECTORY)
 		return ("Is a directory");
 	if (code == PERR_EXEC_FORMAT)

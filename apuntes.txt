@@ -64,3 +64,6 @@ echo $VAR
 echo    "  a   b  "   | cat
 echo "a  b"    >    out.txt
 cat    <   out.txt
+
+LEAKS SIN READLINE
+valgrind --leak-check=full --show-leak-kinds=definite,indirect,possible --errors-for-leak-kinds=definite,indirect,possible --trace-children=yes --suppressions=/tmp/minishell_readline.supp ./minishell

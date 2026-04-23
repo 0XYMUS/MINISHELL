@@ -6,11 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 11:18:45 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:32:59 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 /*reserva e inicializa memoria para la estructura final*/
 t_cmd	*pipeline_new(void)

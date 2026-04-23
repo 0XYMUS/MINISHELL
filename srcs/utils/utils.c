@@ -6,10 +6,11 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 17:51:02 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 15:29:35 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:14:08 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 // Medir longitd del string pasado

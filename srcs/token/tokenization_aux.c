@@ -6,10 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 13:40:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 11:12:39 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:23:03 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
 #include "minishell.h"
 
 /*busca comillas sin cerrar*/

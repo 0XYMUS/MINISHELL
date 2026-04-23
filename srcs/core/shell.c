@@ -6,10 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 02:02:59 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 11:16:47 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:20:04 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "minishell.h"
 
 static void	process_line(char *line, t_shell *sh)

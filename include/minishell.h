@@ -6,27 +6,16 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 15:38:16 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:29:52 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*                                   LIBS                                     */
-/* ══════════════════════════════════════════════════════════════════════════ */
-
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <sys/wait.h>
-# include <errno.h>
-# include <sys/stat.h>
+# include <stddef.h>
 # include <signal.h>
+# include <sys/types.h>
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*                                   ENUMS                                    */

@@ -6,11 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 14:20:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 16:38:37 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:51:42 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 /*borra el crarcter $ en  word y qmask*/
 void	remove_dollar_only(char **word, char **qmask, int i)

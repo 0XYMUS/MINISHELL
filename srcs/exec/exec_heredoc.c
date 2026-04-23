@@ -6,11 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 12:31:13 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 11:21:30 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:43:40 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <readline/readline.h>
 
 /*expande una linea de heredoc como texto normal cuando corresponde*/
 static int	heredoc_expand_line(char **line, t_shell sh)

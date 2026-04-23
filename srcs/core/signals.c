@@ -6,10 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/21 11:52:58 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/22 16:27:52 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:20:04 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <readline/readline.h>
 #include "minishell.h"
 
 volatile sig_atomic_t	g_signal;

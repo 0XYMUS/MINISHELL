@@ -6,10 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 11:40:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/20 19:32:24 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:14:08 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <errno.h>
+#include <stdlib.h>
 #include "minishell.h"
 
 void	fill_word_qmask(char *line, int *idxs, char **dst, int end);

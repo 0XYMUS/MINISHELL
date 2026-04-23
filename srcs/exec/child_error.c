@@ -6,11 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 15:24:02 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 15:37:49 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:43:40 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 /*mapea errno a un error de minishell despues de execve*/
 t_ercod	execve_errno_code(void)

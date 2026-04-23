@@ -6,11 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 14:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 16:15:15 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:50:24 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 /*a la hora expandir, priemro copia el texto antes de la expansion,
 despues cambia el $ por el ontenido de nev y rellena con el resto del texto*/

@@ -6,10 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 17:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 15:37:49 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:15:32 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <stdio.h>
 #include "minishell.h"
 
 static void	write_err_str(const char *s)

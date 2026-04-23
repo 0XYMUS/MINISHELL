@@ -6,11 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 14:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 16:12:32 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:53:21 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 /*hace el calculo de cuantos digitos tendra la expansion de $?*/
 int	question_len(int n)

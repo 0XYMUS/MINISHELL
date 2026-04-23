@@ -6,10 +6,11 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 21:56:48 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 15:27:07 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:15:32 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 int	find_env_var(char **envp, const char *name)

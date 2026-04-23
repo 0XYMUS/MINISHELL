@@ -6,10 +6,11 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 15:21:05 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 15:26:50 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:14:08 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <readline/history.h>
 #include "minishell.h"
 
 int	main(int argc, char **argv, char **envp)

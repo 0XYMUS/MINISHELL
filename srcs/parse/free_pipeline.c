@@ -6,11 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 15:59:44 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/21 11:18:52 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:34:37 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 /*libera o argv o qmask*/
 static void	free_argv_or_qmask(char **argv_or_qmask)

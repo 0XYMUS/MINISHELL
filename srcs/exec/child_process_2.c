@@ -6,11 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 00:00:00 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 15:38:36 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:42:39 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 /*ejecuta el builtin correspondiente dentro del hijo*/
 static int	exec_builtin(t_cmd *pl, t_shell *sh)

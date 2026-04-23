@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exec_heredoc_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 16:20:03 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/22 16:47:57 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:47:18 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/wait.h>
 
 /*restaura stdin/stdout originales tras leer el heredoc*/
 void	restore_heredoc_terminal(int saved_in, int saved_out,

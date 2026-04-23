@@ -6,11 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 16:28:20 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 16:44:33 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:53:21 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 /*encuentra donde termina la variable que empieza en i,
 teniendo en cuenta caracteres y qmask*/

@@ -6,11 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 14:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 16:45:28 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:51:42 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 static char	*pid_value(int *pid_len)
 {

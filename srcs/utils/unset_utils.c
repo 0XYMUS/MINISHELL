@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   unset_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 02:31:06 by julepere          #+#    #+#             */
-/*   Updated: 2026/03/17 00:00:00 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:15:32 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 int	remove_env_var(t_shell *sh, char *rm_var)

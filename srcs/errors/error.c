@@ -6,10 +6,11 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 15:37:49 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:15:32 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <errno.h>
 #include "minishell.h"
 
 /*maneja error ENOMEM*/

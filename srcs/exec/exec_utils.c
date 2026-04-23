@@ -6,11 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 00:00:00 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 15:30:50 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:41:21 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 /*clasifica cada comando en la pipeline como builtin, external o desconocido*/
 void	resolve_command_type(t_cmd *pl)

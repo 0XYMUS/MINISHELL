@@ -6,11 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 17:09:19 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 15:15:06 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:36:00 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
+#include <stdio.h>
 
 int	xy_cd(t_cmd *cmd, t_shell *sh)
 {

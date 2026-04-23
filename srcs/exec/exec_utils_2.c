@@ -6,11 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 11:13:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 11:16:47 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:41:21 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
+#include <readline/history.h>
 
 /*ejecuta el builtin que debe correr en el proceso padre*/
 int	run_parent_builtin(t_cmd *pl, t_shell *sh)

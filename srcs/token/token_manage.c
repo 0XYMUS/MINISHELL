@@ -6,10 +6,11 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:00:00 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 12:59:44 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:23:03 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 /*Crea un nuevo token*/

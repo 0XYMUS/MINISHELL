@@ -6,11 +6,12 @@
 /*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 02:16:43 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 16:50:06 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/23 17:09:38 by julepere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
 
 static int	valid_unset_name(char *name)
 {

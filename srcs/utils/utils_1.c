@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julepere <julepere@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 16:25:23 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/02/25 21:32:29 by julepere         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:14:08 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 void	*ft_memmove(void *dest, const void *src, size_t n)

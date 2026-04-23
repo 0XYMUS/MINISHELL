@@ -6,11 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 12:22:52 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 17:20:26 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:36:00 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
+#include <stdlib.h>
 
 int	xy_pwd(t_cmd *cmd, t_shell *sh)
 {

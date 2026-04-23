@@ -6,10 +6,11 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 14:54:42 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/20 15:57:47 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:20:04 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 // Cuenta cuantas posiciones tiene el env

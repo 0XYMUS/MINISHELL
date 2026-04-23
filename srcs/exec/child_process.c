@@ -6,11 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 11:17:43 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:42:39 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <fcntl.h>
+#include <unistd.h>
 
 /*abre y conecta una redirección de archivo con stdin o stdout*/
 static int	apply_file_redir(t_redir *redir)

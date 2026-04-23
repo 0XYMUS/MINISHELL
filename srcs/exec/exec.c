@@ -6,11 +6,14 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/21 18:11:29 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:47:18 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/wait.h>
 
 /*cierra los fd del padre y prepara el pipe para el siguiente comando*/
 void	parent_process(int *prev_read, t_cmd *pl, int *pipefd)

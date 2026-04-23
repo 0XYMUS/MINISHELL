@@ -6,11 +6,12 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 12:10:22 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/17 12:43:22 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/23 16:32:59 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 /*hace una copia de la cadena qmask*/
 char	*qmask_dup(const char *src)

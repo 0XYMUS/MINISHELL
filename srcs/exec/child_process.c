@@ -6,13 +6,27 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 11:27:52 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 16:42:39 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/27 11:41:03 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <fcntl.h>
 #include <unistd.h>
+
+/*cierra los fd del padre y prepara el pipe para el siguiente comando*/
+void	parent_process(int *prev_read, t_cmd *pl, int *pipefd)
+{
+	if (*prev_read != -1)
+		close((*prev_read));
+	if (pl->next)
+	{
+		close(pipefd[1]);
+		*prev_read = pipefd[0];
+	}
+	else
+		*prev_read = -1;
+}
 
 /*abre y conecta una redirección de archivo con stdin o stdout*/
 static int	apply_file_redir(t_redir *redir)
@@ -35,6 +49,24 @@ static int	apply_file_redir(t_redir *redir)
 	return (0);
 }
 
+/*usa un heredoc ya preparado o lo genera al vuelo para conectar stdin*/
+static int	apply_heredoc_input(t_redir *redir, int stdin_backup, t_shell *sh)
+{
+	if (redir->heredoc_fd != -1)
+	{
+		if (dup2(redir->heredoc_fd, STDIN_FILENO) == -1)
+			return (-1);
+		close(redir->heredoc_fd);
+		redir->heredoc_fd = -1;
+		return (0);
+	}
+	if (dup2(stdin_backup, STDIN_FILENO) == -1)
+		return (-1);
+	if (apply_heredoc_redir(redir, sh) == -1)
+		return (-1);
+	return (0);
+}
+
 /*aplica todas las redirecciones asociadas al comando*/
 int	apply_redirs(t_redir *redirs, t_shell *sh)
 {
@@ -53,9 +85,7 @@ int	apply_redirs(t_redir *redirs, t_shell *sh)
 		}
 		else if (redirs->type == R_HEREDOC)
 		{
-			if (dup2(stdin_backup, STDIN_FILENO) == -1)
-				return (close(stdin_backup), -1);
-			if (apply_heredoc_redir(redirs, sh) == -1)
+			if (apply_heredoc_input(redirs, stdin_backup, sh) == -1)
 				return (close(stdin_backup), -1);
 		}
 		redirs = redirs->next;

@@ -26,6 +26,7 @@ SRC_FILES	=	main.c \
 				token/token_word_fill.c \
 				utils/parse_utils.c \
 				utils/export_utils.c \
+				utils/exit_utils.c \
 				utils/unset_utils.c \
 				errors/error.c \
 				errors/error_print.c \
@@ -56,6 +57,7 @@ SRC_FILES	=	main.c \
 				exec/child_error.c \
 				exec/exec_heredoc.c \
 				exec/exec_heredoc_2.c \
+				exec/exec_wait.c \
 				exec/exec.c \
 				expand/expand.c \
 				expand/expand_env.c \

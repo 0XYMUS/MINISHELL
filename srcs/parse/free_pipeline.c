@@ -6,12 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 15:59:44 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 16:34:37 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/27 11:10:54 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 /*libera o argv o qmask*/
 static void	free_argv_or_qmask(char **argv_or_qmask)
@@ -37,6 +38,8 @@ static void	free_redirs(t_redir *redir)
 	while (redir)
 	{
 		next = redir->next;
+		if (redir->heredoc_fd != -1)
+			close(redir->heredoc_fd);
 		free(redir->target);
 		free(redir->qmask);
 		free(redir);

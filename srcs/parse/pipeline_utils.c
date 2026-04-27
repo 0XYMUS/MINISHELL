@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 13:35:10 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 16:32:59 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/27 11:10:54 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static void	init_node(t_redir *node)
 	node->target = NULL;
 	node->qmask = NULL;
 	node->expand = 0;
+	node->heredoc_fd = -1;
 	node->next = NULL;
 }
 

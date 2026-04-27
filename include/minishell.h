@@ -6,7 +6,7 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:53:12 by jojeda-p          #+#    #+#             */
-/*   Updated: 2026/04/23 16:29:52 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/27 11:36:56 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_redir
 	char				*target;
 	char				*qmask;
 	int					expand;
+	int					heredoc_fd;
 	struct s_redir		*next;
 }	t_redir;
 
@@ -182,6 +183,10 @@ void	catch_signal_heredoc(void);
 size_t	ft_strlen(const char *s);
 char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *s, int c);
+
+/* exit_utils.c */
+int		is_number(char c);
+void	write_str_fd(const char *str, int fd);
 
 /* utils_1.c */
 void	*ft_memmove(void *dest, const void *src, size_t n);
@@ -349,18 +354,22 @@ int		xy_unset(t_cmd *cmd, t_shell *sh);
 int		execution(t_cmd *pl, t_shell *sh);
 int		run_parent_builtin(t_cmd *pl, t_shell *sh);
 int		is_parent_builtin(t_cmd *pl);
-void	parent_process(int *prev_read, t_cmd *pl, int *pipefd);
-int		wait_all_children(void);
+int		wait_all_children(pid_t last_pid);
 void	child_cleanup_and_exit(t_shell *sh, int status);
 
 /* child_process.c */
+void	parent_process(int *prev_read, t_cmd *pl, int *pipefd);
 int		apply_redirs(t_redir *redirs, t_shell *sh);
 int		exec_choice(t_cmd *pl, t_shell *sh);
 int		execute_external(t_cmd *pl, t_shell *sh);
 void	child_process(int prev_read, t_cmd *pl, int *pipefd, t_shell *sh);
 
+/* exec_wait.c */
+int		wait_all_children(pid_t last_pid);
+
 /*exec_heredoc.c*/
 int		apply_heredoc_redir(t_redir *redir, t_shell *sh);
+int		prepare_heredocs(t_cmd *pl, t_shell *sh);
 
 /*exec_heredoc_2.c*/
 void	restore_heredoc_terminal(int saved_in, int saved_out,

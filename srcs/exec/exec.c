@@ -6,57 +6,13 @@
 /*   By: jojeda-p <jojeda-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 12:24:47 by julepere          #+#    #+#             */
-/*   Updated: 2026/04/23 16:47:18 by jojeda-p         ###   ########.fr       */
+/*   Updated: 2026/04/27 11:41:03 by jojeda-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <unistd.h>
 #include <stdio.h>
-#include <sys/wait.h>
-
-/*cierra los fd del padre y prepara el pipe para el siguiente comando*/
-void	parent_process(int *prev_read, t_cmd *pl, int *pipefd)
-{
-	if (*prev_read != -1)
-		close((*prev_read));
-	if (pl->next)
-	{
-		close(pipefd[1]);
-		*prev_read = pipefd[0];
-	}
-	else
-		*prev_read = -1;
-}
-
-/*espera a los hijos y devueve el utlimo codgio de salida valido*/
-int	wait_all_children(void)
-{
-	int	status;
-	int	exit_code;
-	int	printed_signal;
-
-	exit_code = 0;
-	printed_signal = 0;
-	while (waitpid(-1, &status, 0) > 0)
-	{
-		if (WIFEXITED(status))
-			exit_code = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-		{
-			if ((WTERMSIG(status) == SIGINT || WTERMSIG(status) == SIGQUIT)
-				&& !printed_signal)
-			{
-				if (WTERMSIG(status) == SIGQUIT)
-					write(STDOUT_FILENO, "Quit (core dumped)", 18);
-				write(STDOUT_FILENO, "\n", 1);
-				printed_signal = 1;
-			}
-			exit_code = 128 + WTERMSIG(status);
-		}
-	}
-	return (exit_code);
-}
 
 /*ejecut los builtins en el proceso padre y redirecciona entradas y salidas*/
 static int	run_single_parent_builtin(t_cmd *pl, t_shell *sh)
@@ -89,7 +45,7 @@ static int	run_single_parent_builtin(t_cmd *pl, t_shell *sh)
 }
 
 /*crea el pipe si hace falta, hace fork y conecta el comando con la pipeline*/
-static int	fork_pipeline_command(t_cmd *pl, t_shell *sh, int *prev_read)
+static pid_t	fork_pipeline_command(t_cmd *pl, t_shell *sh, int *prev_read)
 {
 	pid_t	pid;
 	int		pipefd[2];
@@ -112,29 +68,57 @@ static int	fork_pipeline_command(t_cmd *pl, t_shell *sh, int *prev_read)
 		child_process(*prev_read, pl, pipefd, sh);
 	}
 	parent_process(prev_read, pl, pipefd);
-	return (0);
+	return (pid);
+}
+
+/* comprueba heredocs, resuelve tipos y ejecuta el builtin del padre si toca */
+static int	pre_exec_checks(t_cmd *pl, t_shell *sh)
+{
+	if (prepare_heredocs(pl, sh) == -1)
+	{
+		if (sh->exit_status == 130)
+			return (130);
+		return (1);
+	}
+	resolve_command_type(pl);
+	if (!pl->next && is_parent_builtin(pl))
+		return (run_single_parent_builtin(pl, sh));
+	return (-1);
+}
+
+/* lanza la pipeline y recoge el estado final del ultimo proceso */
+static int	launch_pipeline(t_cmd *pl, t_shell *sh)
+{
+	int		prev_read;
+	pid_t	last_pid;
+	pid_t	pid;
+
+	prev_read = -1;
+	last_pid = -1;
+	catch_signal_wait_parent();
+	while (pl)
+	{
+		pid = fork_pipeline_command(pl, sh, &prev_read);
+		if (pid == -1)
+			return (1);
+		if (pl->next == NULL)
+			last_pid = pid;
+		pl = pl->next;
+	}
+	return (wait_all_children(last_pid));
 }
 
 /*coordina la ejecucion y lanza los procesos*/
 int	execution(t_cmd *pl, t_shell *sh)
 {
-	int		prev_read;
-	int		status;
+	int	status;
 
 	if (!pl)
 		return (0);
-	resolve_command_type(pl);
-	prev_read = -1;
-	if (!pl->next && is_parent_builtin(pl))
-		return (run_single_parent_builtin(pl, sh));
-	catch_signal_wait_parent();
-	while (pl)
-	{
-		if (fork_pipeline_command(pl, sh, &prev_read) == -1)
-			return (1);
-		pl = pl->next;
-	}
-	status = wait_all_children();
+	status = pre_exec_checks(pl, sh);
+	if (status != -1)
+		return (status);
+	status = launch_pipeline(pl, sh);
 	catch_signal_father();
 	return (status);
 }
